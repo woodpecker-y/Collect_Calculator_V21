@@ -1,3 +1,5 @@
+#define _NWKmodbus_C_
+
 #include "PubDef.h"
 #ifdef Valve_NWK_ENABLE
 
@@ -5,19 +7,19 @@
 #include "main.h"
 
 
-UART_TO_NWK_QueueSend_Stru  NWK_Q_RX_Buffer;		//通信发送队列 接收缓冲器
-UART_TO_NWK_QueueSend_Stru* NWK_Q_RX_BuffeP;	    //通信发送队列 接收缓冲器P
+UART_TO_NWK_QueueSend_Stru      NWK_Q_RX_Buffer;		//通信发送队列 接收缓冲器
+UART_TO_NWK_QueueSend_Stru*     NWK_Q_RX_BuffeP;	    //通信发送队列 接收缓冲器P
 
 
 
 /*
 void NWK_Pack_RxServer_S( UART_RBC_Stru* Ctrl_Point )
 函数功能:协议预处理包，描述  将接收队列缓冲器的数据进行解析并进入解析包
-
 */
 void NWK_Pack_RxServer_S( UART_RBC_Stru* Ctrl_Point )
 {
-	INT8U Bufer;
+	INT8U  Bufer;
+    INT8U  CMD;
 	INT32U DataBdry =0;	//有效数据区边界
 	NWK_Pack_Uni* NWK_RXPack =(NWK_Pack_Uni*)(Ctrl_Point->InputPack);
 	while (Ctrl_Point->Rx_Rear !=Ctrl_Point->Rx_Front) 
@@ -32,10 +34,10 @@ void NWK_Pack_RxServer_S( UART_RBC_Stru* Ctrl_Point )
 		}		
 		switch(Ctrl_Point->RecPackState)
 		{
-			case 0:	//接收起始码
+			case 0:	//接收modbus从机地址
 			{
-				if (Bufer == DDF2Pro_StartCode) 
-				{ 
+				if (Bufer != 0)
+				{
 					Ctrl_Point->InputPack[Ctrl_Point->RecPackPoint]  =Bufer;
 					Ctrl_Point->RecPackPoint +=1;
 					Ctrl_Point->RecPackTimeOut=*(Ctrl_Point->Ticks);		//收到数据间隔时间清零
@@ -45,101 +47,69 @@ void NWK_Pack_RxServer_S( UART_RBC_Stru* Ctrl_Point )
 				}
 			}break;
 			
-			case 1:	//接收版本号/设备类型符
-			{		
-				if ( Bufer == DDF2Pro_ProtocolCode)
-				{
-
-					Ctrl_Point->InputPack[Ctrl_Point->RecPackPoint]  =Bufer;
-					Ctrl_Point->RecPackPoint +=1;
-					Ctrl_Point->RecPackTimeOut=*(Ctrl_Point->Ticks);	 //收到数据间隔时间清零
-					Ctrl_Point->RecPackState=2;//开始接收数据包	
-				}
+			case 1:	//接收modbus 功能码
+			{	    
+                    if ( Bufer == NWKPro_ACKProtocolCode03 )
+                    {
+                        Ctrl_Point->InputPack[Ctrl_Point->RecPackPoint]  =Bufer;
+                        Ctrl_Point->RecPackPoint +=1;
+                        Ctrl_Point->RecPackTimeOut=*(Ctrl_Point->Ticks);	 //收到数据间隔时间清零 
+                        Ctrl_Point->RecPackState=2;//开始接收数据包	
+                    }
+                    else if( Bufer == NWKPro_ACKProtocolCode06 )
+                    {
+                        Ctrl_Point->InputPack[Ctrl_Point->RecPackPoint]  =Bufer;
+                        Ctrl_Point->RecPackPoint +=1;
+                        Ctrl_Point->RecPackTimeOut=*(Ctrl_Point->Ticks);	 //收到数据间隔时间清零 
+                        Ctrl_Point->RecPackState=3;//开始接收数据包	
+                        
+                        NWK_RXPack.Lenth = 4;
+                    }
 			}break;
 			
-			case 2://接收SN 第1字节
+			case 2://接收功能码 03
 			{
-				Ctrl_Point->InputPack[Ctrl_Point->RecPackPoint]  =Bufer;
-				Ctrl_Point->RecPackPoint +=1;
-				Ctrl_Point->RecPackTimeOut=*(Ctrl_Point->Ticks);	 //收到数据间隔时间清零
-				Ctrl_Point->RecPackState=3;//开始接收数据包	
-						
+
+                    if ( Bufer == NWKPro_ACKProtocolSize)//读取数据长度为 0x38 = (2*0x1C)
+                    {
+                        NWK_RXPack.Lenth = Bufer;//接收数据长度
+                        
+                        Ctrl_Point->InputPack[Ctrl_Point->RecPackPoint]  =Bufer;
+                        Ctrl_Point->RecPackPoint +=1;
+                        Ctrl_Point->RecPackTimeOut=*(Ctrl_Point->Ticks);	 //收到数据间隔时间清零
+                        Ctrl_Point->RecPackState=3;//开始接收数据包	
+                    }
+		
 			}break;
 			
-			case 3://接收SN 第2字节
+			case 3://06 数据域接收区
 			{
-					
-				Ctrl_Point->InputPack[Ctrl_Point->RecPackPoint]  =Bufer;
-				Ctrl_Point->RecPackPoint +=1;
-				Ctrl_Point->RecPackTimeOut=*(Ctrl_Point->Ticks);	 //收到数据间隔时间清零
-				Ctrl_Point->RecPackState=4;//开始接收数据包	
-
+                if(NWK_RXPack.Lenth)
+                {
+                    Ctrl_Point->RecPackState=3;			            //开始接收数据包
+                }
+                else
+                {
+                    Ctrl_Point->RecPackState=4;			            //开始接收数据包
+                }
+                Ctrl_Point->InputPack[Ctrl_Point->RecPackPoint]  =Bufer;
+                Ctrl_Point->RecPackPoint +=1;
+                Ctrl_Point->RecPackTimeOut=*(Ctrl_Point->Ticks);	 //收到数据间隔时间清零
 
 			}break;
-	
-			case 4:	//接收SN 第3字节
+            
+			case 4://CRC16_H
 			{
-					
+
 				Ctrl_Point->InputPack[Ctrl_Point->RecPackPoint]  =Bufer;
 				Ctrl_Point->RecPackPoint +=1;
 				Ctrl_Point->RecPackTimeOut=*(Ctrl_Point->Ticks);	 //收到数据间隔时间清零
-				Ctrl_Point->RecPackState=5;//开始接收数据包	
+                Ctrl_Point->RecPackState=5;			            //开始接收数据包
 
 			}break;
-			case 5:	//接收SN 第4字节
+            
+			case 5:	//CRC16_L
 			{
-					
-				Ctrl_Point->InputPack[Ctrl_Point->RecPackPoint]  =Bufer;
-				Ctrl_Point->RecPackPoint +=1;
-				Ctrl_Point->RecPackTimeOut=*(Ctrl_Point->Ticks);	 //收到数据间隔时间清零
-				Ctrl_Point->RecPackState=6;//开始接收数据包 
-
-			}break;			
-
-			case 6:	//接收SNRE 第1字节
-			{
-					
-				Ctrl_Point->InputPack[Ctrl_Point->RecPackPoint]  =Bufer;
-				Ctrl_Point->RecPackPoint +=1;
-				Ctrl_Point->RecPackTimeOut=*(Ctrl_Point->Ticks);	 //收到数据间隔时间清零
-				Ctrl_Point->RecPackState=7;//开始接收数据包 
-
-					
-			}break;	
-			
-			case 7://接收SNRE 第2字节
-			{
-					
-				Ctrl_Point->InputPack[Ctrl_Point->RecPackPoint]  =Bufer;
-				Ctrl_Point->RecPackPoint +=1;
-				Ctrl_Point->RecPackTimeOut=*(Ctrl_Point->Ticks);	 //收到数据间隔时间清零
-				Ctrl_Point->RecPackState=8;//开始接收数据包 			
-			}break;
-			
-			case 8://接收接收FAdd2
-			{
-					
-				Ctrl_Point->InputPack[Ctrl_Point->RecPackPoint]  =Bufer;
-				Ctrl_Point->RecPackPoint +=1;
-				Ctrl_Point->RecPackTimeOut=*(Ctrl_Point->Ticks);	 //收到数据间隔时间清零
-				Ctrl_Point->RecPackState=9;//开始接收数据包 	
-
-
-			}break;
-
-			case 9://接收ConType
-			{
-					
-				Ctrl_Point->InputPack[Ctrl_Point->RecPackPoint]  =Bufer;
-				Ctrl_Point->RecPackPoint +=1;
-				Ctrl_Point->RecPackTimeOut=*(Ctrl_Point->Ticks);	 //收到数据间隔时间清零
-				Ctrl_Point->RecPackState=10;//开始接收数据包 	
-				
-			}break;
-
-			case 10:	//数据长度
-			{
-
 				Ctrl_Point->InputPack[Ctrl_Point->RecPackPoint]  =Bufer;
 				Ctrl_Point->RecPackPoint +=1;
 				Ctrl_Point->RecPackTimeOut=*(Ctrl_Point->Ticks);		//收到数据间隔时间清零
@@ -153,32 +123,6 @@ void NWK_Pack_RxServer_S( UART_RBC_Stru* Ctrl_Point )
 					Ctrl_Point->RecPackState=12;			            //开始接收数据包
 				}
 				DataBdry =DDF2_RXPack->DefaultPack.Head.Lenth;
-			}break;
-		
-			case 11:	//有效数据区
-			{		
-
-
-				Ctrl_Point->RecPackState=11;					//开始接收数据包
-				Ctrl_Point->InputPack[Ctrl_Point->RecPackPoint] =Bufer;
-				Ctrl_Point->RecPackPoint +=1;
-				Ctrl_Point->RecPackTimeOut=*(Ctrl_Point->Ticks);		//收到数据间隔时间清零
-
-				DataBdry -=1;
-				if(DataBdry ==0)
-				{
-					Ctrl_Point->RecPackState=12;
-				}
-				
-			}break;
-
-			case 12:	//校验和
-			{
-				Ctrl_Point->RecPackState=13;					//开始接收数据包
-				Ctrl_Point->InputPack[Ctrl_Point->RecPackPoint] =Bufer;
-				Ctrl_Point->RecPackPoint +=1;
-				Ctrl_Point->RecPackTimeOut=*(Ctrl_Point->Ticks);		//收到数据间隔时间清零
-				
 			}break;
 			
 			case 13:	//结束标志
