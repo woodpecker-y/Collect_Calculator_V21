@@ -5,6 +5,7 @@
 
 #include "NWKmodbus.h"
 #include "main.h"
+#include "check.h"
 
 
 UART_TO_NWK_QueueSend_Stru      NWK_Q_RX_Buffer;		//通信发送队列 接收缓冲器
@@ -54,90 +55,61 @@ void NWK_Pack_RxServer_S( UART_RBC_Stru* Ctrl_Point )
                         Ctrl_Point->InputPack[Ctrl_Point->RecPackPoint]  =Bufer;
                         Ctrl_Point->RecPackPoint +=1;
                         Ctrl_Point->RecPackTimeOut=*(Ctrl_Point->Ticks);	 //收到数据间隔时间清零 
-                        Ctrl_Point->RecPackState=2;//开始接收数据包	
+                        Ctrl_Point->RecPackState=2; //开始接收数据包
+                        
+                        NWK_RXPack->Lenth = NWKPro_ACKProtocolSize+1;       //06设置命令码的数据域为4个字节
+                        DataBdry = NWK_RXPack->Lenth;
                     }
                     else if( Bufer == NWKPro_ACKProtocolCode06 )
                     {
                         Ctrl_Point->InputPack[Ctrl_Point->RecPackPoint]  =Bufer;
                         Ctrl_Point->RecPackPoint +=1;
                         Ctrl_Point->RecPackTimeOut=*(Ctrl_Point->Ticks);	 //收到数据间隔时间清零 
-                        Ctrl_Point->RecPackState=3;//开始接收数据包	
+                        Ctrl_Point->RecPackState=2; //开始接收数据包	
                         
-                        NWK_RXPack.Lenth = 4;
+                        NWK_RXPack->Lenth = 4;       //06设置命令码的数据域为4个字节
+                        DataBdry = NWK_RXPack->Lenth;
                     }
 			}break;
 			
-			case 2://接收功能码 03
+			case 2://06 数据域接收区
 			{
-
-                    if ( Bufer == NWKPro_ACKProtocolSize)//读取数据长度为 0x38 = (2*0x1C)
-                    {
-                        NWK_RXPack.Lenth = Bufer;//接收数据长度
-                        
-                        Ctrl_Point->InputPack[Ctrl_Point->RecPackPoint]  =Bufer;
-                        Ctrl_Point->RecPackPoint +=1;
-                        Ctrl_Point->RecPackTimeOut=*(Ctrl_Point->Ticks);	 //收到数据间隔时间清零
-                        Ctrl_Point->RecPackState=3;//开始接收数据包	
-                    }
-		
-			}break;
-			
-			case 3://06 数据域接收区
-			{
-                if(NWK_RXPack.Lenth)
+                if(DataBdry)
                 {
-                    Ctrl_Point->RecPackState=3;			            //开始接收数据包
+                    Ctrl_Point->RecPackState=2;			            //开始接收数据包
                 }
                 else
                 {
-                    Ctrl_Point->RecPackState=4;			            //开始接收数据包
+                    Ctrl_Point->RecPackState=3;			            //开始接收数据包
                 }
+                DataBdry--;
                 Ctrl_Point->InputPack[Ctrl_Point->RecPackPoint]  =Bufer;
                 Ctrl_Point->RecPackPoint +=1;
                 Ctrl_Point->RecPackTimeOut=*(Ctrl_Point->Ticks);	 //收到数据间隔时间清零
 
 			}break;
             
-			case 4://CRC16_H
+			case 3://CRC16_H
 			{
 
 				Ctrl_Point->InputPack[Ctrl_Point->RecPackPoint]  =Bufer;
 				Ctrl_Point->RecPackPoint +=1;
 				Ctrl_Point->RecPackTimeOut=*(Ctrl_Point->Ticks);	 //收到数据间隔时间清零
-                Ctrl_Point->RecPackState=5;			            //开始接收数据包
+                Ctrl_Point->RecPackState=4;			            //开始接收数据包
 
 			}break;
             
-			case 5:	//CRC16_L
+			case 4:	//CRC16_L
 			{
 				Ctrl_Point->InputPack[Ctrl_Point->RecPackPoint]  =Bufer;
 				Ctrl_Point->RecPackPoint +=1;
-				Ctrl_Point->RecPackTimeOut=*(Ctrl_Point->Ticks);		//收到数据间隔时间清零
-
-				if(DDF2_RXPack->DefaultPack.Head.Lenth)	                //判断数据内容是否存在
-				{
-					Ctrl_Point->RecPackState=11;			            //开始接收数据包
-				}
-				else
-				{
-					Ctrl_Point->RecPackState=12;			            //开始接收数据包
-				}
-				DataBdry =DDF2_RXPack->DefaultPack.Head.Lenth;
-			}break;
-			
-			case 13:	//结束标志
-			{
-				Ctrl_Point->InputPack[Ctrl_Point->RecPackPoint]  =Bufer;
-				Ctrl_Point->RecPackPoint +=1;
-				Ctrl_Point->RecPackState=0; 
+				Ctrl_Point->RecPackTimeOut =*(Ctrl_Point->Ticks);		//收到数据间隔时间清零
+                Ctrl_Point->RecPackState = 0;	
+                
+                NWK_Pack_RxAnalyze_S(Ctrl_Point, NWK_RXPack->Lenth+NWKPro_HeadSize);
 				
-				if (Bufer ==DDF2Pro_EndCode)
-				{
-					DDF2_Pack_RxAnalyze_S(Ctrl_Point,DDF2_RXPack->DefaultPack.Head.Lenth+DDF2Pro_HeadSize);
-				}
-				Ctrl_Point->RecPackTimeOut=*(Ctrl_Point->Ticks);
-			}break;	
-			
+			}break;
+
 			default:	//错误状态,恢复状态为0
 			{
 				Ctrl_Point->RecPackState=0;
@@ -145,7 +117,7 @@ void NWK_Pack_RxServer_S( UART_RBC_Stru* Ctrl_Point )
 			}break;
 		}
 		
-		if (++Ctrl_Point->Rx_Rear >= UART_TO_DDF2BufferSize_S)
+		if (++Ctrl_Point->Rx_Rear >= UART_TO_NWKBufferSize_S)
 		{
 			Ctrl_Point->Rx_Rear=0;
 		}	
@@ -161,33 +133,40 @@ void NWK_Pack_RxServer_S( UART_RBC_Stru* Ctrl_Point )
 INT8U DDF2_Pack_RxAnalyze_S(UART_RBC_Stru* Ctrl_Point,INT8U DataSize)
 函数功能:通信解析并处理子函数
 */
-INT8U NWK_Pack_RxAnalyze_S(UART_RBC_Stru* Ctrl_Point,INT8U DataSize)
+INT8U NWK_Pack_RxAnalyze_S(UART_RBC_Stru* Ctrl_Point, INT8U DataSize)
 {
-	INT8U CheckFlg =0;	//错误标志
-	INT8U ProtoNO =0;	//协议编号
-	DDF2_Pack_Uni* Packin =(DDF2_Pack_Uni*)Ctrl_Point->InputPack;	//指针变换
+	unsigned short CRC16 =0;	//错误标志
+    UINT8 CRC_H = 0;
+    UINT8 CRC_L = 0;
+    
+	NWK_Pack_Uni* Packin =(NWK_Pack_Uni*)Ctrl_Point->InputPack;	//指针变换
 	
-	CheckFlg =SUMCheck_Check(((INT8U*)Ctrl_Point->InputPack),DataSize);
-	if(CheckFlg !=0)//校验错误，退出函数
+    
+    CRC16 = crc_16_modbus((const unsigned char*)Ctrl_Point->InputPack, (unsigned short) DataSize);
+    
+    CRC_H = CRC16 >> 8;
+    CRC_L = CRC16 & 0x00FF;
+    
+	//CheckFlg =SUMCheck_Check(((INT8U*)Ctrl_Point->InputPack), DataSize);
+    
+	if(CRC_H != Ctrl_Point->InputPack[DataSize] || CRC_L != Ctrl_Point->InputPack[DataSize+1])//校验错误，退出函数
 	{
-		return	CheckFlg;
+        CRC16 = 0;
+		return	CRC16;
 	}
 	else
 	{
-
-		ProtoNO =Packin->DefaultPack.Head.Lenth;
-		if(0x05 ==ProtoNO)
-		{
-            ProtoNO =0x04;
-		}
-		else if (0x24 ==ProtoNO)
-		{
-            ProtoNO =0x02;
-
-		}
-		CheckFlg =DDF2_Pack_Rx_S(Ctrl_Point,ProtoNO);
+        if(Packin->Lenth == NWKPro_ACKProtocolSize+1)
+        {
+            CRC16 =NWK_Pack_Rx_S(Ctrl_Point, 0x03);
+        }
+        else if(Packin->Lenth == 4)
+        {
+            CRC16 =NWK_Pack_Rx_S(Ctrl_Point, 0x06);
+        }
+		
 	}
-	return CheckFlg;
+	return CRC16;
 }
 
 
@@ -213,126 +192,65 @@ Protocol: 协议编号
 INT8U NWK_Pack_Rx_S(UART_RBC_Stru* Ctrl_Point,INT8U Protocol)
 {
 
-	INT8U ErrorFlg =0;
-	NWK_Pack_Uni* PackData =(NWK_Pack_Uni*)(Ctrl_Point->InputPack);		   	//输入指针交接
-	INT8U Proto_RX =Protocol;
+	INT8U ErrorFlg = 0;
+	NWK_Pack_Uni* PackData = (NWK_Pack_Uni*)(Ctrl_Point->InputPack);		   	//输入指针交接
+	INT8U Proto_RX = Protocol;
 
-	
+	INT16U DevNum = ClientCH1Ctrler.Device.Num;
+    INT8U DevType = ClientCH1Ctrler.Device.Type;
+    
 	switch (Proto_RX)
 	{
-		case 0X02:
+        case 0x03:
         {
-            ErrorFlg =NWK_Pack_0X02_S(Ctrl_Point);
-            if(  ErrorFlg ==0X00)
+            if( DevType == Valve_NWK )           
             {
-                
-                INT8U DevType =ClientCH1Ctrler.Device.Type;
-                INT16U DESN =ClientCH1Ctrler.Device.Num;
-                
-                
-                if(DevType ==Meter_NWK )           
+                if(PackData->Pack.Head.Addr == SysDevData[DevNum].Device11.Address)
                 {
-                    if(0x01==PackData->Pack_02.IN)
-                    {
-                        SysDevData[DESN].Device9.ValvePosition =Valve_Close;   //阀门位置
-                    }
-                    else if(0x00==PackData->Pack_02.IN)
-                    {
-                        SysDevData[DESN].Device9.ValvePosition =Valve_Open;     //阀门位置
-                    } 
-                    else
-                    {
-                        SysDevData[DESN].Device9.ValvePosition =Valve_Mid;      //阀门位置
-                    }
+                    SysDevData[DevNum].Device11.Input_Temp              = PackData->Pack.data.Input_Temp;
+                    SysDevData[DevNum].Device11.Output_Temp             = PackData->Pack.data.Output_Temp;
+                    SysDevData[DevNum].Device11.EnterWater_Pressure     = PackData->Pack.data.EnterWater_Pressure;
+                    SysDevData[DevNum].Device11.ReturnWater_Pressure    = PackData->Pack.data.ReturnWater_Pressure;
+                    SysDevData[DevNum].Device11.Room_Temp               = PackData->Pack.data.Room_Temp;
+                    SysDevData[DevNum].Device11.Current_Valve_Open      = PackData->Pack.data.Current_Valve_Open;
+                    SysDevData[DevNum].Device11.SetValue_Open           = PackData->Pack.data.SetValue_Open;
+                    SysDevData[DevNum].Device11.Temp_Diff               = PackData->Pack.data.Temp_Diff;
+                    SysDevData[DevNum].Device11.ReturnTemp_Set          = PackData->Pack.data.ReturnTemp_Set;
+                    SysDevData[DevNum].Device11.PressureDiff_Set        = PackData->Pack.data.PressureDiff_Set;
+                    SysDevData[DevNum].Device11.Error                   = PackData->Pack.data.Error;
+                    SysDevData[DevNum].Device11.Software_Version        = PackData->Pack.data.Software_Version;
+                    SysDevData[DevNum].Device11.Run_Mode                = PackData->Pack.data.Run_Mode;
+                    SysDevData[DevNum].Device11.Address                 = PackData->Pack.data.Address;
+                    SysDevData[DevNum].Device11.Motor_Steering          = PackData->Pack.data.Motor_Steering;
+                    SysDevData[DevNum].Device11.Adjust_Switch           = PackData->Pack.data.Adjust_Switch;
+                    SysDevData[DevNum].Device11.Adjust_Tigger           = PackData->Pack.data.Adjust_Tigger;
+                    SysDevData[DevNum].Device11.Dc_Motor_Speed          = PackData->Pack.data.Dc_Motor_Speed;
+					
+                    if( SysDevData_Save(DevNum) ==HAL_OK)
+					{
+						dbg_printf(DEBUG_DEBUG,"用户数据保存......编号: %d \r\n ",DevNum);
+					}
+					SysDevStatus[DevNum].Device11.ComSucNum +=1;
+					SysDevStatus[DevNum].Device11.ComFauNum =0;
                     
-                    SysDevData[DESN].Device9.Cycle_OpTim =0;
-                    SysDevData[DESN].Device9.Cycle_OpRat =0;
-
-                    SysDevData[DESN].Device9.Valve_State =0;   //阀门状态
-
-                
-                    SysDevStatus[DESN].Device9.ComSucNum +=1;
-                    SysDevStatus[DESN].Device9.ComFauNum =0;
                     
-                    if( SysDevData_Save(DESN) ==HAL_OK)
-                    {
-                        dbg_printf(DEBUG_DEBUG,"设备数据保存  编号: %d \r\n ",DESN);
-                    }
-
-                    /* 后台实时数据转发  自动抄收 */
-                        //if( SysPara.SendMode ==DevSendMode_Auto )//数据上报类型为自动跟踪  或者外部触发数据超收 
-                        if(( SysPara.SendMode ==DevSendMode_Auto)&&( ClientCH1Ctrler.UaComFlg ==0))//数据上报类型为自动跟踪  或者外部触发数据超收 
-                        {
-                            UART_TO_FY1000_QueueSend_Stru FY1000_Q_TX_Buffer;
-                            
-                            FY1000_Q_TX_Buffer.SendData.Pack_0XB0_D4.CtrlFlag=0XAA;                         
-                            FY1000_Q_TX_Buffer.SendData.Pack_0XB0_D4.Dev_Type=Meter_DDF2;
-                            FY1000_Q_TX_Buffer.SendData.Pack_0XB0_D4.Dev_ID =ClientCH1Ctrler.Device.ID;
-                            FY1000_Q_TX_Buffer.SendData.Pack_0XB0_D4.BackFlag=COMBack_OK;
-                            
-                            FY1000_Q_TX_Buffer.SendData.Pack_0XB0_D4.ValvePosition =SysDevData[DESN].Device9.ValvePosition;
-                            FY1000_Q_TX_Buffer.SendData.Pack_0XB0_D4.Cycle_OpTim =SysDevData[DESN].Device9.Cycle_OpTim;
-                            FY1000_Q_TX_Buffer.SendData.Pack_0XB0_D4.Cycle_OpRat =0;                            
-                            FY1000_Q_TX_Buffer.SendData.Pack_0XB0_D4.Apportion_Energy =0;
-                            FY1000_Q_TX_Buffer.SendData.Pack_0XB0_D4.Valve_State =SysDevData[DESN].Device9.Valve_State;
-                            
-                            
-                            if(FY_1000Send_Code_QInput(&FY1000_Q_TX_Buffer,0XB0)==pdTRUE)
-                            {
-                                dbg_printf(DEBUG_DEBUG,"设备自动抄收数据转发  编号: %d SN:%08X",DESN,FY1000_Q_TX_Buffer.SendData.Pack_0XB0_D4.Dev_ID);
-                            }
-                        }
-                    /* 后台实时数据转发 自动抄收END*/       
-
-                    /* 后台实时数据转发  远程抄收 */
-                        if( ClientCH1Ctrler.UaComFlg !=0 )//数据上报类型为自动跟踪   或者外部触发数据超收 
-                        {
-                            UART_TO_FY1000_QueueSend_Stru FY1000_Q_TX_Buffer;
-                            
-                            FY1000_Q_TX_Buffer.SendData.Pack_0X02_D4.CtrlFlag=0XAA;                         
-                            FY1000_Q_TX_Buffer.SendData.Pack_0X02_D4.Dev_Type=Meter_DDF2;
-                            FY1000_Q_TX_Buffer.SendData.Pack_0X02_D4.Dev_ID =ClientCH1Ctrler.Device.ID;
-                            FY1000_Q_TX_Buffer.SendData.Pack_0X02_D4.BackFlag=COMBack_OK;
-                            
-                            FY1000_Q_TX_Buffer.SendData.Pack_0X02_D4.ValvePosition =SysDevData[DESN].Device9.ValvePosition;
-                            FY1000_Q_TX_Buffer.SendData.Pack_0X02_D4.Cycle_OpTim =SysDevData[DESN].Device9.Cycle_OpTim;
-                            FY1000_Q_TX_Buffer.SendData.Pack_0X02_D4.Cycle_OpRat =0;
-                            FY1000_Q_TX_Buffer.SendData.Pack_0X02_D4.Apportion_Energy =0;
-                            FY1000_Q_TX_Buffer.SendData.Pack_0X02_D4.Valve_State =SysDevData[DESN].Device9.Valve_State;
-                            
-                            
-                            if(FY_1000Send_Code_QInput(&FY1000_Q_TX_Buffer,0X02)==pdTRUE)
-                            {
-                                dbg_printf(DEBUG_DEBUG,"设备远程抄收数据转发  编号: %d SN:%08X",DESN,FY1000_Q_TX_Buffer.SendData.Pack_0X02_D4.Dev_ID);
-                            }
-                        }
-                    /* 后台实时数据转发 远程抄收END*/                       
-                    
-                    ClientCH1Ctrler.SignleCom =RESET;
+                    ClientCH1Ctrler.SignleCom = RESET;
                 }
             }
-
-
         }break;
-		case 0X04:
-		{
-			UART_TO_FY1000_QueueSend_Stru SendBuffer;
-			
-			ClientCH1Ctrler.SignleCom =RESET;
-			
-			ErrorFlg =NWK_Pack_0X04_S(Ctrl_Point);
-			if(  ErrorFlg ==0X00)
-			{
-				SendBuffer.SendData.Pack_0X0E.DevType =ClientCH1Ctrler.Device.Type;
-				SendBuffer.SendData.Pack_0X0E.DevID =ClientCH1Ctrler.Device.ID;
-				SendBuffer.SendData.Pack_0X0E.State =COMBack_OK;
-				dbg_printf(DEBUG_INFO,"阀门动作执行成功...，类型:%d  编号%08X",ClientCH1Ctrler.Device.Type,ClientCH1Ctrler.Device.ID);
-			}
-			FY_1000Send_Code_QInput(&SendBuffer,0X0E);
-
-
-		}break;		
-		
+        
+        case 0x06:
+        {
+            if(PackData->Pack.Head.Addr == SysDevData[DevNum].Device11.Address)
+            {
+                if(PackData->Pack.Head.CMD == 0x06)
+                {
+                    
+                }
+            }
+            
+        }break;
+        
 		default :
 		{
 		   ErrorFlg =0XFF; 
@@ -349,7 +267,7 @@ NWK耐威科采集器发送给楼栋单元调节阀modbus协议 01 03 00 00 00 1C 44 03
 void NWK_Pack_S(UART_RBC_Stru* PORT)
 {
 
-	NWK_Pack_Uni* PackData =(NWK_Pack_Uni*)(PORT->OutputPack);	//指针变换
+	NWK_Send_Uni* PackData =(NWK_Send_Uni*)(PORT->OutputPack);	//指针变换
 	//INT8U PackSize =0;
     //INT8U TYPE =0;
 
