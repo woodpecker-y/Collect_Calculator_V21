@@ -347,13 +347,7 @@ void USART3_IRQHandler(void)
             }break;
 #endif	
          
-#ifdef  Valve_NWK_ENABLE	
-            case Valve_NWK:
-            {
-                UART_RBC_BufferInput(UART_TO_NWK_CCB_S,UART3_Rxlenth,UART3_RxBuffer);
 
-            }break;
-#endif	
 
 			default: 
             {
