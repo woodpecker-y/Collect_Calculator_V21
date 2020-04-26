@@ -20,7 +20,7 @@
 //#define NWKPro_ProtocolCode		    0X41				//版本号
 //#define NWKPro_EndCode				0X16				//结束符
 
-#define NWKPro_HeadSize				        2				    //数据包头大小
+
 #define NWKPro_ACKProtocolCode03		    0X03				//03功能码
 #define NWKPro_ACKProtocolCode06		    0X06				//06功能码
 #define NWKPro_ACKProtocolSize  		    0X38				//反馈数据长度
