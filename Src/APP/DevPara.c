@@ -340,7 +340,7 @@ HAL_StatusTypeDef SysDevData_ResetALL(INT16U DevNum)
 	DataBuffer11.SetValue_Open          = 0;    //设置阀门开度值
 	DataBuffer11.Temp_Diff              = 0;    //温差设定值
 	DataBuffer11.ReturnTemp_Set         = 0;    //回水温度设定值
-	DataBuffer11.PressureDiff_Set       = 0;    //回水温度设定值
+	DataBuffer11.PressureDiff_Set       = 0;    //压差设定值
 	DataBuffer11.Error                  = 0;    //错误代码 0为正常，1为堵转，2为进水温度传感器开路，3.回水温度传感器开路，4.进水压力传感器开路，5回水压力传感器开路
 	DataBuffer11.Software_Version       = 0;    //软件版本号  100 则为 V1.0 
 	DataBuffer11.Run_Mode               = 0;    //运行模式  0为开度模式；1为温差模式2为回温模式3为压差模式4.就地控制模式（电机掉电）5.4-20控制开度模式（需硬件支持）6 TIME
