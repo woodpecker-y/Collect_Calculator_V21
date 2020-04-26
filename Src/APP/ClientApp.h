@@ -38,8 +38,6 @@
 #include "DDF2PRO.h"
 #include "NWKmodbus.h"
 
-
-
  
 #ifdef _CLIENTAPP_C_
 #define CLIENTAPP_EXT

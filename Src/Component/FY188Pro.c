@@ -421,7 +421,7 @@ INT8U FY188_Pack_Rx_S(UART_RBC_Stru* Ctrl_Point,INT8U Protocol)
  
 								if(FY_1000Send_Code_QInput(&FY1000_Q_TX_Buffer,0XB0)==pdTRUE)
 								{
-									dbg_printf(DEBUG_DEBUG,"设备自动抄收数据转发  编号: %d SN:%08X\r\n ",DevNum,FY1000_Q_TX_Buffer.SendData.Pack_0XB0_D1.Dev_ID);
+									dbg_printf(DEBUG_DEBUG,"设备自动抄收数据转发  编号: %d SN:%08lX\r\n ",DevNum,FY1000_Q_TX_Buffer.SendData.Pack_0XB0_D1.Dev_ID);
 								}
 							}
 							/* 后台实时数据转发 自动抄收END*/
@@ -460,7 +460,7 @@ INT8U FY188_Pack_Rx_S(UART_RBC_Stru* Ctrl_Point,INT8U Protocol)
 								
 								if(FY_1000Send_Code_QInput(&FY1000_Q_TX_Buffer,0X02)==pdTRUE)
 								{
-									dbg_printf(DEBUG_DEBUG,"设备远程抄收数据转发  编号: %d SN:%08X\r\n ",DevNum,FY1000_Q_TX_Buffer.SendData.Pack_0X02_D1.Dev_ID);
+									dbg_printf(DEBUG_DEBUG,"设备远程抄收数据转发  编号: %d SN:%08lX\r\n ",DevNum,FY1000_Q_TX_Buffer.SendData.Pack_0X02_D1.Dev_ID);
 								}
 							}
 							/* 后台实时数据转发 远程抄收END*/	
@@ -599,7 +599,7 @@ INT8U FY188_Pack_Rx_S(UART_RBC_Stru* Ctrl_Point,INT8U Protocol)
 			
 								if(FY_1000Send_Code_QInput(&FY1000_Q_TX_Buffer,0XB0)==pdTRUE)
 								{
-									dbg_printf(DEBUG_DEBUG,"设备自动超收数据转发  编号: %d SN:%08X\r\n ",DevNum,FY1000_Q_TX_Buffer.SendData.Pack_0XB0_D2.Dev_ID);
+									dbg_printf(DEBUG_DEBUG,"设备自动超收数据转发  编号: %d SN:%08lX\r\n ",DevNum,FY1000_Q_TX_Buffer.SendData.Pack_0XB0_D2.Dev_ID);
 								}
 							}
 						/* 后台实时数据转发 自动抄收END*/
@@ -639,7 +639,7 @@ INT8U FY188_Pack_Rx_S(UART_RBC_Stru* Ctrl_Point,INT8U Protocol)
 
 								if(FY_1000Send_Code_QInput(&FY1000_Q_TX_Buffer,0X02)==pdTRUE)
 								{
-									dbg_printf(DEBUG_DEBUG,"设备自动超收数据转发  编号: %d SN:%08X\r\n ",DevNum,FY1000_Q_TX_Buffer.SendData.Pack_0X02_D2.Dev_ID);
+									dbg_printf(DEBUG_DEBUG,"设备自动超收数据转发  编号: %d SN:%08lX\r\n ",DevNum,FY1000_Q_TX_Buffer.SendData.Pack_0X02_D2.Dev_ID);
 								}
 							}
 						/* 后台实时数据转发 远程抄收END*/

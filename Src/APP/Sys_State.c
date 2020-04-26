@@ -35,7 +35,7 @@ void printenv(char *pcWriteBuffer, int xWriteBufferLen,int argc, char **argv)
 	INT8U Type =SysPara.DeviceType;
 	INT32U ReportMode =SysPara.SendMode;
 
-	cli_printf("   设备编号:       %08X \r\n",SysPara.Device_SN);
+	cli_printf("   设备编号:       %08lX \r\n",SysPara.Device_SN);
 	cli_printf("   SystemTick:     %ld \r\n",SystemTick_ms);
 	cli_printf("   SystemTick(S):  %ld \r\n",SystemTick_ms/1000);
 	cli_printf("   系统时间:       %4d年%2d月%2d日 %2d:%2d:%2d\r\n",RTC_Time.Year,RTC_Time.Month,RTC_Time.Day,RTC_Time.Hour,RTC_Time.Minute,RTC_Time.Second);	
@@ -1244,7 +1244,7 @@ void setsn(char *pcWriteBuffer, int xWriteBufferLen,int argc, char **argv)
 	if(SysPara_Update()==HAL_OK)
 	{
 		cmd_printf("设备编号设置成功...\r\n");
-		cli_printf("设备编号:       %08X \r\n",SysPara.Device_SN);
+		cli_printf("设备编号:       %08lX \r\n",SysPara.Device_SN);
 	}
 	else
 	{
@@ -1550,7 +1550,7 @@ void ClirateSet(char *pcWriteBuffer, int xWriteBufferLen,int argc, char **argv)
         return;
     }
 
-    cli_printf("clirate The rate value set success :  %d\r\n",rate);
+    cli_printf("clirate The rate value set success :  %ld\r\n",rate);
     
     cli_printf("Please reset the serial communication rate and turn it back on..\r\n\r\n\r\n");
 

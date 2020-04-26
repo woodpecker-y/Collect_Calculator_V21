@@ -20,7 +20,7 @@ void NWK_Pack_RxServer_S( UART_RBC_Stru* Ctrl_Point )
 void NWK_Pack_RxServer_S( UART_RBC_Stru* Ctrl_Point )
 {
 	INT8U  Bufer;
-    INT8U  CMD;
+    //INT8U  CMD;
 	INT32U DataBdry =0;	//有效数据区边界
 	NWK_Pack_Uni* NWK_RXPack =(NWK_Pack_Uni*)(Ctrl_Point->InputPack);
 	while (Ctrl_Point->Rx_Rear !=Ctrl_Point->Rx_Front) 
@@ -246,6 +246,9 @@ INT8U NWK_Pack_Rx_S(UART_RBC_Stru* Ctrl_Point,INT8U Protocol)
                 if(PackData->Pack.Head.CMD == 0x06)
                 {
                     
+                    
+                    
+                    ClientCH1Ctrler.SignleCom = RESET;
                 }
             }
             

@@ -1812,14 +1812,14 @@ void Task08_F(void const * argument)
 #endif	
 
 #ifdef  Valve_NWK_ENABLE                
-                case Valve_NWK ://海通通断控制器DDF2
+                case Valve_NWK ://耐威科NWK
                 {
                 
-                    NWK_QueueSend.ID =ClientCH1Ctrler.Device.ID;                   //传递设备编号ID
-                    NWK_QueueSend.COM_Type =ClientCH1Ctrler.Device.COM_Type;            
-                    NWK_QueueSend.PackCreatFlag =ClientCH1Ctrler.PackCreatFlag;   //传递协议创建触发标志
-                    NWK_QueueSend.PackINPort =ClientCH1Ctrler.PackINPort;         //传递协议入口序号
-                    NWK_QueueSend.SendData =ClientCH1Ctrler.SendData;             //传递协议数据
+                    NWK_QueueSend.ID                = ClientCH1Ctrler.Device.ID;                   //传递设备编号ID
+                    NWK_QueueSend.COM_Type          = ClientCH1Ctrler.Device.COM_Type;            
+                    NWK_QueueSend.PackCreatFlag     = ClientCH1Ctrler.PackCreatFlag;   //传递协议创建触发标志
+                    NWK_QueueSend.PackINPort        = ClientCH1Ctrler.PackINPort;         //传递协议入口序号
+                    NWK_QueueSend.SendData          = ClientCH1Ctrler.SendData;             //传递协议数据
 
                     Err =UART_TO_NWK_CCB_QueueSend(&NWK_QueueSend);              //发送消息
                     if( Err ==pdTRUE)

@@ -1,13 +1,17 @@
-#include "PubDef.h"
-#ifdef Valve_NWK_ENABLE
+
+
 
 #ifndef _NWKMODBUS_H
 #define _NWKMODBUS_H
 #include "main.h"
 #include "UART_RBC.h"
+#include "PubDef.h"
 
+
+
+#ifdef Valve_NWK_ENABLE
  
-#ifdef _DDF2PRO_C_
+#ifdef _NWKmodbus_C_
 #define NWK_EXT
 #else
 #define NWK_EXT extern

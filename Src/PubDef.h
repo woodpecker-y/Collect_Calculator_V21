@@ -142,7 +142,7 @@ typedef enum
 }SysDEV_Type;
 
 
-#define MAXDevTypeNum 10
+#define MAXDevTypeNum 11
 
 
 

@@ -23,7 +23,7 @@
 */ 
 #define _CLIENTAPP_C_
 #include "ClientApp.h"
-
+#include "NWKmodbus.h"
 
 
 BaseType_t UART_TO_FY188_CCB_QueueSend(UART_TO_FY188_QueueSend_Stru *DATAIN)
@@ -195,6 +195,31 @@ BaseType_t UART_TO_DDF2_CCB_QueueSend(UART_TO_DDF2_QueueSend_Stru *DATAIN)
 	return err;
 }
 #endif
+
+
+
+#ifdef Valve_NWK_ENABLE
+BaseType_t UART_TO_NWK_CCB_QueueSend(UART_TO_NWK_QueueSend_Stru *DATAIN)
+{
+
+	BaseType_t err;
+	err =err;
+
+	UART_TO_NWK_OutArray[UART_TO_NWK_OutRecord] =*DATAIN;
+	UART_TO_NWK_OutArrayP[UART_TO_NWK_OutRecord] =&UART_TO_NWK_OutArray[UART_TO_NWK_OutRecord];
+
+	
+    //·¢ËÍÏûÏ¢
+    err = xQueueSend(UART_TO_NWK_Msg, &UART_TO_NWK_OutArrayP[UART_TO_NWK_OutRecord] , 20);
+	UART_TO_NWK_OutRecord +=1;
+	if(UART_TO_NWK_OutRecord >=UART_TO_NWK_Q_NUM)
+	{
+		UART_TO_NWK_OutRecord =0;
+	}
+	return err;
+}
+#endif
+
 
 
 

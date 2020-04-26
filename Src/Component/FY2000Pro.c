@@ -891,14 +891,14 @@ INT8U FY2000_Pack_Rx_S(UART_RBC_Stru* Ctrl_Point,INT8U Protocol)
 				SendBuffer.SendData.Pack_0X0E.DevType =ClientCH1Ctrler.Device.Type;
 				SendBuffer.SendData.Pack_0X0E.DevID =ClientCH1Ctrler.Device.ID;
 				SendBuffer.SendData.Pack_0X0E.State =COMBack_OK;
-				dbg_printf(DEBUG_INFO,"阀门动作执行成功...，类型:%d  编号%08X",ClientCH1Ctrler.Device.Type,ClientCH1Ctrler.Device.ID);
+				dbg_printf(DEBUG_INFO,"阀门动作执行成功...，类型:%d  编号%08lX",ClientCH1Ctrler.Device.Type,ClientCH1Ctrler.Device.ID);
 			}
 			else
 			{
 				SendBuffer.SendData.Pack_0X0E.DevType =ClientCH1Ctrler.Device.Type;
 				SendBuffer.SendData.Pack_0X0E.DevID =ClientCH1Ctrler.Device.ID;
 				SendBuffer.SendData.Pack_0X0E.State =COMBack_FT;
-				dbg_printf(DEBUG_INFO,"阀门动作执行失败...，类型:%d  编号%08X",ClientCH1Ctrler.Device.Type,ClientCH1Ctrler.Device.ID);
+				dbg_printf(DEBUG_INFO,"阀门动作执行失败...，类型:%d  编号%08lX",ClientCH1Ctrler.Device.Type,ClientCH1Ctrler.Device.ID);
 			}
 			FY_1000Send_Code_QInput(&SendBuffer,0X0E);
 			
@@ -1063,7 +1063,7 @@ INT8U FY2000_Pack_Rx_S(UART_RBC_Stru* Ctrl_Point,INT8U Protocol)
 
 							if(FY_1000Send_Code_QInput(&FY1000_Q_TX_Buffer,0XB0)==pdTRUE)
 							{
-								dbg_printf(DEBUG_DEBUG,"设备自动抄收数据转发  编号: %d SN:%08X\r\n ",DESN,FY1000_Q_TX_Buffer.SendData.Pack_0XB0_D3.Dev_ID);
+								dbg_printf(DEBUG_DEBUG,"设备自动抄收数据转发  编号: %d SN:%08lX\r\n ",DESN,FY1000_Q_TX_Buffer.SendData.Pack_0XB0_D3.Dev_ID);
 							}
 						}
 					/* 后台实时数据转发 自动抄收END*/
@@ -1098,7 +1098,7 @@ INT8U FY2000_Pack_Rx_S(UART_RBC_Stru* Ctrl_Point,INT8U Protocol)
 
 							if(FY_1000Send_Code_QInput(&FY1000_Q_TX_Buffer,0X02)==pdTRUE)
 							{
-								dbg_printf(DEBUG_DEBUG,"设备远程抄收数据转发  编号: %d SN:%08X\r\n ",DESN,FY1000_Q_TX_Buffer.SendData.Pack_0X02_D3.Dev_ID);
+								dbg_printf(DEBUG_DEBUG,"设备远程抄收数据转发  编号: %d SN:%08lX\r\n ",DESN,FY1000_Q_TX_Buffer.SendData.Pack_0X02_D3.Dev_ID);
 							}
 						}
 					/* 后台实时数据转发 自动抄收END*/
@@ -1147,7 +1147,7 @@ INT8U FY2000_Pack_Rx_S(UART_RBC_Stru* Ctrl_Point,INT8U Protocol)
 							
 							if(FY_1000Send_Code_QInput(&FY1000_Q_TX_Buffer,0XB0)==pdTRUE)
 							{
-								dbg_printf(DEBUG_DEBUG,"设备自动抄收数据转发  编号: %d SN:%08X",DESN,FY1000_Q_TX_Buffer.SendData.Pack_0XB0_D4.Dev_ID);
+								dbg_printf(DEBUG_DEBUG,"设备自动抄收数据转发  编号: %d SN:%08lX",DESN,FY1000_Q_TX_Buffer.SendData.Pack_0XB0_D4.Dev_ID);
 							}
 						}
 					/* 后台实时数据转发 自动抄收END*/		
@@ -1171,7 +1171,7 @@ INT8U FY2000_Pack_Rx_S(UART_RBC_Stru* Ctrl_Point,INT8U Protocol)
 							
 							if(FY_1000Send_Code_QInput(&FY1000_Q_TX_Buffer,0X02)==pdTRUE)
 							{
-								dbg_printf(DEBUG_DEBUG,"设备远程抄收数据转发  编号: %d SN:%08X",DESN,FY1000_Q_TX_Buffer.SendData.Pack_0X02_D4.Dev_ID);
+								dbg_printf(DEBUG_DEBUG,"设备远程抄收数据转发  编号: %d SN:%08lX",DESN,FY1000_Q_TX_Buffer.SendData.Pack_0X02_D4.Dev_ID);
 							}
 						}
 					/* 后台实时数据转发 远程抄收END*/						

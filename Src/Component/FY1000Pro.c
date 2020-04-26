@@ -2499,28 +2499,28 @@ INT8U FY1000_Pack_Rx_S(UART_RBC_Stru* Ctrl_Point,INT8U Protocol)
 						{
 							SysDevData[DevNum].Device3.Set_TCtrlFg =0XAA;
 							SysDevData[DevNum].Device3.Set_Temp =PackData->Pack_0X05.Set_Temp;
-							dbg_printf(DEBUG_INFO,"设备编号:%08X",DevID);
+							dbg_printf(DEBUG_INFO,"设备编号:%08lX",DevID);
 							dbg_printf(DEBUG_INFO,"温度值:%d",SysDevData[DevNum].Device3.Set_Temp);
 						}
 						else if( PackData->Pack_0X05.Set_TCtrlFg ==0X00)
 						{
 							SysDevData[DevNum].Device3.Set_TCtrlFg =0XFF;
 							dbg_printf(DEBUG_INFO,"系统温度设置取消...");
-							dbg_printf(DEBUG_INFO,"设备编号:%08X",DevID);
+							dbg_printf(DEBUG_INFO,"设备编号:%08lX",DevID);
 						}
 
 						if(PackData->Pack_0X05.LimtTE_Flag ==0XAA)
 						{
 							SysDevData[DevNum].Device3.LimtTE_Flag =0XAA;
 							SysDevData[DevNum].Device3.LimtTE_Value =PackData->Pack_0X05.LimtTE_Value;
-							dbg_printf(DEBUG_INFO,"设备编号:%08X",DevID);
+							dbg_printf(DEBUG_INFO,"设备编号:%08lX",DevID);
 							dbg_printf(DEBUG_INFO,"极限温度值:%d",SysDevData[DevNum].Device3.LimtTE_Value);
 						}
 						else if( PackData->Pack_0X05.LimtTE_Flag ==0X00)
 						{
 							SysDevData[DevNum].Device3.LimtTE_Flag =0XFF;
 							dbg_printf(DEBUG_INFO,"极限温度设置取消...");
-							dbg_printf(DEBUG_INFO,"设备编号:%08X",DevID);
+							dbg_printf(DEBUG_INFO,"设备编号:%08lX",DevID);
 						}
 
 						
@@ -2850,7 +2850,7 @@ INT8U FY1000_Pack_Rx_S(UART_RBC_Stru* Ctrl_Point,INT8U Protocol)
                             
                                 if( CtrlDemand ==0XAA)
                                 {   
-                                    dbg_printf(DEBUG_INFO,"主站命令 强制开启 %08X",DevID);
+                                    dbg_printf(DEBUG_INFO,"主站命令 强制开启 %08lX",DevID);
                                     if(DevType ==Valve_U)
                                     {
                                         SysDevData[DevNum].Device3.ForceCtrlFlg=Force_Open;
@@ -2865,7 +2865,7 @@ INT8U FY1000_Pack_Rx_S(UART_RBC_Stru* Ctrl_Point,INT8U Protocol)
                                 }
                                 else if( CtrlDemand ==0X00)
                                 {
-                                    dbg_printf(DEBUG_INFO,"主站命令 强制关闭 %08X",DevID);
+                                    dbg_printf(DEBUG_INFO,"主站命令 强制关闭 %08lX",DevID);
                                     if(DevType ==Valve_U)
                                     {
                                         SysDevData[DevNum].Device3.ForceCtrlFlg=Force_Close;
@@ -2901,7 +2901,7 @@ INT8U FY1000_Pack_Rx_S(UART_RBC_Stru* Ctrl_Point,INT8U Protocol)
                             }
                             else if( CtrlFlg==0X00 )//非强制动作命令 强制取消
                             {
-                                dbg_printf(DEBUG_INFO,"主站命令 强制取消 %08X",DevID);
+                                dbg_printf(DEBUG_INFO,"主站命令 强制取消 %08lX",DevID);
                                 if(DevType ==Valve_U)
                                 {
                                     SysDevData[DevNum].Device3.ForceCtrlFlg=Force_Nor;
@@ -3151,7 +3151,7 @@ INT8U FY1000_Pack_Rx_S(UART_RBC_Stru* Ctrl_Point,INT8U Protocol)
 					{
 						SendBuffer_1000.SendData.Pack_0X18.State =COMBack_OK;
 						dbg_printf(DEBUG_INFO,"主站命令 用户数据保存成功...");						
-						dbg_printf(DEBUG_INFO,"设备类型:%d  设备序号:%d  设备编号:%08X  用户序号:%d ",DevType,DevNum,DevID,userNum);
+						dbg_printf(DEBUG_INFO,"设备类型:%d  设备序号:%d  设备编号:%08lX  用户序号:%d ",DevType,DevNum,DevID,userNum);
 						
 					}
 					else
