@@ -76,6 +76,7 @@ JLinkLog.txt
 
 *.sct
 *.Administrator
+*.uvguix.Administrator
 *.uvopt
 *.pyc
 *.map
