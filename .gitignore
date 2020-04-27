@@ -51,29 +51,51 @@ Mkfile.old
 dkms.conf
 
 # Keil ignore files
- *.bak
- *.ddk
- *.edk 
- *.lst 
- *.lnp 
- *.mpf 
- *.mpj 
- *.obj 
- *.omf 
- *.plg 
- *.rpt
- *.tmp 
- *.__i
- *.crf
- *.o 
- *.d 
- *.axf 
- *.tra
- *.dep           
- JLinkLog.txt 
- *.iex
- *.htm
- *.sct 
- *.map 
+*.bak
+*.ddk
+*.edk 
+*.lst 
+*.lnp 
+*.mpf 
+*.mpj 
+*.obj 
+*.omf 
+*.plg 
+*.rpt
+*.tmp 
+*.__i
+*.crf
+*.o 
+*.d 
+*.axf 
+*.tra
+*.dep           
+JLinkLog.txt 
+*.iex
+*.htm
+*.sct 
 *.Administrator
 *.uvopt
+*.pyc
+*.map
+*.dblite
+*.elf
+*.bin
+*.hex
+*.axf
+*.exe
+*.pdb
+*.idb
+*.ilk
+*.old
+*~
+*.obj
+*.out
+*.bak
+*.dep
+*.i
+.DS_Stor*
+*.uimg
+*.uvguix*
+*.orig
+MDK-ARM/
