@@ -1882,7 +1882,7 @@
         <PaneID>0</PaneID>
       </Doc>
       <Doc>
-        <Name>E:\Yjh开发\GitHub\CollectCalculatorV21\Src\APP\ClientApp.h</Name>
+        <Name>..\Src\APP\ClientApp.h</Name>
         <ColumnNumber>6</ColumnNumber>
         <TopLine>66</TopLine>
         <CurrentLine>80</CurrentLine>
@@ -1900,7 +1900,7 @@
         <PaneID>0</PaneID>
       </Doc>
       <Doc>
-        <Name>E:\Yjh开发\GitHub\CollectCalculatorV21\Src\NWKmodbus.h</Name>
+        <Name>..\Src\NWKmodbus.h</Name>
         <ColumnNumber>0</ColumnNumber>
         <TopLine>99</TopLine>
         <CurrentLine>121</CurrentLine>

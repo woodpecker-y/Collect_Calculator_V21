@@ -102,4 +102,5 @@ JLinkLog.txt
 *.orig
 
 /MDK-ARM/*
-#.MDK-ARM#忽略.MDK-ARM文件夹及文件夹下文件
+#忽略.MDK-ARM文件夹及文件夹下文件
+/MDK-ARM/FY-1102/*
