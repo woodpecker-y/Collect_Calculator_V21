@@ -78,19 +78,19 @@ void printenv(char *pcWriteBuffer, int xWriteBufferLen,int argc, char **argv)
 	{
 		case DevSendMode_Auto:
 		{
-			cli_printf("   上报模式:  %d    自动上报\r\n",ReportMode);
+			cli_printf("   上报模式:  %ld    自动上报\r\n",ReportMode);
 
 		}break;
 
 		case DevSendMode_Loop:
 		{
-			cli_printf("   上报模式:  %d    循环上报\r\n",ReportMode);	
+			cli_printf("   上报模式:  %ld    循环上报\r\n",ReportMode);	
 
 		}break;	
 
 		default :
 		{
-			cli_printf("   上报模式:  %d    未设置\r\n",ReportMode);
+			cli_printf("   上报模式:  %ld    未设置\r\n",ReportMode);
 			
 
 		}break;
@@ -101,26 +101,24 @@ void printenv(char *pcWriteBuffer, int xWriteBufferLen,int argc, char **argv)
 	
 	cli_printf("   供暖开始时间:   %4d年%2d月%2d日 %2d:%2d:%2d  \r\n",SysPara.StartTime.Year,SysPara.StartTime.Month,SysPara.StartTime.Day,SysPara.StartTime.Hour,SysPara.StartTime.Minute,SysPara.StartTime.Second);
 	cli_printf("   供暖结束时间:   %4d年%2d月%2d日 %2d:%2d:%2d  \r\n",SysPara.FinalTime.Year,SysPara.FinalTime.Month,SysPara.FinalTime.Day,SysPara.FinalTime.Hour,SysPara.FinalTime.Minute,SysPara.FinalTime.Second);
-	cli_printf("   系统供暖时间:   %f    PRD:%f \r\n",(FL32)CalculateProvideTimeCtrler.ProvideTime/3600,(FL32)CalculateProvideTimeCtrler.PassData/3600);
+	cli_printf("   系统供暖时间:   %f\r\n   供暖季超时PRD:%f \r\n",(FL32)CalculateProvideTimeCtrler.ProvideTime/3600,(FL32)CalculateProvideTimeCtrler.PassData/3600);
 	cli_printf("\r\n");
 	cli_printf("   分摊周期:       %lu 分钟 \r\n",SysPara.Apportion_T);	
 	cli_printf("\r\n\r\n");
 
 	
-	cli_printf("   主站地址:       %3d.%3d.%3d.%3d:%5d \r\n",SysPara.IP1,SysPara.IP2,SysPara.IP3,SysPara.IP4,SysPara.PortNum);
+	//cli_printf("   主站地址:       %3d.%3d.%3d.%3d:%5d \r\n",SysPara.IP1,SysPara.IP2,SysPara.IP3,SysPara.IP4,SysPara.PortNum);
 
 	cli_printf("   系统用户容量:   %3d \r\n",MAXUser_Num);
+    cli_printf("   系统设备容量:   %3d \r\n",MAXDevice_Num);
+    cli_printf("   系统栋表容量:   %3d \r\n\r\n",MAXBuldMeter_Num);
+    
 	cli_printf("   系统用户数量:   %3d \r\n",SysPara.UserNum);
+	cli_printf("   系统栋表数量:   %3d \r\n\r\n",SysPara.BuldMeterNum);
 
-	cli_printf("   系统栋表容量:   %3d \r\n",MAXBuldMeter_Num);
-	cli_printf("   系统栋表数量:   %3d \r\n",SysPara.BuldMeterNum);
-
-	cli_printf("   系统设备容量:   %3d \r\n",MAXDevice_Num);
 	
-	cli_printf("   用户设备数量:   %3d \r\n\r\n",SysPara.DevNum);
+	cli_printf("   用户设备数量:   %3d \r\n",SysPara.DevNum);
 	cli_printf("   系统设备总量:   %3d \r\n\r\n",SysPara.DevNum+SysPara.BuldMeterNum);
-	
-
 }
 
 
@@ -270,7 +268,7 @@ void devicepara(char *pcWriteBuffer, int xWriteBufferLen,int argc, char **argv)
 				}
 				else
 				{
-					cli_printf("公共计量设备...\r\n\r\n",);
+					cli_printf("公共计量设备...\r\n\r\n");
 				}
 			}
 		}
@@ -650,6 +648,7 @@ void devicedata(char *pcWriteBuffer, int xWriteBufferLen,int argc, char **argv)
             cli_printf("耐威科单元阀 行程校正触发:   %d（写0x5555触发一次）\r\n", SysDevData[devNum].Device11.Adjust_Tigger);
             cli_printf("耐威科单元阀 直流电机速度:   %d（10%-100% 直流电机有效）\r\n", SysDevData[devNum].Device11.Dc_Motor_Speed);
 
+            cli_printf("通信总数:                  %lu\r\n",SysDevStatus[devNum].Device11.ComTolNum);
 			cli_printf("耐威科单元阀 通讯成功:      %lu\r\n",SysDevStatus[devNum].Device11.ComSucNum);
 			cli_printf("耐威科单元阀 通讯失败:      %lu\r\n",SysDevStatus[devNum].Device11.ComFauNum);	
 
@@ -693,7 +692,8 @@ void devicestatus(char *pcWriteBuffer, int xWriteBufferLen,int argc, char **argv
 	INT32U  COMBack_CE =0;
 	INT32U  DeviceNums =0;
 
-	cli_printf("%-15s%-15s%-15s%-15s%-15s\r\n\r\n","Num","Type","COM_T","COM_S","COMBack_CE");
+	//cli_printf("%-5s%-10s%-15s%-15s%-15s%-15s%-15s\r\n\r\n","Num","Type(设备类型)","COM_T(失败次数)","COM_S(成功次数)","COMBack_CE(抄收次数)", "设备编号", "位置");
+    cli_printf(" %-5s%-5s%-18s%-18s%-18s%-18s%s\r\n\r\n", "【序号】", "【类型】", "【失败次数】", "【成功次数】", "【抄收总次数】", "【设备编号】", "【位置】");
 	for(INT16U i=0; i<MAXDevice_Num;i++)
 	{	
 		feedIWDG(cli_dog);
@@ -797,7 +797,12 @@ void devicestatus(char *pcWriteBuffer, int xWriteBufferLen,int argc, char **argv
 					COMBack_CE =0;
 				}break;
 			}
-			cli_printf("%-15d%-15d%-15lu%-15lu%-15lu\r\n",i,DeviceT,COM_T,COM_S,COMBack_CE);
+			cli_printf(" %-10d%-8d%-18lu%-18lu%-18lu%-18lX%02d号楼 - %d单元 - %02d层 - %02d室\r\n", i, DeviceT, COM_T, COM_S, COMBack_CE,\
+                                                                                            SysDeviceList.Device[i].ID,\
+                                                                                            SysUserList.User[i].Buld,\
+                                                                                            SysUserList.User[i].Unit,\
+                                                                                            SysUserList.User[i].Floor,\
+                                                                                            SysUserList.User[i].Cell);
 		}
 	}
 	cli_printf("查询设备总数量: %lu\r\n\r\n\r\n",DeviceNums);

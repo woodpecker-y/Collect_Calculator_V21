@@ -32,7 +32,11 @@ void CreateFileName(char *buf, SysDEV_Type type)
 #ifdef Meter_H_ENABLE
         case Meter_H:
         sprintf(typeName,"MH");
-
+        break;
+#endif
+#ifdef Valve_NWK_ENABLE
+        case Valve_NWK:
+        sprintf(typeName,"NWK");
         break;
 #endif
         default:

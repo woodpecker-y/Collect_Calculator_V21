@@ -76,7 +76,7 @@ typedef union
 #endif
 
 #ifdef Valve_NWK_ENABLE
-	NWK_Pack_Uni   NWKData;
+	NWK_Send_Uni   NWKData;
 #endif
 	
 }ClientCH1_QSend_Uni;
@@ -87,17 +87,17 @@ typedef struct
 {
     SysDevPara				Device;					//设备参数缓冲器
 	HAL_StatusTypeDef		Busy;						//总线状态忙 标志位
-	INT32U				Ticks;						//系统时钟记录记录器 用于 设备的重复超收
+	INT32U				    Ticks;						//系统时钟记录记录器 用于 设备的重复超收
     HAL_StatusTypeDef		RetFlag;					//返回成功标志 
     
-    INT8U				Repeat;					//单终端重复次数
+    INT8U				    Repeat;					//单终端重复次数
 	HAL_StatusTypeDef		CreatFlag;					//通信触发标志
 	FlagStatus				SignleCom;					//单次传送 用于广播命令  非广播命令时该标志置位
-	INT16U				UaComFlg;					//命令编码 用于标记异步通信回传
-	INT8U				Uapack;					//异步抄收命令 标记
+	INT16U				    UaComFlg;					//命令编码 用于标记异步通信回传
+	INT8U				    Uapack;					//异步抄收命令 标记
 
-	INT8U PackCreatFlag;								//发送协议创建标志 打包控制参数
-	INT8U PackINPort;								//发送协议入口序号 打包控制参数
+	INT8U                   PackCreatFlag;								//发送协议创建标志 打包控制参数
+	INT8U                   PackINPort;								//发送协议入口序号 打包控制参数
 	
 	ClientCH1_QSend_Uni		SendData;					//发送协议数据区
 }ClientCtrl_Stru;	//通道状态控制器
@@ -121,11 +121,11 @@ typedef struct
 	SysDevPara			Device;
 	
 	FlagStatus			SignleCom;						    //单次传送
-	INT16U			UaComFlg;						        //命令编码 用于标记是否为异步抄收命令  异步抄收命令 自行设置为0XAAAA
-	INT8U			Uapack;                                 //异步抄收命令 标记
+	INT16U			    UaComFlg;						        //命令编码 用于标记是否为异步抄收命令  异步抄收命令 自行设置为0XAAAA
+	INT8U			    Uapack;                                 //异步抄收命令 标记
 
-	INT8U PackCreatFlag;								    //发送协议创建标志 打包控制参数
-	INT8U PackINPort;								        //发送协议入口序号 打包控制参数
+	INT8U               PackCreatFlag;								    //发送协议创建标志 打包控制参数
+	INT8U               PackINPort;								        //发送协议入口序号 打包控制参数
 	ClientCH1_QSend_Uni	SendData;						    //发送协议数据区
 
 }ClientCH1_Queue_Stru;
@@ -200,8 +200,8 @@ typedef struct
 	INT8U PackCreatFlag;				//发送协议创建标志 打包控制参数
 	INT8U PackINPort;				//发送协议入口序号 打包控制参数
 	INT32U ID;						//设备编号
+    
 	ClientCH1_QSend_Uni	SendData;    	//发送数据区
-
 }UART_TO_FY2000_QueueSend_Stru;
 
 #define UART_TO_FY2000_Q_NUM		4						//定义发送消息队列的数量
@@ -232,6 +232,7 @@ CLIENTAPP_EXT UART_TO_HZCRL_QueueSend_Stru* UART_TO_HZCRL_OutArrayP[UART_TO_HZCR
 
 CLIENTAPP_EXT INT8U UART_TO_HZCRL_OutRecord;	//入栈计数器
 CLIENTAPP_EXT BaseType_t UART_TO_HZCRL_CCB_QueueSend(UART_TO_HZCRL_QueueSend_Stru *DATAIN);
+CLIENTAPP_EXT BaseType_t HZCRL_188Send_Code_QInput(ClientCH1_Queue_Stru*DataBuffer_P,INT8U PackPort );
 #endif
 
 
@@ -258,7 +259,6 @@ CLIENTAPP_EXT UART_TO_XY188_QueueSend_Stru* UART_TO_XY188_OutArrayP[UART_TO_XY18
 CLIENTAPP_EXT INT8U UART_TO_XY188_OutRecord;	//入栈计数器
 CLIENTAPP_EXT BaseType_t UART_TO_XY188_CCB_QueueSend(UART_TO_XY188_QueueSend_Stru *DATAIN);
 CLIENTAPP_EXT BaseType_t XY_188Send_Code_QInput(ClientCH1_Queue_Stru*DataBuffer_P,INT8U PackPort );
-CLIENTAPP_EXT BaseType_t HZCRL_188Send_Code_QInput(ClientCH1_Queue_Stru*DataBuffer_P,INT8U PackPort );
 #endif
 
 
@@ -344,7 +344,6 @@ typedef struct
 	INT8U PackCreatFlag;            //发送协议创建标志 打包控制参数
 	INT8U PackINPort;				//发送协议入口序号 打包控制参数
 	INT32U ID;						//设备编号
-	INT8U COM_Type;                 //前导参数
 
 	ClientCH1_QSend_Uni SendData;		                        //发送数据区
 }UART_TO_NWK_QueueSend_Stru;

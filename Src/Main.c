@@ -567,7 +567,7 @@ int main(void)
 #endif
 
 #ifdef Valve_NWK_ENABLE
-        UART_TO_NWK_Msg =xQueueCreate(UART_TO_NWK_Q_NUM, sizeof(UART_TO_NWK_QueueSend_Stru*));               //创建应用于UARTRBC的消息队列
+        UART_TO_NWK_Msg = xQueueCreate(UART_TO_NWK_Q_NUM, sizeof(UART_TO_NWK_QueueSend_Stru*));               //创建应用于UARTRBC的消息队列
 #endif
 
 
@@ -1130,6 +1130,7 @@ void Task07_F(void const * argument)
 
 #ifdef  Valve_NWK_ENABLE	        
         NWK_Pack_TxServer_S(UART_TO_NWK_CCB_S);         //NWK打包服务
+        //dbg_printf(DEBUG_DEBUG,"--NWK--打包");
 #endif
     	osDelay(500);
     }
@@ -1816,7 +1817,7 @@ void Task08_F(void const * argument)
                 {
                 
                     NWK_QueueSend.ID                = ClientCH1Ctrler.Device.ID;                   //传递设备编号ID
-                    NWK_QueueSend.COM_Type          = ClientCH1Ctrler.Device.COM_Type;            
+                    //NWK_QueueSend.COM_Type          = ClientCH1Ctrler.Device.COM_Type;            
                     NWK_QueueSend.PackCreatFlag     = ClientCH1Ctrler.PackCreatFlag;   //传递协议创建触发标志
                     NWK_QueueSend.PackINPort        = ClientCH1Ctrler.PackINPort;         //传递协议入口序号
                     NWK_QueueSend.SendData          = ClientCH1Ctrler.SendData;             //传递协议数据
@@ -1902,11 +1903,12 @@ void Task09_F(void const * argument)
 										SendBuffer_1000.SendData.Pack_0XB0_F.ComSucNum =SysDevStatus[DevNum].Device1.ComSucNum;
 										SendBuffer_1000.SendData.Pack_0XB0_F.ComFauNum =SysDevStatus[DevNum].Device1.ComFauNum;
 										FY_1000Send_Code_QInput(&SendBuffer_1000,0XB0);
-										dbg_printf(DEBUG_WARNING,"设备 自动 抄收失败，类型:%d 编号:%08lX...",DevType, ClientCH1Ctrler.Device.ID);
-                                        dbg_printf(DEBUG_INFO,   "设备 自动 抄收失败位置信息 %d楼-%d单元-%d层-%d号", SysUserList.User[DevNum].Buld,\
-                                                                                                                   SysUserList.User[DevNum].Unit,\
-                                                                                                                   SysUserList.User[DevNum].Floor,\
-                                                                                                                   SysUserList.User[DevNum].Cell);
+										dbg_printf(DEBUG_WARNING,"自动 抄收失败，类型:%d 编号:%08lX...位置信息 %d楼-%d单元-%d层-%d号",\
+                                                                                                    DevType, ClientCH1Ctrler.Device.ID,\
+                                                                                                    SysUserList.User[DevNum].Buld,\
+                                                                                                    SysUserList.User[DevNum].Unit,\
+                                                                                                    SysUserList.User[DevNum].Floor,\
+                                                                                                    SysUserList.User[DevNum].Cell);
 									}break;
 									case 0XAAAA: //远程抄收
 									{
@@ -1920,11 +1922,12 @@ void Task09_F(void const * argument)
 										SendBuffer_1000.SendData.Pack_0X02_F.ComSucNum =SysDevStatus[DevNum].Device1.ComSucNum;
 										SendBuffer_1000.SendData.Pack_0X02_F.ComFauNum =SysDevStatus[DevNum].Device1.ComFauNum;
 										FY_1000Send_Code_QInput(&SendBuffer_1000,0X02);
-										dbg_printf(DEBUG_WARNING,"设备 远程 抄收失败 0X01，类型:%d 编号:%08lX...",DevType, ClientCH1Ctrler.Device.ID);
-                                        dbg_printf(DEBUG_INFO,   "设备 远程 抄收失败位置信息 %d楼-%d单元-%d层-%d号", SysUserList.User[DevNum].Buld,\
-                                                                                                                   SysUserList.User[DevNum].Unit,\
-                                                                                                                   SysUserList.User[DevNum].Floor,\
-                                                                                                                   SysUserList.User[DevNum].Cell);
+										dbg_printf(DEBUG_WARNING,"远程 抄收失败 0X01，类型:%d 编号:%08lX...位置信息 %d楼-%d单元-%d层-%d号",\
+                                                                                                        DevType, ClientCH1Ctrler.Device.ID,\
+                                                                                                        SysUserList.User[DevNum].Buld,\
+                                                                                                        SysUserList.User[DevNum].Unit,\
+                                                                                                        SysUserList.User[DevNum].Floor,\
+                                                                                                        SysUserList.User[DevNum].Cell);
 
 									}break;
 									default:break;
@@ -1948,11 +1951,12 @@ void Task09_F(void const * argument)
 										SendBuffer_1000.SendData.Pack_0XB0_F.ComSucNum =SysDevStatus[DevNum].Device2.ComSucNum;
 										SendBuffer_1000.SendData.Pack_0XB0_F.ComFauNum =SysDevStatus[DevNum].Device2.ComFauNum;
 										FY_1000Send_Code_QInput(&SendBuffer_1000,0XB0);
-										dbg_printf(DEBUG_WARNING,"设备 自动 抄收失败，类型:%d 编号:%08lX...",DevType, ClientCH1Ctrler.Device.ID);
-                                        dbg_printf(DEBUG_INFO,   "设备 自动 抄收失败位置信息 %d楼-%d单元-%d层-%d号", SysUserList.User[DevNum].Buld,\
-                                                                                                                   SysUserList.User[DevNum].Unit,\
-                                                                                                                   SysUserList.User[DevNum].Floor,\
-                                                                                                                   SysUserList.User[DevNum].Cell);
+										dbg_printf(DEBUG_WARNING,"自动 抄收失败，类型:%d 编号:%08lX...位置信息 %d楼-%d单元-%d层-%d号",\
+                                                                                                    DevType, ClientCH1Ctrler.Device.ID,\
+                                                                                                    SysUserList.User[DevNum].Buld,\
+                                                                                                    SysUserList.User[DevNum].Unit,\
+                                                                                                    SysUserList.User[DevNum].Floor,\
+                                                                                                    SysUserList.User[DevNum].Cell);
 									}break;
 									
 									case 0XAAAA: //远程抄收
@@ -1967,11 +1971,12 @@ void Task09_F(void const * argument)
 										SendBuffer_1000.SendData.Pack_0X02_F.ComSucNum =SysDevStatus[DevNum].Device2.ComSucNum;
 										SendBuffer_1000.SendData.Pack_0X02_F.ComFauNum =SysDevStatus[DevNum].Device2.ComFauNum;
 										FY_1000Send_Code_QInput(&SendBuffer_1000,0X02);
-										dbg_printf(DEBUG_WARNING,"设备 远程 抄收失败 0X01，类型:%d 编号:%08lX...",DevType, ClientCH1Ctrler.Device.ID);
-                                        dbg_printf(DEBUG_INFO,   "设备 远程 抄收失败位置信息 %d楼-%d单元-%d层-%d号", SysUserList.User[DevNum].Buld,\
-                                                                                                                   SysUserList.User[DevNum].Unit,\
-                                                                                                                   SysUserList.User[DevNum].Floor,\
-                                                                                                                   SysUserList.User[DevNum].Cell);
+										dbg_printf(DEBUG_WARNING,"远程 抄收失败 0X01，类型:%d 编号:%08lX...位置信息 %d楼-%d单元-%d层-%d号",\
+                                                                                                        DevType, ClientCH1Ctrler.Device.ID,\
+                                                                                                        SysUserList.User[DevNum].Buld,\
+                                                                                                        SysUserList.User[DevNum].Unit,\
+                                                                                                        SysUserList.User[DevNum].Floor,\
+                                                                                                        SysUserList.User[DevNum].Cell);
 
 									}break;
 									default:break;
@@ -1994,11 +1999,12 @@ void Task09_F(void const * argument)
 										SendBuffer_1000.SendData.Pack_0XB0_F.ComSucNum =SysDevStatus[DevNum].Device3.ComSucNum;
 										SendBuffer_1000.SendData.Pack_0XB0_F.ComFauNum =SysDevStatus[DevNum].Device3.ComFauNum;
 										FY_1000Send_Code_QInput(&SendBuffer_1000,0XB0);
-										dbg_printf(DEBUG_WARNING,"设备 自动 抄收失败，类型:%d 编号:%08lX...",DevType, ClientCH1Ctrler.Device.ID);
-                                        dbg_printf(DEBUG_INFO,   "设备 自动 抄收失败位置信息 %d楼-%d单元-%d层-%d号", SysUserList.User[DevNum].Buld,\
-                                                                                                                   SysUserList.User[DevNum].Unit,\
-                                                                                                                   SysUserList.User[DevNum].Floor,\
-                                                                                                                   SysUserList.User[DevNum].Cell);
+										dbg_printf(DEBUG_WARNING,"自动 抄收失败，类型:%d 编号:%08lX...位置信息 %d楼-%d单元-%d层-%d号",\
+                                                                                                    DevType, ClientCH1Ctrler.Device.ID,\
+                                                                                                    SysUserList.User[DevNum].Buld,\
+                                                                                                    SysUserList.User[DevNum].Unit,\
+                                                                                                    SysUserList.User[DevNum].Floor,\
+                                                                                                    SysUserList.User[DevNum].Cell);
 									}break;
 									
 									case 0XAAAA: //远程抄收/控制
@@ -2017,11 +2023,12 @@ void Task09_F(void const * argument)
 												SendBuffer_1000.SendData.Pack_0X02_F.ComSucNum =SysDevStatus[DevNum].Device3.ComSucNum;
 												SendBuffer_1000.SendData.Pack_0X02_F.ComFauNum =SysDevStatus[DevNum].Device3.ComFauNum;
 												FY_1000Send_Code_QInput(&SendBuffer_1000,0X02);
-												dbg_printf(DEBUG_WARNING,"设备 远程 抄收失败 0X01，类型:%d 编号:%08lX...",DevType, ClientCH1Ctrler.Device.ID);
-                                                dbg_printf(DEBUG_INFO,   "设备 远程 抄收失败位置信息 %d楼-%d单元-%d层-%d号", SysUserList.User[DevNum].Buld,\
-                                                                                                                           SysUserList.User[DevNum].Unit,\
-                                                                                                                           SysUserList.User[DevNum].Floor,\
-                                                                                                                           SysUserList.User[DevNum].Cell);
+                                                dbg_printf(DEBUG_WARNING,"远程 抄收失败 0X01，类型:%d 编号:%08lX...位置信息 %d楼-%d单元-%d层-%d号",\
+                                                                                                                DevType, ClientCH1Ctrler.Device.ID,\
+                                                                                                                SysUserList.User[DevNum].Buld,\
+                                                                                                                SysUserList.User[DevNum].Unit,\
+                                                                                                                SysUserList.User[DevNum].Floor,\
+                                                                                                                SysUserList.User[DevNum].Cell);
 
 											}break;
 											case 0X0D://阀门动作控制
@@ -2030,11 +2037,12 @@ void Task09_F(void const * argument)
 												SendBuffer_1000.SendData.Pack_0X0E.DevID =ClientCH1Ctrler.Device.ID;
 												SendBuffer_1000.SendData.Pack_0X0E.State =0X03;
 												FY_1000Send_Code_QInput(&SendBuffer_1000,0X0E);
-												dbg_printf(DEBUG_WARNING,"设备 远程控制 失败 0X0D，类型:%d 编号:%08lX...",DevType,ClientCH1Ctrler.Device.ID);
-                                                dbg_printf(DEBUG_INFO,   "设备 远程控制 失败位置信息 %d楼-%d单元-%d层-%d号", SysUserList.User[DevNum].Buld,\
-                                                                                                                 SysUserList.User[DevNum].Unit,\
-                                                                                                                 SysUserList.User[DevNum].Floor,\
-                                                                                                                 SysUserList.User[DevNum].Cell);
+												dbg_printf(DEBUG_WARNING,"远程 控制失败 0X0D，类型:%d 编号:%08lX...位置信息 %d楼-%d单元-%d层-%d号",\
+                                                                                                                DevType, ClientCH1Ctrler.Device.ID,\
+                                                                                                                SysUserList.User[DevNum].Buld,\
+                                                                                                                SysUserList.User[DevNum].Unit,\
+                                                                                                                SysUserList.User[DevNum].Floor,\
+                                                                                                                SysUserList.User[DevNum].Cell);
 											}break;
 										}
 									}break;
@@ -2059,11 +2067,12 @@ void Task09_F(void const * argument)
 										SendBuffer_1000.SendData.Pack_0XB0_F.ComSucNum =SysDevStatus[DevNum].Device4.ComSucNum;
 										SendBuffer_1000.SendData.Pack_0XB0_F.ComFauNum =SysDevStatus[DevNum].Device4.ComFauNum;
 										FY_1000Send_Code_QInput(&SendBuffer_1000,0XB0);
-										dbg_printf(DEBUG_WARNING,"设备 自动 抄收失败，类型:%d 编号:%08lX...",DevType, ClientCH1Ctrler.Device.ID);
-                                        dbg_printf(DEBUG_INFO,   "设备 自动 抄收失败位置信息 %d楼-%d单元-%d层-%d号", SysUserList.User[DevNum].Buld,\
-                                                                                                                   SysUserList.User[DevNum].Unit,\
-                                                                                                                   SysUserList.User[DevNum].Floor,\
-                                                                                                                   SysUserList.User[DevNum].Cell);
+										dbg_printf(DEBUG_WARNING,"自动 抄收失败，类型:%d 编号:%08lX...位置信息 %d楼-%d单元-%d层-%d号",\
+                                                                                                    DevType, ClientCH1Ctrler.Device.ID,\
+                                                                                                    SysUserList.User[DevNum].Buld,\
+                                                                                                    SysUserList.User[DevNum].Unit,\
+                                                                                                    SysUserList.User[DevNum].Floor,\
+                                                                                                    SysUserList.User[DevNum].Cell);
 									}break;
 									
 									case 0XAAAA: //远程抄收/控制
@@ -2082,11 +2091,12 @@ void Task09_F(void const * argument)
 												SendBuffer_1000.SendData.Pack_0X02_F.ComSucNum =SysDevStatus[DevNum].Device4.ComSucNum;
 												SendBuffer_1000.SendData.Pack_0X02_F.ComFauNum =SysDevStatus[DevNum].Device4.ComFauNum;
 												FY_1000Send_Code_QInput(&SendBuffer_1000,0X02);
-												dbg_printf(DEBUG_WARNING,"设备 远程控制 失败 0X0D，类型:%d 编号:%08lX...",DevType,ClientCH1Ctrler.Device.ID);
-                                                dbg_printf(DEBUG_INFO,   "设备 远程控制 失败位置信息 %d楼-%d单元-%d层-%d号", SysUserList.User[DevNum].Buld,\
-                                                                                                                 SysUserList.User[DevNum].Unit,\
-                                                                                                                 SysUserList.User[DevNum].Floor,\
-                                                                                                                 SysUserList.User[DevNum].Cell);
+												dbg_printf(DEBUG_WARNING,"远程 抄收失败 0X01，类型:%d 编号:%08lX...位置信息 %d楼-%d单元-%d层-%d号",\
+                                                                                                                DevType, ClientCH1Ctrler.Device.ID,\
+                                                                                                                SysUserList.User[DevNum].Buld,\
+                                                                                                                SysUserList.User[DevNum].Unit,\
+                                                                                                                SysUserList.User[DevNum].Floor,\
+                                                                                                                SysUserList.User[DevNum].Cell);
 
 											}break;
 											case 0X0D://阀门动作控制
@@ -2095,11 +2105,12 @@ void Task09_F(void const * argument)
 												SendBuffer_1000.SendData.Pack_0X0E.DevID =ClientCH1Ctrler.Device.ID;
 												SendBuffer_1000.SendData.Pack_0X0E.State =0X03;
 												FY_1000Send_Code_QInput(&SendBuffer_1000,0X0E);												
-												dbg_printf(DEBUG_WARNING,"设备 远程控制 失败 0X0D，类型:%d 编号:%08lX...",DevType,ClientCH1Ctrler.Device.ID);
-                                                dbg_printf(DEBUG_INFO,   "设备 远程控制 失败位置信息 %d楼-%d单元-%d层-%d号", SysUserList.User[DevNum].Buld,\
-                                                                                                                 SysUserList.User[DevNum].Unit,\
-                                                                                                                 SysUserList.User[DevNum].Floor,\
-                                                                                                                 SysUserList.User[DevNum].Cell);
+												dbg_printf(DEBUG_WARNING,"远程 控制失败 0X0D，类型:%d 编号:%08lX...位置信息 %d楼-%d单元-%d层-%d号",\
+                                                                                                                DevType, ClientCH1Ctrler.Device.ID,\
+                                                                                                                SysUserList.User[DevNum].Buld,\
+                                                                                                                SysUserList.User[DevNum].Unit,\
+                                                                                                                SysUserList.User[DevNum].Floor,\
+                                                                                                                SysUserList.User[DevNum].Cell);
 												
 											}break;
 										}
@@ -2125,11 +2136,12 @@ void Task09_F(void const * argument)
 										SendBuffer_1000.SendData.Pack_0XB0_F.ComSucNum =SysDevStatus[DevNum].Device5.ComSucNum;
 										SendBuffer_1000.SendData.Pack_0XB0_F.ComFauNum =SysDevStatus[DevNum].Device5.ComFauNum;
 										FY_1000Send_Code_QInput(&SendBuffer_1000,0XB0);										
-										dbg_printf(DEBUG_WARNING,"设备 自动抄收 失败，类型:%d 编号:%08lX...",DevType,ClientCH1Ctrler.Device.ID);
-                                        dbg_printf(DEBUG_INFO,   "设备 自动抄收 失败位置信息 %d楼-%d单元-%d层-%d号", SysUserList.User[DevNum].Buld,\
-                                                                                                                   SysUserList.User[DevNum].Unit,\
-                                                                                                                   SysUserList.User[DevNum].Floor,\
-                                                                                                                   SysUserList.User[DevNum].Cell);
+										dbg_printf(DEBUG_WARNING,"自动 抄收失败，类型:%d 编号:%08lX...位置信息 %d楼-%d单元-%d层-%d号",\
+                                                                                                    DevType, ClientCH1Ctrler.Device.ID,\
+                                                                                                    SysUserList.User[DevNum].Buld,\
+                                                                                                    SysUserList.User[DevNum].Unit,\
+                                                                                                    SysUserList.User[DevNum].Floor,\
+                                                                                                    SysUserList.User[DevNum].Cell);
 									}break;
 									
 									case 0XAAAA: //远程抄收
@@ -2144,11 +2156,12 @@ void Task09_F(void const * argument)
 										SendBuffer_1000.SendData.Pack_0X02_F.ComSucNum =SysDevStatus[DevNum].Device5.ComSucNum;
 										SendBuffer_1000.SendData.Pack_0X02_F.ComFauNum =SysDevStatus[DevNum].Device5.ComFauNum;
 										FY_1000Send_Code_QInput(&SendBuffer_1000,0X02);										
-										dbg_printf(DEBUG_WARNING,"设备 远程抄收 失败 0X01，类型:%d 编号:%08lX...",DevType,ClientCH1Ctrler.Device.ID);
-                                        dbg_printf(DEBUG_INFO,   "设备 远程抄收 失败位置信息 %d楼-%d单元-%d层-%d号", SysUserList.User[DevNum].Buld,\
-                                                                                                                   SysUserList.User[DevNum].Unit,\
-                                                                                                                   SysUserList.User[DevNum].Floor,\
-                                                                                                                   SysUserList.User[DevNum].Cell);
+										dbg_printf(DEBUG_WARNING,"远程 抄收失败 0X01，类型:%d 编号:%08lX...位置信息 %d楼-%d单元-%d层-%d号",\
+                                        																 DevType, ClientCH1Ctrler.Device.ID,\
+                                                                                                         SysUserList.User[DevNum].Buld,\
+                                                                                                         SysUserList.User[DevNum].Unit,\
+                                                                                                         SysUserList.User[DevNum].Floor,\
+                                                                                                         SysUserList.User[DevNum].Cell);
 									}break;
 									default:break;
 								}							
@@ -2174,11 +2187,12 @@ void Task09_F(void const * argument)
 										SendBuffer_1000.SendData.Pack_0XB0_F.ComSucNum =SysDevStatus[DevNum].Device6.ComSucNum;
 										SendBuffer_1000.SendData.Pack_0XB0_F.ComFauNum =SysDevStatus[DevNum].Device6.ComFauNum;
 										FY_1000Send_Code_QInput(&SendBuffer_1000,0XB0);										
-										dbg_printf(DEBUG_WARNING,"设备 自动抄收 失败，类型:%d 编号:%08lX...",DevType,ClientCH1Ctrler.Device.ID);
-                                        dbg_printf(DEBUG_INFO,   "设备 自动抄收 失败位置信息 %d楼-%d单元-%d层-%d号", SysUserList.User[DevNum].Buld,\
-                                                                                                                   SysUserList.User[DevNum].Unit,\
-                                                                                                                   SysUserList.User[DevNum].Floor,\
-                                                                                                                   SysUserList.User[DevNum].Cell);
+										dbg_printf(DEBUG_WARNING,"自动 抄收失败，类型:%d 编号:%08lX...位置信息 %d楼-%d单元-%d层-%d号",\
+                                                                                                    DevType, ClientCH1Ctrler.Device.ID,\
+                                                                                                    SysUserList.User[DevNum].Buld,\
+                                                                                                    SysUserList.User[DevNum].Unit,\
+                                                                                                    SysUserList.User[DevNum].Floor,\
+                                                                                                    SysUserList.User[DevNum].Cell);
 									}break;
 									
 									case 0XAAAA: //远程抄收
@@ -2193,11 +2207,12 @@ void Task09_F(void const * argument)
 										SendBuffer_1000.SendData.Pack_0X02_F.ComSucNum =SysDevStatus[DevNum].Device6.ComSucNum;
 										SendBuffer_1000.SendData.Pack_0X02_F.ComFauNum =SysDevStatus[DevNum].Device6.ComFauNum;
 										FY_1000Send_Code_QInput(&SendBuffer_1000,0X02);										
-										dbg_printf(DEBUG_WARNING,"设备 远程抄收 失败 0X01，类型:%d 编号:%08lX...",DevType,ClientCH1Ctrler.Device.ID);
-                                        dbg_printf(DEBUG_INFO,   "设备 远程抄收 失败位置信息 %d楼-%d单元-%d层-%d号", SysUserList.User[DevNum].Buld,\
-                                                                                                                   SysUserList.User[DevNum].Unit,\
-                                                                                                                   SysUserList.User[DevNum].Floor,\
-                                                                                                                   SysUserList.User[DevNum].Cell);
+										dbg_printf(DEBUG_WARNING,"远程 抄收失败 0X01，类型:%d 编号:%08lX...位置信息 %d楼-%d单元-%d层-%d号",\
+                                        																 DevType, ClientCH1Ctrler.Device.ID,\
+                                                                                                         SysUserList.User[DevNum].Buld,\
+                                                                                                         SysUserList.User[DevNum].Unit,\
+                                                                                                         SysUserList.User[DevNum].Floor,\
+                                                                                                         SysUserList.User[DevNum].Cell);
 									}break;
 									default:break;
 								}							
@@ -2223,11 +2238,12 @@ void Task09_F(void const * argument)
                                         SendBuffer_1000.SendData.Pack_0XB0_F.ComSucNum =SysDevStatus[DevNum].Device7.ComSucNum;
                                         SendBuffer_1000.SendData.Pack_0XB0_F.ComFauNum =SysDevStatus[DevNum].Device7.ComFauNum;
                                         FY_1000Send_Code_QInput(&SendBuffer_1000,0XB0);                                     
-                                        dbg_printf(DEBUG_WARNING,"设备 自动抄收 失败，类型:%d 编号:%08lX...",DevType,ClientCH1Ctrler.Device.ID);
-                                        dbg_printf(DEBUG_INFO,   "设备 自动抄收 失败位置信息 %d楼-%d单元-%d层-%d号", SysUserList.User[DevNum].Buld,\
-                                                                                                                   SysUserList.User[DevNum].Unit,\
-                                                                                                                   SysUserList.User[DevNum].Floor,\
-                                                                                                                   SysUserList.User[DevNum].Cell);
+										dbg_printf(DEBUG_WARNING,"自动 抄收失败，类型:%d 编号:%08lX...位置信息 %d楼-%d单元-%d层-%d号",\
+                                                                                                    DevType, ClientCH1Ctrler.Device.ID,\
+                                                                                                    SysUserList.User[DevNum].Buld,\
+                                                                                                    SysUserList.User[DevNum].Unit,\
+                                                                                                    SysUserList.User[DevNum].Floor,\
+                                                                                                    SysUserList.User[DevNum].Cell);
                                     }break;
                                     
                                     case 0XAAAA: //远程抄收
@@ -2242,11 +2258,12 @@ void Task09_F(void const * argument)
                                         SendBuffer_1000.SendData.Pack_0X02_F.ComSucNum =SysDevStatus[DevNum].Device7.ComSucNum;
                                         SendBuffer_1000.SendData.Pack_0X02_F.ComFauNum =SysDevStatus[DevNum].Device7.ComFauNum;
                                         FY_1000Send_Code_QInput(&SendBuffer_1000,0X02);                                     
-                                        dbg_printf(DEBUG_WARNING,"设备 远程抄收 失败 0X01，类型:%d 编号:%08lX...",DevType,ClientCH1Ctrler.Device.ID);
-                                        dbg_printf(DEBUG_INFO,   "设备 远程抄收 失败位置信息 %d楼-%d单元-%d层-%d号", SysUserList.User[DevNum].Buld,\
-                                                                                                                   SysUserList.User[DevNum].Unit,\
-                                                                                                                   SysUserList.User[DevNum].Floor,\
-                                                                                                                   SysUserList.User[DevNum].Cell);
+                                        dbg_printf(DEBUG_WARNING,"远程 抄收失败 0X01，类型:%d 编号:%08lX...位置信息 %d楼-%d单元-%d层-%d号",\
+                                        																 DevType, ClientCH1Ctrler.Device.ID,\
+                                                                                                         SysUserList.User[DevNum].Buld,\
+                                                                                                         SysUserList.User[DevNum].Unit,\
+                                                                                                         SysUserList.User[DevNum].Floor,\
+                                                                                                         SysUserList.User[DevNum].Cell);
                                     }break;
                                     default:break;
                                 }                           
@@ -2271,11 +2288,12 @@ void Task09_F(void const * argument)
                                         SendBuffer_1000.SendData.Pack_0XB0_F.ComSucNum =SysDevStatus[DevNum].Device8.ComSucNum;
                                         SendBuffer_1000.SendData.Pack_0XB0_F.ComFauNum =SysDevStatus[DevNum].Device8.ComFauNum;
                                         FY_1000Send_Code_QInput(&SendBuffer_1000,0XB0);                                     
-                                        dbg_printf(DEBUG_WARNING,"设备 自动抄收 失败，类型:%d 编号:%08lX...",DevType,ClientCH1Ctrler.Device.ID);
-                                        dbg_printf(DEBUG_INFO,   "设备 自动抄收 失败位置信息 %d楼-%d单元-%d层-%d号", SysUserList.User[DevNum].Buld,\
-                                                                                                                   SysUserList.User[DevNum].Unit,\
-                                                                                                                   SysUserList.User[DevNum].Floor,\
-                                                                                                                   SysUserList.User[DevNum].Cell);
+										dbg_printf(DEBUG_WARNING,"自动 抄收失败，类型:%d 编号:%08lX...位置信息 %d楼-%d单元-%d层-%d号",\
+                                        															DevType, ClientCH1Ctrler.Device.ID,\
+                                                                                                    SysUserList.User[DevNum].Buld,\
+                                                                                                    SysUserList.User[DevNum].Unit,\
+                                                                                                    SysUserList.User[DevNum].Floor,\
+                                                                                                    SysUserList.User[DevNum].Cell);
                                     }break;
                                     
                                     case 0XAAAA: //远程抄收
@@ -2290,11 +2308,12 @@ void Task09_F(void const * argument)
                                         SendBuffer_1000.SendData.Pack_0X02_F.ComSucNum =SysDevStatus[DevNum].Device8.ComSucNum;
                                         SendBuffer_1000.SendData.Pack_0X02_F.ComFauNum =SysDevStatus[DevNum].Device8.ComFauNum;
                                         FY_1000Send_Code_QInput(&SendBuffer_1000,0X02);                                     
-                                        dbg_printf(DEBUG_WARNING,"设备 远程抄收 失败 0X01，类型:%d 编号:%08lX...",DevType,ClientCH1Ctrler.Device.ID);
-                                        dbg_printf(DEBUG_INFO,   "设备 远程抄收 失败位置信息 %d楼-%d单元-%d层-%d号", SysUserList.User[DevNum].Buld,\
-                                                                                                                   SysUserList.User[DevNum].Unit,\
-                                                                                                                   SysUserList.User[DevNum].Floor,\
-                                                                                                                   SysUserList.User[DevNum].Cell);
+                                        dbg_printf(DEBUG_WARNING,"远程 抄收失败 0X01，类型:%d 编号:%08lX...位置信息 %d楼-%d单元-%d层-%d号",\
+                                        																 DevType, ClientCH1Ctrler.Device.ID,\
+                                                                                                         SysUserList.User[DevNum].Buld,\
+                                                                                                         SysUserList.User[DevNum].Unit,\
+                                                                                                         SysUserList.User[DevNum].Floor,\
+                                                                                                         SysUserList.User[DevNum].Cell);
                                     }break;
                                     default:break;
                                 }                           
@@ -2320,11 +2339,12 @@ void Task09_F(void const * argument)
 										SendBuffer_1000.SendData.Pack_0XB0_F.ComSucNum =SysDevStatus[DevNum].Device9.ComSucNum;
 										SendBuffer_1000.SendData.Pack_0XB0_F.ComFauNum =SysDevStatus[DevNum].Device9.ComFauNum;
 										FY_1000Send_Code_QInput(&SendBuffer_1000,0XB0);
-										dbg_printf(DEBUG_WARNING,"设备 自动抄收 失败，类型:%d 编号:%08lX...",DevType,ClientCH1Ctrler.Device.ID);
-                                        dbg_printf(DEBUG_INFO,   "设备 自动抄收 失败位置信息 %d楼-%d单元-%d层-%d号", SysUserList.User[DevNum].Buld,\
-                                                                                                                   SysUserList.User[DevNum].Unit,\
-                                                                                                                   SysUserList.User[DevNum].Floor,\
-                                                                                                                   SysUserList.User[DevNum].Cell);
+										dbg_printf(DEBUG_WARNING,"自动 抄收失败，类型:%d 编号:%08lX...位置信息 %d楼-%d单元-%d层-%d号",\
+                                        															DevType, ClientCH1Ctrler.Device.ID,\
+                                                                                                    SysUserList.User[DevNum].Buld,\
+                                                                                                    SysUserList.User[DevNum].Unit,\
+                                                                                                    SysUserList.User[DevNum].Floor,\
+                                                                                                    SysUserList.User[DevNum].Cell);
 									}break;
 									
 									case 0XAAAA: //远程抄收/控制
@@ -2343,11 +2363,12 @@ void Task09_F(void const * argument)
 												SendBuffer_1000.SendData.Pack_0X02_F.ComSucNum =SysDevStatus[DevNum].Device9.ComSucNum;
 												SendBuffer_1000.SendData.Pack_0X02_F.ComFauNum =SysDevStatus[DevNum].Device9.ComFauNum;
 												FY_1000Send_Code_QInput(&SendBuffer_1000,0X02);
-												dbg_printf(DEBUG_WARNING,"设备 远程抄收 失败 0X01，类型:%d 编号:%08lX...",DevType,ClientCH1Ctrler.Device.ID);
-                                                dbg_printf(DEBUG_INFO,   "设备 远程抄收 失败位置信息 %d楼-%d单元-%d层-%d号", SysUserList.User[DevNum].Buld,\
-                                                                                                                   SysUserList.User[DevNum].Unit,\
-                                                                                                                   SysUserList.User[DevNum].Floor,\
-                                                                                                                   SysUserList.User[DevNum].Cell);
+												dbg_printf(DEBUG_WARNING,"远程 抄收失败 0X01，类型:%d 编号:%08lX...位置信息 %d楼-%d单元-%d层-%d号",\
+                                                                                                                 DevType, ClientCH1Ctrler.Device.ID,\
+                                                                                                                 SysUserList.User[DevNum].Buld,\
+                                                                                                                 SysUserList.User[DevNum].Unit,\
+                                                                                                                 SysUserList.User[DevNum].Floor,\
+                                                                                                                 SysUserList.User[DevNum].Cell);
 
 											}break;
 											case 0X0D://阀门动作控制
@@ -2356,11 +2377,12 @@ void Task09_F(void const * argument)
 												SendBuffer_1000.SendData.Pack_0X0E.DevID =ClientCH1Ctrler.Device.ID;
 												SendBuffer_1000.SendData.Pack_0X0E.State =0X03;
 												FY_1000Send_Code_QInput(&SendBuffer_1000,0X0E);												
-												dbg_printf(DEBUG_WARNING,"设备 远程控制 失败 0X0D，类型:%d 编号:%08lX...",DevType,ClientCH1Ctrler.Device.ID);
-                                                dbg_printf(DEBUG_INFO,   "设备 远程控制 失败位置信息 %d楼-%d单元-%d层-%d号", SysUserList.User[DevNum].Buld,\
-                                                                                                                   SysUserList.User[DevNum].Unit,\
-                                                                                                                   SysUserList.User[DevNum].Floor,\
-                                                                                                                   SysUserList.User[DevNum].Cell);
+												dbg_printf(DEBUG_WARNING,"远程 控制失败 0X0D，类型:%d 编号:%08lX...位置信息 %d楼-%d单元-%d层-%d号",\
+                                                                                                                 DevType, ClientCH1Ctrler.Device.ID,\
+                                                                                                                 SysUserList.User[DevNum].Buld,\
+                                                                                                                 SysUserList.User[DevNum].Unit,\
+                                                                                                                 SysUserList.User[DevNum].Floor,\
+                                                                                                                 SysUserList.User[DevNum].Cell);
 												
 											}break;
 										}
@@ -2387,11 +2409,12 @@ void Task09_F(void const * argument)
 										SendBuffer_1000.SendData.Pack_0XB0_F.ComSucNum =SysDevStatus[DevNum].Device11.ComSucNum;
 										SendBuffer_1000.SendData.Pack_0XB0_F.ComFauNum =SysDevStatus[DevNum].Device11.ComFauNum;
 										FY_1000Send_Code_QInput(&SendBuffer_1000,0XB0);
-										dbg_printf(DEBUG_WARNING,"设备 自动抄收 失败，类型:%d 编号:%08lX...",DevType,ClientCH1Ctrler.Device.ID);
-                                        dbg_printf(DEBUG_INFO,   "设备 自动抄收 失败位置信息 %d楼-%d单元-%d层-%d号", SysUserList.User[DevNum].Buld,\
-                                                                                                                   SysUserList.User[DevNum].Unit,\
-                                                                                                                   SysUserList.User[DevNum].Floor,\
-                                                                                                                   SysUserList.User[DevNum].Cell);
+										dbg_printf(DEBUG_WARNING,"自动 抄收失败，类型:%d 编号:%08lX...位置信息 %d楼-%d单元-%d层-%d号",\
+                                                                                                    DevType, ClientCH1Ctrler.Device.ID,\
+                                                                                                    SysUserList.User[DevNum].Buld,\
+                                                                                                    SysUserList.User[DevNum].Unit,\
+                                                                                                    SysUserList.User[DevNum].Floor,\
+                                                                                                    SysUserList.User[DevNum].Cell);
 									}break;
 									
 									case 0XAAAA: //远程抄收/控制
@@ -2410,11 +2433,12 @@ void Task09_F(void const * argument)
 												SendBuffer_1000.SendData.Pack_0X02_F.ComSucNum =SysDevStatus[DevNum].Device11.ComSucNum;
 												SendBuffer_1000.SendData.Pack_0X02_F.ComFauNum =SysDevStatus[DevNum].Device11.ComFauNum;
 												FY_1000Send_Code_QInput(&SendBuffer_1000,0X02);
-												dbg_printf(DEBUG_WARNING,"设备 远程抄收 失败 0X01，类型:%d 编号:%08lX...",DevType,ClientCH1Ctrler.Device.ID);
-                                                dbg_printf(DEBUG_INFO,   "设备 远程抄收 失败位置信息 %d楼-%d单元-%d层-%d号", SysUserList.User[DevNum].Buld,\
-                                                                                                                   SysUserList.User[DevNum].Unit,\
-                                                                                                                   SysUserList.User[DevNum].Floor,\
-                                                                                                                   SysUserList.User[DevNum].Cell);
+												dbg_printf(DEBUG_WARNING,"远程 抄收失败 0X01，类型:%d 编号:%08lX...位置信息 %d楼-%d单元-%d层-%d号",\
+                                                                                                                 DevType, ClientCH1Ctrler.Device.ID,\
+                                                                                                                 SysUserList.User[DevNum].Buld,\
+                                                                                                                 SysUserList.User[DevNum].Unit,\
+                                                                                                                 SysUserList.User[DevNum].Floor,\
+                                                                                                                 SysUserList.User[DevNum].Cell);
 
 											}break;
 											case 0X0D://阀门动作控制
@@ -2423,11 +2447,12 @@ void Task09_F(void const * argument)
 												SendBuffer_1000.SendData.Pack_0X0E.DevID =ClientCH1Ctrler.Device.ID;
 												SendBuffer_1000.SendData.Pack_0X0E.State =0X03;
 												FY_1000Send_Code_QInput(&SendBuffer_1000,0X0E);												
-												dbg_printf(DEBUG_WARNING,"设备 远程控制 失败 0X0D，类型:%d 编号:%08lX...",DevType,ClientCH1Ctrler.Device.ID);
-                                                dbg_printf(DEBUG_INFO,   "设备 远程控制 失败位置信息 %d楼-%d单元-%d层-%d号", SysUserList.User[DevNum].Buld,\
-                                                                                                                   SysUserList.User[DevNum].Unit,\
-                                                                                                                   SysUserList.User[DevNum].Floor,\
-                                                                                                                   SysUserList.User[DevNum].Cell);
+												dbg_printf(DEBUG_WARNING,"远程 控制失败 0X0D，类型:%d 编号:%08lX...位置信息 %d楼-%d单元-%d层-%d号",\
+                                                                                                                 DevType, ClientCH1Ctrler.Device.ID,\
+                                                                                                                 SysUserList.User[DevNum].Buld,\
+                                                                                                                 SysUserList.User[DevNum].Unit,\
+                                                                                                                 SysUserList.User[DevNum].Floor,\
+                                                                                                                 SysUserList.User[DevNum].Cell);
 												
 											}break;
 										}
@@ -2589,11 +2614,19 @@ void Task12_F(void const * argument)
 				{
 					if( UserData_Save(UserNum) ==HAL_OK)
 					{
-						dbg_printf(DEBUG_INFO,"用户数据保存成功 序号:%d  ID:%08lX",UserNum, SysUserList.User[UserNum].User_ID);
-                        dbg_printf(DEBUG_INFO,"用户位置信息 %d楼-%d单元-%d层-%d号", SysUserList.User[UserNum].Buld,\
-                                                                                   SysUserList.User[UserNum].Unit,\
-                                                                                   SysUserList.User[UserNum].Floor,\
-                                                                                   SysUserList.User[UserNum].Cell);
+                        dbg_printf(DEBUG_INFO,"用户数据保存成功 序号:%d    ID:%08lX    DeviceID:%08lX---位置信息 %d楼-%d单元-%d层-%d号",\
+                                                                                UserNum, SysUserList.User[UserNum].User_ID, ClientCH1Ctrler.Device.ID,\
+                                                                                SysUserList.User[UserNum].Buld,\
+                                                                                SysUserList.User[UserNum].Unit,\
+                                                                                SysUserList.User[UserNum].Floor,\
+                                                                                SysUserList.User[UserNum].Cell);
+                        
+						//dbg_printf(DEBUG_INFO,"用户数据保存成功 序号:%d  ID:%08lX---位置信息 %d楼-%d单元-%d层-%d号",\
+                        												 UserNum, SysUserList.User[UserNum].User_ID,\
+                                                                         SysUserList.User[UserNum].Buld,\
+                                                                         SysUserList.User[UserNum].Unit,\
+                                                                         SysUserList.User[UserNum].Floor,\
+                                                                         SysUserList.User[UserNum].Cell);
 					}
 
 					//取消用户数据的上传功能  2017年11月10日
@@ -3044,10 +3077,10 @@ void Task13_F(void const * argument)
 						if( (SysDevStatus[DevNum].Device11.ComTolNum !=0)&&(SysDevStatus[DevNum].Device11.ComSucNum !=0)&&(SysDevStatus[DevNum].Device11.ComFauNum ==0) )
 						{
 						
-							FY1000_Q_TX_Buffer.SendData.Pack_0XB0_D5.CtrlFlag=0X00;
-							FY1000_Q_TX_Buffer.SendData.Pack_0XB0_D5.Dev_Type =Valve_NWK;
-							FY1000_Q_TX_Buffer.SendData.Pack_0XB0_D5.Dev_ID =Device.ID;
-							FY1000_Q_TX_Buffer.SendData.Pack_0XB0_D5.BackFlag =COMBack_OK;
+							FY1000_Q_TX_Buffer.SendData.Pack_0XB0_D5.CtrlFlag               = 0X00;
+							FY1000_Q_TX_Buffer.SendData.Pack_0XB0_D5.Dev_Type               = Valve_NWK;
+							FY1000_Q_TX_Buffer.SendData.Pack_0XB0_D5.Dev_ID                 = Device.ID;
+							FY1000_Q_TX_Buffer.SendData.Pack_0XB0_D5.BackFlag               = COMBack_OK;
 
                             FY1000_Q_TX_Buffer.SendData.Pack_0XB0_D5.CtrlFlag               = 0X00;
                             FY1000_Q_TX_Buffer.SendData.Pack_0XB0_D5.Dev_Type               = Valve_NWK;

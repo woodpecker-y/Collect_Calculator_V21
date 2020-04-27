@@ -76,10 +76,10 @@
 
 
 #define Meter_H_ENABLE          //汇中楼栋热量表 HZ-188
-#define Meter_XY_ENABLE         //祥源小口径热量表XY-188
+//#define Meter_XY_ENABLE         //祥源小口径热量表XY-188
 
-#define Meter_HT2X_ENABLE       //海通小口径热量表HT2X
-#define Meter_BRC_ENABLE        //山东贝特智联小口径热量表BRC
+//#define Meter_HT2X_ENABLE       //海通小口径热量表HT2X
+//#define Meter_BRC_ENABLE        //山东贝特智联小口径热量表BRC
 #define Meter_DDF2_ENABLE       //海通通断控制器 DDF2
 
 #define Valve_NWK_ENABLE        //耐威科楼栋单元调节阀modbus协议

@@ -275,7 +275,7 @@ void NWK_Pack_S(UART_RBC_Stru* PORT)
     //INT8U TYPE =0;
 
 		
-	PackData->Pack.Head.Addr 				= NWK_Q_RX_Buffer.ID;			//NWK_Q_RX_Buffer.ID;
+	PackData->Pack.Head.Addr 				= (INT8U)NWK_Q_RX_Buffer.ID;			//NWK_Q_RX_Buffer.ID;
 	PackData->Pack.Head.CMD  				= 0X03;
 	
 	PackData->Pack.Register_Addr_H 	        = 0X00;
@@ -294,7 +294,7 @@ void NWK_Pack_S(UART_RBC_Stru* PORT)
     //    TYPE =0X15;
     //}
 
-	PORT->OutputPackSize = sizeof(NWK_Pack_Stru);
+	PORT->OutputPackSize = 8; //sizeof(NWK_Pack_Stru);
 	//PORT->OutputPackSize = PackSize;
 	PORT->PackSendFlag =ENABLE;
 }
