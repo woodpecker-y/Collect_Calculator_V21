@@ -3,10 +3,10 @@
 #include "PubDef.h"
 #ifdef Valve_NWK_ENABLE
 
-#include "NWKmodbus.h"
+
 #include "main.h"
 #include "check.h"
-
+#include "NWKmodbus.h"
 
 UART_TO_NWK_QueueSend_Stru      NWK_Q_RX_Buffer;		//通信发送队列 接收缓冲器
 UART_TO_NWK_QueueSend_Stru*     NWK_Q_RX_BuffeP;	    //通信发送队列 接收缓冲器P

@@ -7,7 +7,9 @@
 #include "UART_RBC.h"
 #include "PubDef.h"
 
-
+#include "stm32f4xx_hal.h"
+#include "Typedef.h "
+#include "COM_Server.h"
 
 #ifdef Valve_NWK_ENABLE
  
@@ -18,11 +20,6 @@
 #endif
  
 
-//#define NWKPro_PackSize				UART_TO_NWKPackSize_S
-//#define NWKPro_HeadSize				11				    //数据包头大小
-//#define NWKPro_StartCode			0X68				//起始符
-//#define NWKPro_ProtocolCode		    0X41				//版本号
-//#define NWKPro_EndCode				0X16				//结束符
 
 #define NWKPro_HeadSize				        2				    //数据包头大小
 #define NWKPro_ACKProtocolCode03		    0X03				//03功能码
@@ -39,26 +36,11 @@ typedef struct
     
 }NWK_Head_Stru;
 
-
-//NWK通信协议 数据抄收 下行
-typedef struct
-{
-	NWK_Head_Stru  Head;                    //01 03
-	
-	INT8U	Register_Addr_H;				//寄存器地址高字节 00
-	INT8U	Register_Addr_L;				//寄存器地址低字节 00
-	
-	INT8U	Register_Num_H;					//寄存器数量高字节 00
-	INT8U	Register_Num_L;					//寄存器数量高字节 1C = 28(D)
-	
-	INT8U	CRC16_H;						//CRC高字节 44
-	INT8U	CRC16_L;                        //CRC低字节 03
-}NWK_Pack_Stru;//实时数据
+#pragma pack()			//字节对齐
 
 
-
-
-
+//耐威科通信协议
+#pragma pack(1)			//字节对齐
 /*设备类型11数据结构   耐威科楼栋单元调节阀NWKmodbus协议
 该数据变动较大存储于FRAM
 */
@@ -108,7 +90,20 @@ typedef union
 }NWK_Pack_Uni;
 
 
-
+//NWK通信协议 数据抄收 下行
+typedef struct
+{
+	NWK_Head_Stru  Head;                    //01 03
+	
+	INT8U	Register_Addr_H;				//寄存器地址高字节 00
+	INT8U	Register_Addr_L;				//寄存器地址低字节 00
+	
+	INT8U	Register_Num_H;					//寄存器数量高字节 00
+	INT8U	Register_Num_L;					//寄存器数量高字节 1C = 28(D)
+	
+	INT8U	CRC16_H;						//CRC高字节 44
+	INT8U	CRC16_L;                        //CRC低字节 03
+}NWK_Pack_Stru;//实时数据
 
 typedef union
 {
@@ -132,6 +127,7 @@ INT8U NWK_Pack_Rx_S(UART_RBC_Stru* Ctrl_Point,INT8U Protocol);
 
 #endif
  
+
 
 
 NWK_EXT void NWK_Pack_RxServer_S( UART_RBC_Stru* Ctrl_Point );

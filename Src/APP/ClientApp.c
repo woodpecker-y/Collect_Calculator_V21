@@ -23,7 +23,6 @@
 */ 
 #define _CLIENTAPP_C_
 #include "ClientApp.h"
-#include "NWKmodbus.h"
 
 
 BaseType_t UART_TO_FY188_CCB_QueueSend(UART_TO_FY188_QueueSend_Stru *DATAIN)

@@ -46,7 +46,7 @@
 #endif
  
 
-#define ClientRepeatNum	3
+#define ClientRepeatNum	3		//³­ÊÕÊ§°Ü´ÎÊı
 
 
 
