@@ -11,7 +11,7 @@
 UART_TO_NWK_QueueSend_Stru      NWK_Q_RX_Buffer;		//通信发送队列 接收缓冲器
 UART_TO_NWK_QueueSend_Stru*     NWK_Q_RX_BuffeP;	    //通信发送队列 接收缓冲器P
 
-
+UINT16 NWK_Rcv_Lenth = 0;
 
 /*
 void NWK_Pack_RxServer_S( UART_RBC_Stru* Ctrl_Point )
@@ -22,7 +22,8 @@ void NWK_Pack_RxServer_S( UART_RBC_Stru* Ctrl_Point )
 	INT8U  Bufer;
     //INT8U  CMD;
 	INT32U DataBdry =0;	//有效数据区边界
-	NWK_Pack_Uni* NWK_RXPack =(NWK_Pack_Uni*)(Ctrl_Point->InputPack);
+	//NWK_Pack_Uni* NWK_RXPack =(NWK_Pack_Uni*)(Ctrl_Point->InputPack);
+    
 	while (Ctrl_Point->Rx_Rear !=Ctrl_Point->Rx_Front) 
 	{
 	
@@ -57,8 +58,8 @@ void NWK_Pack_RxServer_S( UART_RBC_Stru* Ctrl_Point )
                         Ctrl_Point->RecPackTimeOut=*(Ctrl_Point->Ticks);	 //收到数据间隔时间清零 
                         Ctrl_Point->RecPackState=2; //开始接收数据包
                         
-                        NWK_RXPack->Lenth = NWKPro_ACKProtocolSize+1;       //06设置命令码的数据域为4个字节
-                        DataBdry = NWK_RXPack->Lenth;
+                        NWK_Rcv_Lenth = NWKPro_ACKProtocolSize+0x01;       //06设置命令码的数据域为4个字节
+                        DataBdry = NWKPro_ACKProtocolSize;
                     }
                     else if( Bufer == NWKPro_ACKProtocolCode06 )
                     {
@@ -67,8 +68,8 @@ void NWK_Pack_RxServer_S( UART_RBC_Stru* Ctrl_Point )
                         Ctrl_Point->RecPackTimeOut=*(Ctrl_Point->Ticks);	 //收到数据间隔时间清零 
                         Ctrl_Point->RecPackState=2; //开始接收数据包	
                         
-                        NWK_RXPack->Lenth = 4;       //06设置命令码的数据域为4个字节
-                        DataBdry = NWK_RXPack->Lenth;
+                        NWK_Rcv_Lenth = 4;       //06设置命令码的数据域为4个字节
+                        DataBdry = NWK_Rcv_Lenth;
                     }
 			}break;
 			
@@ -106,7 +107,7 @@ void NWK_Pack_RxServer_S( UART_RBC_Stru* Ctrl_Point )
 				Ctrl_Point->RecPackTimeOut =*(Ctrl_Point->Ticks);		//收到数据间隔时间清零
                 Ctrl_Point->RecPackState = 0;	
                 
-                NWK_Pack_RxAnalyze_S(Ctrl_Point, NWK_RXPack->Lenth+NWKPro_HeadSize);
+                NWK_Pack_RxAnalyze_S(Ctrl_Point, NWK_Rcv_Lenth + NWKPro_HeadSize);
 				
 			}break;
 
@@ -139,13 +140,13 @@ INT8U NWK_Pack_RxAnalyze_S(UART_RBC_Stru* Ctrl_Point, INT8U DataSize)
     UINT8 CRC_H = 0;
     UINT8 CRC_L = 0;
     
-	NWK_Pack_Uni* Packin =(NWK_Pack_Uni*)Ctrl_Point->InputPack;	//指针变换
+	//NWK_Pack_Uni* Packin =(NWK_Pack_Uni*)Ctrl_Point->InputPack;	//指针变换
 	
     
     CRC16 = crc_16_modbus((const unsigned char*)Ctrl_Point->InputPack, (unsigned short) DataSize);
     
-    CRC_H = CRC16 >> 8;
-    CRC_L = CRC16 & 0x00FF;
+    CRC_L = CRC16 >> 8;
+    CRC_H = CRC16 & 0x00FF;
     
 	//CheckFlg =SUMCheck_Check(((INT8U*)Ctrl_Point->InputPack), DataSize);
     
@@ -156,11 +157,11 @@ INT8U NWK_Pack_RxAnalyze_S(UART_RBC_Stru* Ctrl_Point, INT8U DataSize)
 	}
 	else
 	{
-        if(Packin->Lenth == NWKPro_ACKProtocolSize+1)
+        if(NWK_Rcv_Lenth == NWKPro_ACKProtocolSize+0x01)
         {
             CRC16 =NWK_Pack_Rx_S(Ctrl_Point, 0x03);
         }
-        else if(Packin->Lenth == 4)
+        else if(NWK_Rcv_Lenth == 4)
         {
             CRC16 =NWK_Pack_Rx_S(Ctrl_Point, 0x06);
         }
@@ -178,7 +179,21 @@ INT8U NWK_Pack_RxAnalyze_S(UART_RBC_Stru* Ctrl_Point, INT8U DataSize)
 
 
 
+/* 大小端模式互转 */
+unsigned char *bytes_reverse(unsigned char *dat, unsigned char len)
+{
+    unsigned char i = 0, j = 0;
+    unsigned char tmp = 0;
 
+    for (i=0,j=len-1; i<=j; ++i,--j)
+    {
+        tmp     = dat[i];
+        dat[i]  = dat[j];
+        dat[j]  = tmp;
+    }
+
+    return dat;
+}
 
 
 /*
@@ -205,36 +220,39 @@ INT8U NWK_Pack_Rx_S(UART_RBC_Stru* Ctrl_Point,INT8U Protocol)
         {
             if( DevType == Valve_NWK )           
             {
-                if(PackData->Pack.Head.Addr == SysDevData[DevNum].Device11.Address)
+                if(PackData->Pack.lenth == 0x38)
                 {
-                    SysDevData[DevNum].Device11.Input_Temp              = PackData->Pack.data.Input_Temp;
-                    SysDevData[DevNum].Device11.Output_Temp             = PackData->Pack.data.Output_Temp;
-                    SysDevData[DevNum].Device11.EnterWater_Pressure     = PackData->Pack.data.EnterWater_Pressure;
-                    SysDevData[DevNum].Device11.ReturnWater_Pressure    = PackData->Pack.data.ReturnWater_Pressure;
-                    SysDevData[DevNum].Device11.Room_Temp               = PackData->Pack.data.Room_Temp;
-                    SysDevData[DevNum].Device11.Current_Valve_Open      = PackData->Pack.data.Current_Valve_Open;
-                    SysDevData[DevNum].Device11.SetValue_Open           = PackData->Pack.data.SetValue_Open;
-                    SysDevData[DevNum].Device11.Temp_Diff               = PackData->Pack.data.Temp_Diff;
-                    SysDevData[DevNum].Device11.ReturnTemp_Set          = PackData->Pack.data.ReturnTemp_Set;
-                    SysDevData[DevNum].Device11.PressureDiff_Set        = PackData->Pack.data.PressureDiff_Set;
-                    SysDevData[DevNum].Device11.Error                   = PackData->Pack.data.Error;
-                    SysDevData[DevNum].Device11.Software_Version        = PackData->Pack.data.Software_Version;
-                    SysDevData[DevNum].Device11.Run_Mode                = PackData->Pack.data.Run_Mode;
-                    SysDevData[DevNum].Device11.Address                 = PackData->Pack.data.Address;
-                    SysDevData[DevNum].Device11.Motor_Steering          = PackData->Pack.data.Motor_Steering;
-                    SysDevData[DevNum].Device11.Adjust_Switch           = PackData->Pack.data.Adjust_Switch;
-                    SysDevData[DevNum].Device11.Adjust_Tigger           = PackData->Pack.data.Adjust_Tigger;
-                    SysDevData[DevNum].Device11.Dc_Motor_Speed          = PackData->Pack.data.Dc_Motor_Speed;
-					
-                    if( SysDevData_Save(DevNum) ==HAL_OK)
-					{
-						dbg_printf(DEBUG_DEBUG,"用户数据保存......编号: %d \r\n ",DevNum);
-					}
-					SysDevStatus[DevNum].Device11.ComSucNum +=1;
-					SysDevStatus[DevNum].Device11.ComFauNum =0;
-                    
-                    
-                    ClientCH1Ctrler.SignleCom = RESET;
+                    //if(PackData->Pack.Head.Addr == SysDevData[DevNum].Device11.Address)
+                    //{
+                        SysDevData[DevNum].Device11.Input_Temp              = (float)*bytes_reverse((unsigned char *)&PackData->Pack.data.Input_Temp, 4);
+                        SysDevData[DevNum].Device11.Output_Temp             = (float)*bytes_reverse((unsigned char *)&PackData->Pack.data.Output_Temp, 4);
+                        SysDevData[DevNum].Device11.EnterWater_Pressure     = (float)*bytes_reverse((unsigned char *)&PackData->Pack.data.EnterWater_Pressure, 4);
+                        SysDevData[DevNum].Device11.ReturnWater_Pressure    = (float)*bytes_reverse((unsigned char *)&PackData->Pack.data.ReturnWater_Pressure, 4);
+                        SysDevData[DevNum].Device11.Room_Temp               = (float)*bytes_reverse((unsigned char *)&PackData->Pack.data.Room_Temp, 4);
+                        SysDevData[DevNum].Device11.Current_Valve_Open      = (float)*bytes_reverse((unsigned char *)&PackData->Pack.data.Current_Valve_Open, 4);
+                        SysDevData[DevNum].Device11.SetValue_Open           = (float)*bytes_reverse((unsigned char *)&PackData->Pack.data.SetValue_Open, 4);
+                        SysDevData[DevNum].Device11.Temp_Diff               = (float)*bytes_reverse((unsigned char *)&PackData->Pack.data.Temp_Diff, 4);
+                        SysDevData[DevNum].Device11.ReturnTemp_Set          = (float)*bytes_reverse((unsigned char *)&PackData->Pack.data.ReturnTemp_Set, 4);
+                        SysDevData[DevNum].Device11.PressureDiff_Set        = (float)*bytes_reverse((unsigned char *)&PackData->Pack.data.PressureDiff_Set, 4);
+                        SysDevData[DevNum].Device11.Error                   = PackData->Pack.data.Error;
+                        SysDevData[DevNum].Device11.Software_Version        = PackData->Pack.data.Software_Version;
+                        SysDevData[DevNum].Device11.Run_Mode                = PackData->Pack.data.Run_Mode;
+                        SysDevData[DevNum].Device11.Address                 = PackData->Pack.data.Address;
+                        SysDevData[DevNum].Device11.Motor_Steering          = PackData->Pack.data.Motor_Steering;
+                        SysDevData[DevNum].Device11.Adjust_Switch           = PackData->Pack.data.Adjust_Switch;
+                        SysDevData[DevNum].Device11.Adjust_Tigger           = PackData->Pack.data.Adjust_Tigger;
+                        SysDevData[DevNum].Device11.Dc_Motor_Speed          = PackData->Pack.data.Dc_Motor_Speed;
+                        
+                        if( SysDevData_Save(DevNum) ==HAL_OK)
+                        {
+                            dbg_printf(DEBUG_DEBUG,"用户数据保存......编号: %d \r\n ",DevNum);
+                        }
+                        SysDevStatus[DevNum].Device11.ComSucNum +=1;
+                        SysDevStatus[DevNum].Device11.ComFauNum =0;
+                        
+                        
+                        ClientCH1Ctrler.SignleCom = RESET;
+                    //}
                 }
             }
         }break;

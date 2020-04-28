@@ -329,7 +329,7 @@ HAL_StatusTypeDef SysDevData_ResetALL(INT16U DevNum)
 	DataBuffer5.STATE2 =0;
 #endif
 
-#ifdef Meter_H_ENABLE
+#ifdef Valve_NWK_ENABLE
 	//设备类型11
 	DataBuffer11.Input_Temp             = 0;    //进水温度
 	DataBuffer11.Output_Temp            = 0;    //回水温度

@@ -85,7 +85,7 @@ typedef struct
 
 	INT32U	SendMode;				//设备数据上报模式
 	INT32U	ReadSpace;				//设备通信间隔时间
-	INT32U	SendSpace;				//设备数据循环上报间隔时间
+	INT32U	SendSpace;				//设备数据循环上报间隔时间 秒
 
 
 	INT32U	DebugEnable;			//系统调试使能标志

@@ -36,89 +36,84 @@ void printenv(char *pcWriteBuffer, int xWriteBufferLen,int argc, char **argv)
 	INT32U ReportMode =SysPara.SendMode;
 
 	cli_printf("   设备编号:       %08lX \r\n",SysPara.Device_SN);
-	cli_printf("   SystemTick:     %ld \r\n",SystemTick_ms);
-	cli_printf("   SystemTick(S):  %ld \r\n",SystemTick_ms/1000);
-	cli_printf("   系统时间:       %4d年%2d月%2d日 %2d:%2d:%2d\r\n",RTC_Time.Year,RTC_Time.Month,RTC_Time.Day,RTC_Time.Hour,RTC_Time.Minute,RTC_Time.Second);	
-	cli_printf("\r\n");
-	
+	cli_printf("   SYSTick:        %lds \r\n",SystemTick_ms/1000);  //cli_printf("   SystemTick:     %ld \r\n",SystemTick_ms);
+	cli_printf("   系统时间:       %4d年%2d月%2d日 %2d:%2d:%2d\r\n",RTC_Time.Year,RTC_Time.Month,RTC_Time.Day,RTC_Time.Hour,RTC_Time.Minute,RTC_Time.Second);
+    cli_printf("   启动时间:       %4d年%2d月%2d日 %2d:%2d:%2d \r\n",PowerStateRecord.Year,PowerStateRecord.Month,PowerStateRecord.Day,PowerStateRecord.Hour,PowerStateRecord.Minute,PowerStateRecord.Second);		
 	cli_printf("   上电次数:       %ld \r\n",PowerStateRecord.Times);	
-	cli_printf("   启动时间:       %4d年%2d月%2d日 %2d:%2d:%2d \r\n",PowerStateRecord.Year,PowerStateRecord.Month,PowerStateRecord.Day,PowerStateRecord.Hour,PowerStateRecord.Minute,PowerStateRecord.Second);	
-	cli_printf("\r\n\r\n");
-
+	
+    cli_printf("\r\n\r\n");
 	switch(Type)
 	{
 		case Type_Meter:
 		{
-			cli_printf("   系统类型:  %d    热量表 采集系统\r\n",Type);	
+			cli_printf("   系统类型  %d :   热量表 采集系统\r\n",Type);	
 		}break;
 
 		case Type_MeterValve:
 		{
-			cli_printf("   系统类型:  %d    温控计量一体化 计量系统\r\n",Type);	
+			cli_printf("   系统类型  %d :   温控计量一体化 计量系统\r\n",Type);	
 		}break;	
 
 		case Type_Valve:
 		{
-			cli_printf("   系统类型:  %d    通断时间面积法 计量系统\r\n",Type);	
+			cli_printf("   系统类型  %d :   通断时间面积法 计量系统\r\n",Type);	
 
 		}break;
 
 		default :
 		{
-			cli_printf("   系统类型:  %d    未设置\r\n",Type);
+			cli_printf("   系统类型  %d :    未设置\r\n",Type);
 
 		}break;
 	}
-
-	cli_printf("   终端重复间隔:   %lu \r\n",SysPara.ReadSpace);		//终端设备重复读取间隔
-	cli_printf("   终端循环间隔:   %lu \r\n",SysPara.LoopSpace);		//终端设备循环读取间隔
-	cli_printf("\r\n");
-
+	cli_printf("   终端重复间隔:   %lu ms \r\n",SysPara.ReadSpace);		//终端设备重复读取间隔
+	cli_printf("   终端循环间隔:   %lu ms \r\n",SysPara.LoopSpace);		//终端设备循环读取间隔
+	
+    cli_printf("\r\n\r\n");
 	switch(ReportMode)
 	{
 		case DevSendMode_Auto:
 		{
-			cli_printf("   上报模式:  %ld    自动上报\r\n",ReportMode);
+			cli_printf("   上报模式  %ld :   自动上报\r\n",ReportMode);
 
 		}break;
 
 		case DevSendMode_Loop:
 		{
-			cli_printf("   上报模式:  %ld    循环上报\r\n",ReportMode);	
+			cli_printf("   上报模式  %ld :   循环上报\r\n",ReportMode);	
 
 		}break;	
 
 		default :
 		{
-			cli_printf("   上报模式:  %ld    未设置\r\n",ReportMode);
+			cli_printf("   上报模式  %ld :   未设置\r\n",ReportMode);
 			
-
 		}break;
 	}
-	cli_printf("   终端上报间隔:   %lu \r\n",SysPara.SendSpace);	
+	cli_printf("   终端上报间隔:   %lu ms \r\n",SysPara.SendSpace);	
 	cli_printf("\r\n\r\n");
 
 	
 	cli_printf("   供暖开始时间:   %4d年%2d月%2d日 %2d:%2d:%2d  \r\n",SysPara.StartTime.Year,SysPara.StartTime.Month,SysPara.StartTime.Day,SysPara.StartTime.Hour,SysPara.StartTime.Minute,SysPara.StartTime.Second);
 	cli_printf("   供暖结束时间:   %4d年%2d月%2d日 %2d:%2d:%2d  \r\n",SysPara.FinalTime.Year,SysPara.FinalTime.Month,SysPara.FinalTime.Day,SysPara.FinalTime.Hour,SysPara.FinalTime.Minute,SysPara.FinalTime.Second);
-	cli_printf("   系统供暖时间:   %f\r\n   供暖季超时PRD:%f \r\n",(FL32)CalculateProvideTimeCtrler.ProvideTime/3600,(FL32)CalculateProvideTimeCtrler.PassData/3600);
-	cli_printf("\r\n");
-	cli_printf("   分摊周期:       %lu 分钟 \r\n",SysPara.Apportion_T);	
+	cli_printf("   系统供暖时长:   %f 小时 \r\n", (FL32)CalculateProvideTimeCtrler.ProvideTime/3600);
+	cli_printf("   供暖超时时长:   %f 小时 \r\n", (FL32)CalculateProvideTimeCtrler.PassData/3600);
+    cli_printf("\r\n\r\n");
+	cli_printf("   系统分摊周期:   %lu 分钟 \r\n",SysPara.Apportion_T);	
 	cli_printf("\r\n\r\n");
 
 	
 	//cli_printf("   主站地址:       %3d.%3d.%3d.%3d:%5d \r\n",SysPara.IP1,SysPara.IP2,SysPara.IP3,SysPara.IP4,SysPara.PortNum);
-
-	cli_printf("   系统用户容量:   %3d \r\n",MAXUser_Num);
-    cli_printf("   系统设备容量:   %3d \r\n",MAXDevice_Num);
-    cli_printf("   系统栋表容量:   %3d \r\n\r\n",MAXBuldMeter_Num);
+    cli_printf("   系统设备容量:   %d \r\n",MAXDevice_Num);
+	cli_printf("   系统用户容量:   %d \r\n",MAXUser_Num);
+    cli_printf("   系统栋表容量:   %d \r\n\r\n",MAXBuldMeter_Num);
     
-	cli_printf("   系统用户数量:   %3d \r\n",SysPara.UserNum);
-	cli_printf("   系统栋表数量:   %3d \r\n\r\n",SysPara.BuldMeterNum);
-
+	cli_printf("   系统用户数量:   %d \r\n",SysPara.UserNum);
+    cli_printf("   系统设备数量:   %d \r\n",SysPara.DevNum);
+	cli_printf("   系统栋表数量:   %d \r\n\r\n",SysPara.BuldMeterNum);
 	
-	cli_printf("   用户设备数量:   %3d \r\n",SysPara.DevNum);
-	cli_printf("   系统设备总量:   %3d \r\n\r\n",SysPara.DevNum+SysPara.BuldMeterNum);
+	
+    cli_printf("   系统设备总量:   %d \r\n\r\n",SysPara.DevNum+SysPara.BuldMeterNum);
 }
 
 
@@ -256,7 +251,7 @@ void devicepara(char *pcWriteBuffer, int xWriteBufferLen,int argc, char **argv)
 				INT16U userNum =0;
 				INT32U UserKEY =0;
 				cli_printf("设备序号:  %d\r\n",SysDeviceList.Device[devNum].Num);
-				cli_printf("设备主键:  %08lX\r\n",SysDeviceList.Device[devNum].ID);
+				cli_printf("设备编号:  %08lX\r\n",SysDeviceList.Device[devNum].ID);
 
 				userNum =SysDeviceList.Device[devNum].UserNum;
 				UserKEY =SysDeviceList.Device[devNum].UserKEY;
@@ -693,7 +688,7 @@ void devicestatus(char *pcWriteBuffer, int xWriteBufferLen,int argc, char **argv
 	INT32U  DeviceNums =0;
 
 	//cli_printf("%-5s%-10s%-15s%-15s%-15s%-15s%-15s\r\n\r\n","Num","Type(设备类型)","COM_T(失败次数)","COM_S(成功次数)","COMBack_CE(抄收次数)", "设备编号", "位置");
-    cli_printf(" %-5s%-5s%-18s%-18s%-18s%-18s%s\r\n\r\n", "【序号】", "【类型】", "【失败次数】", "【成功次数】", "【抄收总次数】", "【设备编号】", "【位置】");
+    cli_printf("%-9s%-9s%-18s%-18s%-17s%-20s%s\r\n\r\n", "【序号】", "【类型】", "【抄收总次数】", "【成功次数】", "【失败次数】", "【设备编号】", "【设备位置信息】");
 	for(INT16U i=0; i<MAXDevice_Num;i++)
 	{	
 		feedIWDG(cli_dog);
@@ -797,15 +792,26 @@ void devicestatus(char *pcWriteBuffer, int xWriteBufferLen,int argc, char **argv
 					COMBack_CE =0;
 				}break;
 			}
-			cli_printf(" %-10d%-8d%-18lu%-18lu%-18lu%-18lX%02d号楼 - %d单元 - %02d层 - %02d室\r\n", i, DeviceT, COM_T, COM_S, COMBack_CE,\
-                                                                                            SysDeviceList.Device[i].ID,\
-                                                                                            SysUserList.User[i].Buld,\
-                                                                                            SysUserList.User[i].Unit,\
-                                                                                            SysUserList.User[i].Floor,\
-                                                                                            SysUserList.User[i].Cell);
+            if(DeviceT != 1 && DeviceT != 5 && DeviceT != 11)//筛选出楼栋热量表，不打印出楼号-单元号-房间号
+            {
+                cli_printf("   %-8d%-8d%-18lu%-18lu%-18lu%08lX     %02d号楼 - %d单元 - %02d层 - %02d室\r\n", i, DeviceT, COM_T, COM_S, COMBack_CE,\
+                                                                                                        SysDeviceList.Device[i].ID,\
+                                                                                                        SysUserList.User[i-MAXBuldMeter_Num].Buld,\
+                                                                                                        SysUserList.User[i-MAXBuldMeter_Num].Unit,\
+                                                                                                        SysUserList.User[i-MAXBuldMeter_Num].Floor,\
+                                                                                                        SysUserList.User[i-MAXBuldMeter_Num].Cell);
+            }
+            else
+            {
+                cli_printf("   %-8d%-8d%-18lu%-18lu%-18lu%08lX     **号楼 - *单元 - **层 - **室\r\n", i, DeviceT, COM_T, COM_S, COMBack_CE, SysDeviceList.Device[i].ID);
+            }
+            //cli_printf("--------|-------|-------------------|-----------------|-----------------|----------------|-------------------------------\r\n");
+            //cli_printf("-------------------------------------------------------------------------------------------------------------------------\r\n");
+            //cli_printf("|_______|_______|___________________|_________________|_________________|________________|______________________________|\r\n");
+            //cli_printf("_________________________________________________________________________________________________________________________\r\n");
 		}
 	}
-	cli_printf("查询设备总数量: %lu\r\n\r\n\r\n",DeviceNums);
+	cli_printf("\r\n    查询设备总数量: %lu\r\n\r\n\r\n",DeviceNums);
 	
 }
 
@@ -1171,7 +1177,7 @@ void devchange(char *pcWriteBuffer, int xWriteBufferLen,int argc, char **argv)
 	
 	if(argc != 4)		//判断输入参数的合法性
 	{
-		cmd_printf("devchange [X] [Y] [Z]\r\n");
+		cmd_printf("devchange [XXXXXXXX] [YYYYYYYY] [设备类型]\r\n");
 		return;
 	}
     DevType = atoi(argv[3]);
@@ -1280,13 +1286,14 @@ void setread(char *pcWriteBuffer, int xWriteBufferLen,int argc, char **argv)
 
 	if(argc != 3)		//判断输入参数的合法性
 	{
-		cmd_printf("setread [Repeat space] [Loop space]\r\n");
+		//cmd_printf("setread [Repeat space] [Loop space]\r\n");
+        cmd_printf("setread [重试间隔] [循环间隔]\r\n");
 		return;
 	}
 	Num  = atoi(argv[1]);
 	if(( Num<2000)||(Num>1000*60*10))
 	{
-		cmd_printf("setread [Repeat space] 2000<->600000 ms\r\n");
+		cmd_printf("setread [重试间隔] 2000<->600000 ms\r\n");
 		return;
 	}
 	SysPara.ReadSpace =Num;
@@ -1294,7 +1301,7 @@ void setread(char *pcWriteBuffer, int xWriteBufferLen,int argc, char **argv)
 	Num  = atoi(argv[2]);
 	if(( Num<2000)||(Num>1000*60*10))
 	{
-		cmd_printf("setread [Loop space] 2000<->600000 ms\r\n");
+		cmd_printf("setread [循环间隔] 2000<->600000 ms\r\n");
 		return;
 	}
 	SysPara.LoopSpace =Num;
@@ -1335,7 +1342,8 @@ void setsend(char *pcWriteBuffer, int xWriteBufferLen,int argc, char **argv)
 
 	if(argc != 3)		//判断输入参数的合法性
 	{
-		cmd_printf("setsend [ModeID] [XXXXX]\r\n");
+		//cmd_printf("setsend [ModeID] [XXXXX]\r\n");
+        cmd_printf("setsend [模式] [上报间隔]\r\n");
 		return;
 	}
 
@@ -1345,7 +1353,8 @@ void setsend(char *pcWriteBuffer, int xWriteBufferLen,int argc, char **argv)
 	{
 		if(Mode >2)
 		{
-			cmd_printf("ModeID  0:无效 1:Auto 2:Loop \r\n");
+			//cmd_printf("ModeID  0:无效 1:Auto 2:Loop \r\n");
+            cmd_printf("模式：     0:无效 1:自动模式 2:循环模式 \r\n");
 			return;
 		}
 
@@ -1353,7 +1362,8 @@ void setsend(char *pcWriteBuffer, int xWriteBufferLen,int argc, char **argv)
 	Num  = atoi(argv[2]);
 	if(( Num<5000)||(Num>1000*60*10))
 	{
-		cmd_printf("setsend [5000]<->[600000] ms\r\n");
+		//cmd_printf("setsend [5000]<->[600000] ms\r\n");
+        cmd_printf("setsend [X] [5000<->600000] ms\r\n");
 		return;
 	}
 
@@ -1395,20 +1405,22 @@ void setshare(char *pcWriteBuffer, int xWriteBufferLen,int argc, char **argv)
 
 	if(argc != 2)		//判断输入参数的合法性
 	{
-		cmd_printf("setshare [XXXXX]\r\n");
+		//cmd_printf("setshare [XXXXX]\r\n");
+        cmd_printf("setshare [分钟]\r\n");
 		return;
 	}
 	Num  = atoi(argv[1]);
 	if(( Num<10)||(Num>60*12))
 	{
-		cmd_printf("ShareSpace [10]<->[720] Minutes\r\n");
+		//cmd_printf("ShareSpace [10]<->[720] Minutes\r\n");
+        cmd_printf("ShareSpace [10<->720] Minutes\r\n");
 		return;
 	}
 	SysPara.Apportion_T =Num;
 	if(SysPara_Update()==HAL_OK)
 	{
 		cmd_printf("分摊周期设置成功...\r\n");
-		cli_printf("分摊周期:       %lu Minutes \r\n",SysPara.Apportion_T);
+		cli_printf("分摊周期:       %lu 分钟 \r\n",SysPara.Apportion_T);
 	}
 	else
 	{
@@ -1555,14 +1567,21 @@ void ClirateSet(char *pcWriteBuffer, int xWriteBufferLen,int argc, char **argv)
         return;
     }
 
-    cli_printf("clirate The rate value set success :  %ld\r\n",rate);
+//    cli_printf("clirate The rate value set success :  %ld\r\n",rate);
+//    
+//    cli_printf("Please reset the serial communication rate and turn it back on..\r\n\r\n\r\n");
+
+//    
+//    cli_printf("If you want to restore the default settings[115200], please restart the device again.\r\n");
+//    cli_printf("THANK YOU, GOOD LUCK\r\n\r\n");
     
-    cli_printf("Please reset the serial communication rate and turn it back on..\r\n\r\n\r\n");
+    cli_printf("设置成功的速率值 :  %ld\r\n",rate);
+    
+    cli_printf("请重新设置调试软件的通信速率，并重新打开它..\r\n\r\n\r\n");
 
     
-    cli_printf("If you want to restore the default settings[9600], please restart the device again.\r\n");
+    cli_printf("如果您想恢复默认设置[115200]，请重新启动设备.\r\n");
     cli_printf("THANK YOU, GOOD LUCK\r\n\r\n");
-
 
     HAL_Delay(2500);
 
