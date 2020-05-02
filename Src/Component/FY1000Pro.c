@@ -25,10 +25,14 @@
 #define _FY1000PRO_C_
 #include "FY1000Pro.h"
 #include "Main.h"
+#include "check.h"
 
 
 osMutexId fy1000SendMutexHandle;//FY-1000协议队列发送互锁
 
+
+INT8U  NWK_0X1B_Register_Addr   = 0; //接收服务器下发耐威科指令的寄存器地址 保存下来， 以备后面反馈给服务打包使用
+INT16U NWK_0X1B_Data            = 0; //接收服务器下发耐威科指令的数据 保存下来， 以备后面反馈给服务打包使用
 
 /*
 函数名称:ProtocolCon_Rx_ForyonV20( INT8U PortNum )
@@ -554,7 +558,7 @@ void FY1000_Pack_0X02_A4(UART_RBC_Stru* PORT)
 
 }
 
-
+#ifdef Valve_NWK_ENABLE
 void FY1000_Pack_0X02_A5(UART_RBC_Stru* PORT)
 {
 
@@ -607,7 +611,7 @@ void FY1000_Pack_0X02_A5(UART_RBC_Stru* PORT)
 
 
 }
-
+#endif
 
 INT8U  FY1000_Pack_0X03(UART_RBC_Stru* PORT)
 {
@@ -1247,8 +1251,36 @@ void FY1000_Pack_0X1A(UART_RBC_Stru* PORT)
 
 
 
+#ifdef Valve_NWK_ENABLE
+void FY1000_Pack_0X1C(UART_RBC_Stru* PORT)
+{
 
+	FY1000_Send_Uni* PackData           = (FY1000_Send_Uni*)(PORT->OutputPack);	//指针变换
+	INT16U PackSize =0;
 
+	PackData->Pack_0X1C.Head.Start      = FY1000Pro_StartCode;
+	PackData->Pack_0X1C.Head.Version    = FY1000Pro_ProtocolCode;
+	PackData->Pack_0X1C.Head.SN         = SysPara.Device_SN;			
+	PackData->Pack_0X1C.Head.Lenth      = sizeof(FY1000_Pack0X1B_NWK_Stru)-FY1000Pro_HeadSize-2;//实际有效数据区长度
+	
+    PackData->Pack_0X1A.Head.ConType    = 0X1C;
+    
+	PackData->Pack_0X1C.DevType         = FY1000_Q_RX_Buffer.SendData.Pack_0X1C.DevType;
+	PackData->Pack_0X1C.DevID           = FY1000_Q_RX_Buffer.SendData.Pack_0X1C.DevID;
+    
+	PackData->Pack_0X1C.Register_Addr   = FY1000_Q_RX_Buffer.SendData.Pack_0X1C.Register_Addr;
+    PackData->Pack_0X1C.data            = FY1000_Q_RX_Buffer.SendData.Pack_0X1C.data;
+
+	PackSize = sizeof(FY1000_Pack0X1B_NWK_Stru)-2; //校验数据长度计算
+	PackData->Pack_0X1C.Check           = SUMCheck_Input((INT8U*)PackData, PackSize);
+	PackData->Pack_0X1C.End             = FY1000Pro_EndCode;
+
+	PackSize+=2;
+	PORT->OutputPackSize = PackSize;
+	PORT->PackSendFlag   = ENABLE; 
+	
+}
+#endif
 
 
 
@@ -1568,7 +1600,7 @@ void FY1000_Pack_0XB0_A4(UART_RBC_Stru* PORT)
 
 }
 
-
+#ifdef Valve_NWK_ENABLE
 
 void FY1000_Pack_0XB0_A5(UART_RBC_Stru* PORT)
 {
@@ -1623,7 +1655,7 @@ void FY1000_Pack_0XB0_A5(UART_RBC_Stru* PORT)
 
 }
 
-
+#endif
 
 
 
@@ -1836,10 +1868,50 @@ INT8U  FY1000_Pack_0XFF(UART_RBC_Stru* PORT)
 }
 
 
+#ifdef Valve_NWK_ENABLE
+INT8U  FY1000_UnPack_0X1B(UART_RBC_Stru* PORT)
+{
+	FY1000_Pack_Uni* PackData =(FY1000_Pack_Uni*)(PORT->InputPack);	//指针变换
+	INT8U BackVal =0X01;
+
+	if (PackData->Pack_0X1B.Head.SN ==SysPara.Device_SN)
+	{
+		if( ( PackData->Pack_0X1B.Register_Addr==12)||( PackData->Pack_0X1B.Register_Addr==14)||\
+            ( PackData->Pack_0X1B.Register_Addr==16)||( PackData->Pack_0X1B.Register_Addr==18)||\
+            ( PackData->Pack_0X1B.Register_Addr==22)||( PackData->Pack_0X1B.Register_Addr==23)||\
+            ( PackData->Pack_0X1B.Register_Addr==24)||( PackData->Pack_0X1B.Register_Addr==25)||\
+            ( PackData->Pack_0X1B.Register_Addr==26)||( PackData->Pack_0X1B.Register_Addr==27) )
+		{
+			BackVal =0X00;
+		}
+	}
+	return BackVal;
+}
+#endif
+
+//INT8U FY1000_UnPack_0X1B(UART_RBC_Stru* Ctrl_Point)
+//{
+//    unsigned short CRC16 = 0xFF;	//错误标志
+//    UINT8 CRC_H = 0;
+//    UINT8 CRC_L = 0;
+
+//    //NWK_Pack_Uni* Packin =(NWK_Pack_Uni*)Ctrl_Point->InputPack;	//指针变换
 
 
+//    CRC16 = crc_16_modbus((const unsigned char*)Ctrl_Point->InputPack, (unsigned short) 6);
 
+//    CRC_L = CRC16 >> 8;
+//    CRC_H = CRC16 & 0x00FF;
 
+//    //CheckFlg =SUMCheck_Check(((INT8U*)Ctrl_Point->InputPack), DataSize);
+
+//    if(CRC_H != Ctrl_Point->InputPack[6] || CRC_L != Ctrl_Point->InputPack[7])//校验错误，退出函数
+//    {
+//        CRC16 = 0;
+//    }
+//    
+//    return	CRC16;
+//}
 
 
 
@@ -2191,36 +2263,57 @@ INT8U FY1000_Pack_Rx_S(UART_RBC_Stru* Ctrl_Point,INT8U Protocol)
 #ifdef  Valve_NWK_ENABLE
 							case Valve_NWK://NWK耐威科楼栋单元调节阀modbus协议
 							{
+                                
                                 SendBuffer.SendData.Pack_0XB0_D5.CtrlFlag               = PackData->Pack_0X01.CtrlFlag;
                                 SendBuffer.SendData.Pack_0XB0_D5.Dev_Type               = DevType;
                                 SendBuffer.SendData.Pack_0XB0_D5.Dev_ID                 = DevID;
                                 SendBuffer.SendData.Pack_0XB0_D5.BackFlag               = COMBack_OK;
 
-                                //数据域
-                                SendBuffer.SendData.Pack_0XB0_D5.Input_Temp             = SysDevData[DevNum].Device11.Input_Temp;
-                                SendBuffer.SendData.Pack_0XB0_D5.Output_Temp            = SysDevData[DevNum].Device11.Output_Temp;
-                                SendBuffer.SendData.Pack_0XB0_D5.EnterWater_Pressure    = SysDevData[DevNum].Device11.EnterWater_Pressure;
-                                SendBuffer.SendData.Pack_0XB0_D5.ReturnWater_Pressure   = SysDevData[DevNum].Device11.ReturnWater_Pressure;
-                                SendBuffer.SendData.Pack_0XB0_D5.Room_Temp              = SysDevData[DevNum].Device11.Room_Temp;
-                                SendBuffer.SendData.Pack_0XB0_D5.Current_Valve_Open     = SysDevData[DevNum].Device11.Current_Valve_Open;
-                                SendBuffer.SendData.Pack_0XB0_D5.SetValue_Open          = SysDevData[DevNum].Device11.SetValue_Open;
-                                SendBuffer.SendData.Pack_0XB0_D5.Temp_Diff              = SysDevData[DevNum].Device11.Temp_Diff;
-                                SendBuffer.SendData.Pack_0XB0_D5.ReturnTemp_Set         = SysDevData[DevNum].Device11.ReturnTemp_Set;
-                                SendBuffer.SendData.Pack_0XB0_D5.PressureDiff_Set       = SysDevData[DevNum].Device11.PressureDiff_Set;
-                                SendBuffer.SendData.Pack_0XB0_D5.Error                  = SysDevData[DevNum].Device11.Error;
-                                SendBuffer.SendData.Pack_0XB0_D5.Software_Version       = SysDevData[DevNum].Device11.Software_Version;
-                                SendBuffer.SendData.Pack_0XB0_D5.Run_Mode               = SysDevData[DevNum].Device11.Run_Mode;
-                                SendBuffer.SendData.Pack_0XB0_D5.Address                = SysDevData[DevNum].Device11.Address;
-                                SendBuffer.SendData.Pack_0XB0_D5.Motor_Steering         = SysDevData[DevNum].Device11.Motor_Steering;
-                                SendBuffer.SendData.Pack_0XB0_D5.Adjust_Switch          = SysDevData[DevNum].Device11.Adjust_Switch;
-                                SendBuffer.SendData.Pack_0XB0_D5.Adjust_Tigger          = SysDevData[DevNum].Device11.Adjust_Tigger;
-                                SendBuffer.SendData.Pack_0XB0_D5.Dc_Motor_Speed         = SysDevData[DevNum].Device11.Dc_Motor_Speed;
+                                //数据域  //数据小端模式 字节倒序
+                                
+                                SendBuffer.SendData.Pack_0XB0_D5.Input_Temp             = (UINT16)(SysDevData[DevNum].Device11.Input_Temp*100);
+                                //dbg_printf(DEBUG_INFO,"Input_Temp  0X%02x\r\n\r\n", SendBuffer.SendData.Pack_0XB0_D5.Input_Temp);
+                                SendBuffer.SendData.Pack_0XB0_D5.Output_Temp            = (UINT16)(SysDevData[DevNum].Device11.Output_Temp*100);
+                                //dbg_printf(DEBUG_INFO,"Output_Temp 0X%02x\r\n\r\n", SendBuffer.SendData.Pack_0XB0_D5.Output_Temp);
+                                SendBuffer.SendData.Pack_0XB0_D5.EnterWater_Pressure    = (UINT16)(SysDevData[DevNum].Device11.EnterWater_Pressure*100);
+                                //dbg_printf(DEBUG_INFO,"EnterWater_Pressure  %02x\r\n\r\n", SendBuffer.SendData.Pack_0XB0_D5.EnterWater_Pressure);
+                                SendBuffer.SendData.Pack_0XB0_D5.ReturnWater_Pressure   = (UINT16)(SysDevData[DevNum].Device11.ReturnWater_Pressure*100);
+                                //dbg_printf(DEBUG_INFO,"ReturnWater_Pressure  %02x\r\n\r\n", SendBuffer.SendData.Pack_0XB0_D5.ReturnWater_Pressure);
+                                SendBuffer.SendData.Pack_0XB0_D5.Room_Temp              = (UINT16)(SysDevData[DevNum].Device11.Room_Temp*100);
+                                //dbg_printf(DEBUG_INFO,"Room_Temp  %02x\r\n\r\n", SendBuffer.SendData.Pack_0XB0_D5.Room_Temp);
+                                SendBuffer.SendData.Pack_0XB0_D5.Current_Valve_Open     = (UINT16)(SysDevData[DevNum].Device11.Current_Valve_Open*100);
+                                //dbg_printf(DEBUG_INFO,"Current_Valve_Open  %02x\r\n\r\n", SendBuffer.SendData.Pack_0XB0_D5.Current_Valve_Open);
+                                SendBuffer.SendData.Pack_0XB0_D5.SetValue_Open          = (UINT16)(SysDevData[DevNum].Device11.SetValue_Open*100);
+                                //dbg_printf(DEBUG_INFO,"SetValue_Open  %02x\r\n\r\n", SendBuffer.SendData.Pack_0XB0_D5.SetValue_Open);
+                                SendBuffer.SendData.Pack_0XB0_D5.Temp_Diff              = (UINT16)(SysDevData[DevNum].Device11.Temp_Diff*100);
+                                //dbg_printf(DEBUG_INFO,"Temp_Diff  %02x\r\n\r\n", SendBuffer.SendData.Pack_0XB0_D5.Temp_Diff);
+                                SendBuffer.SendData.Pack_0XB0_D5.ReturnTemp_Set         = (UINT16)(SysDevData[DevNum].Device11.ReturnTemp_Set*100);
+                                //dbg_printf(DEBUG_INFO,"ReturnTemp_Set  %02x\r\n\r\n", SendBuffer.SendData.Pack_0XB0_D5.ReturnTemp_Set);
+                                SendBuffer.SendData.Pack_0XB0_D5.PressureDiff_Set       = (UINT16)(SysDevData[DevNum].Device11.PressureDiff_Set*100);
+                                //dbg_printf(DEBUG_INFO,"PressureDiff_Set  %02x\r\n\r\n", SendBuffer.SendData.Pack_0XB0_D5.PressureDiff_Set);
+                                
+                                
+                                SendBuffer.SendData.Pack_0XB0_D5.Error                  = SysDevData[DevNum].Device11.Error;    
+                                //dbg_printf(DEBUG_INFO,"Error=%d\r\n",SendBuffer.SendData.Pack_0XB0_D5.Error);
+                                SendBuffer.SendData.Pack_0XB0_D5.Software_Version       = SysDevData[DevNum].Device11.Software_Version; 
+                                //dbg_printf(DEBUG_INFO,"Software_Version=%d\r\n",SendBuffer.SendData.Pack_0XB0_D5.Software_Version);
+                                SendBuffer.SendData.Pack_0XB0_D5.Run_Mode               = SysDevData[DevNum].Device11.Run_Mode; 
+                                //dbg_printf(DEBUG_INFO,"Run_Mode=%d\r\n",SendBuffer.SendData.Pack_0XB0_D5.Run_Mode);
+                                SendBuffer.SendData.Pack_0XB0_D5.Address                = SysDevData[DevNum].Device11.Address;  
+                                //dbg_printf(DEBUG_INFO,"Address=%d\r\n",SendBuffer.SendData.Pack_0XB0_D5.Address);
+                                SendBuffer.SendData.Pack_0XB0_D5.Motor_Steering         = SysDevData[DevNum].Device11.Motor_Steering;   
+                                //dbg_printf(DEBUG_INFO,"Motor_Steering=%d\r\n",SendBuffer.SendData.Pack_0XB0_D5.Motor_Steering);
+                                SendBuffer.SendData.Pack_0XB0_D5.Adjust_Switch          = SysDevData[DevNum].Device11.Adjust_Switch;    
+                                //dbg_printf(DEBUG_INFO,"Adjust_Switch=%d\r\n",SendBuffer.SendData.Pack_0XB0_D5.Adjust_Switch);
+                                SendBuffer.SendData.Pack_0XB0_D5.Adjust_Tigger          = SysDevData[DevNum].Device11.Adjust_Tigger;    
+                                //dbg_printf(DEBUG_INFO,"Adjust_Tigger=%d\r\n",SendBuffer.SendData.Pack_0XB0_D5.Adjust_Tigger);
+                                SendBuffer.SendData.Pack_0XB0_D5.Dc_Motor_Speed         = SysDevData[DevNum].Device11.Dc_Motor_Speed;   
+                                //dbg_printf(DEBUG_INFO,"Dc_Motor_Speed=%d\r\n",SendBuffer.SendData.Pack_0XB0_D5.Dc_Motor_Speed);
+                                
                                 
 								FY_1000Send_Code_QInput(&SendBuffer,0X02);
 
 							}break;
-
-
 #endif
 
 
@@ -2242,6 +2335,8 @@ INT8U FY1000_Pack_Rx_S(UART_RBC_Stru* Ctrl_Point,INT8U Protocol)
 				
 				else if( PackData->Pack_0X01.CtrlFlag ==0XAA)//重新补招终端数据
 				{
+                    //UART_TO_FY1000_QueueSend_Stru SendBuffer;
+                    
 					if(GetMeters_Num(DevID,(SysDEV_Type)DevType ,&DevNum) ==HAL_OK)	//成功找到用户设备
 					{
 						dbg_printf(DEBUG_INFO,"设备检索成功...");
@@ -2411,8 +2506,58 @@ INT8U FY1000_Pack_Rx_S(UART_RBC_Stru* Ctrl_Point,INT8U Protocol)
                                 Buffer.Uapack=0X01;
                                 Buffer.Device =SysDeviceList.Device[DevNum];                            //设备传输
                                 Buffer.SignleCom =SET;                                                  //重复超收
-                                NWK_Send_Code_QInput(&Buffer, 0X01);                                    //队列填充  
+                                NWK_Send_Code_QInput(&Buffer, 0X03);                                    //队列填充  
+                                
+                                
+//                                //反馈给服务器最新数据
+//                                SendBuffer.SendData.Pack_0XB0_D5.CtrlFlag               = PackData->Pack_0X01.CtrlFlag;
+//                                SendBuffer.SendData.Pack_0XB0_D5.Dev_Type               = DevType;
+//                                SendBuffer.SendData.Pack_0XB0_D5.Dev_ID                 = DevID;
+//                                SendBuffer.SendData.Pack_0XB0_D5.BackFlag               = COMBack_OK;
 
+//                                //数据域  //数据小端模式 字节倒序
+//                                
+//                                SendBuffer.SendData.Pack_0XB0_D5.Input_Temp             = (UINT16)(SysDevData[DevNum].Device11.Input_Temp*100);
+//                                //dbg_printf(DEBUG_INFO,"Input_Temp  0X%02x\r\n\r\n", SendBuffer.SendData.Pack_0XB0_D5.Input_Temp);
+//                                SendBuffer.SendData.Pack_0XB0_D5.Output_Temp            = (UINT16)(SysDevData[DevNum].Device11.Output_Temp*100);
+//                                //dbg_printf(DEBUG_INFO,"Output_Temp 0X%02x\r\n\r\n", SendBuffer.SendData.Pack_0XB0_D5.Output_Temp);
+//                                SendBuffer.SendData.Pack_0XB0_D5.EnterWater_Pressure    = (UINT16)(SysDevData[DevNum].Device11.EnterWater_Pressure*100);
+//                                //dbg_printf(DEBUG_INFO,"EnterWater_Pressure  %02x\r\n\r\n", SendBuffer.SendData.Pack_0XB0_D5.EnterWater_Pressure);
+//                                SendBuffer.SendData.Pack_0XB0_D5.ReturnWater_Pressure   = (UINT16)(SysDevData[DevNum].Device11.ReturnWater_Pressure*100);
+//                                //dbg_printf(DEBUG_INFO,"ReturnWater_Pressure  %02x\r\n\r\n", SendBuffer.SendData.Pack_0XB0_D5.ReturnWater_Pressure);
+//                                SendBuffer.SendData.Pack_0XB0_D5.Room_Temp              = (UINT16)(SysDevData[DevNum].Device11.Room_Temp*100);
+//                                //dbg_printf(DEBUG_INFO,"Room_Temp  %02x\r\n\r\n", SendBuffer.SendData.Pack_0XB0_D5.Room_Temp);
+//                                SendBuffer.SendData.Pack_0XB0_D5.Current_Valve_Open     = (UINT16)(SysDevData[DevNum].Device11.Current_Valve_Open*100);
+//                                //dbg_printf(DEBUG_INFO,"Current_Valve_Open  %02x\r\n\r\n", SendBuffer.SendData.Pack_0XB0_D5.Current_Valve_Open);
+//                                SendBuffer.SendData.Pack_0XB0_D5.SetValue_Open          = (UINT16)(SysDevData[DevNum].Device11.SetValue_Open*100);
+//                                //dbg_printf(DEBUG_INFO,"SetValue_Open  %02x\r\n\r\n", SendBuffer.SendData.Pack_0XB0_D5.SetValue_Open);
+//                                SendBuffer.SendData.Pack_0XB0_D5.Temp_Diff              = (UINT16)(SysDevData[DevNum].Device11.Temp_Diff*100);
+//                                //dbg_printf(DEBUG_INFO,"Temp_Diff  %02x\r\n\r\n", SendBuffer.SendData.Pack_0XB0_D5.Temp_Diff);
+//                                SendBuffer.SendData.Pack_0XB0_D5.ReturnTemp_Set         = (UINT16)(SysDevData[DevNum].Device11.ReturnTemp_Set*100);
+//                                //dbg_printf(DEBUG_INFO,"ReturnTemp_Set  %02x\r\n\r\n", SendBuffer.SendData.Pack_0XB0_D5.ReturnTemp_Set);
+//                                SendBuffer.SendData.Pack_0XB0_D5.PressureDiff_Set       = (UINT16)(SysDevData[DevNum].Device11.PressureDiff_Set*100);
+//                                //dbg_printf(DEBUG_INFO,"PressureDiff_Set  %02x\r\n\r\n", SendBuffer.SendData.Pack_0XB0_D5.PressureDiff_Set);
+//                                
+//                                
+//                                SendBuffer.SendData.Pack_0XB0_D5.Error                  = SysDevData[DevNum].Device11.Error;    
+//                                //dbg_printf(DEBUG_INFO,"Error=%d\r\n",SendBuffer.SendData.Pack_0XB0_D5.Error);
+//                                SendBuffer.SendData.Pack_0XB0_D5.Software_Version       = SysDevData[DevNum].Device11.Software_Version; 
+//                                //dbg_printf(DEBUG_INFO,"Software_Version=%d\r\n",SendBuffer.SendData.Pack_0XB0_D5.Software_Version);
+//                                SendBuffer.SendData.Pack_0XB0_D5.Run_Mode               = SysDevData[DevNum].Device11.Run_Mode; 
+//                                //dbg_printf(DEBUG_INFO,"Run_Mode=%d\r\n",SendBuffer.SendData.Pack_0XB0_D5.Run_Mode);
+//                                SendBuffer.SendData.Pack_0XB0_D5.Address                = SysDevData[DevNum].Device11.Address;  
+//                                //dbg_printf(DEBUG_INFO,"Address=%d\r\n",SendBuffer.SendData.Pack_0XB0_D5.Address);
+//                                SendBuffer.SendData.Pack_0XB0_D5.Motor_Steering         = SysDevData[DevNum].Device11.Motor_Steering;   
+//                                //dbg_printf(DEBUG_INFO,"Motor_Steering=%d\r\n",SendBuffer.SendData.Pack_0XB0_D5.Motor_Steering);
+//                                SendBuffer.SendData.Pack_0XB0_D5.Adjust_Switch          = SysDevData[DevNum].Device11.Adjust_Switch;    
+//                                //dbg_printf(DEBUG_INFO,"Adjust_Switch=%d\r\n",SendBuffer.SendData.Pack_0XB0_D5.Adjust_Switch);
+//                                SendBuffer.SendData.Pack_0XB0_D5.Adjust_Tigger          = SysDevData[DevNum].Device11.Adjust_Tigger;    
+//                                //dbg_printf(DEBUG_INFO,"Adjust_Tigger=%d\r\n",SendBuffer.SendData.Pack_0XB0_D5.Adjust_Tigger);
+//                                SendBuffer.SendData.Pack_0XB0_D5.Dc_Motor_Speed         = SysDevData[DevNum].Device11.Dc_Motor_Speed;   
+//                                //dbg_printf(DEBUG_INFO,"Dc_Motor_Speed=%d\r\n",SendBuffer.SendData.Pack_0XB0_D5.Dc_Motor_Speed);
+//                                
+//                                
+//								FY_1000Send_Code_QInput(&SendBuffer,0X02);
                             }break;
 
 #endif
@@ -3235,10 +3380,341 @@ INT8U FY1000_Pack_Rx_S(UART_RBC_Stru* Ctrl_Point,INT8U Protocol)
 				dbg_printf(DEBUG_INFO,"主站命令 设备参数错误...");
 			}
 		}break;
+        
+        
+/********************************************************************************************/
+/********************************************************************************************/
+/***********************************新添加命令************************************************/
+/********************************************************************************************/
+/********************************************************************************************/
+#ifdef  Valve_NWK_ENABLE
+        
+		case 0X1B:
+		{
+            INT8U  DevType =DEFUNULL;
+			INT32U DevID =0;
+			INT16U DevNum =0;
+            
+            float f_temp = 0;
+            
+			//实现接收服务器下发 06/10 命令之后 返回命令给采集器  并且下行发送 06/10 设置命令
+			ClientCH1_Queue_Stru            SendBuffer_NWK;
+			//UART_TO_FY1000_QueueSend_Stru   SendBuffer_1000;
 
+			ErrorFlg =FY1000_UnPack_0X1B(Ctrl_Point);		
+			if( ErrorFlg==0X00 )
+			{
+                DevType = PackData->Pack_0X1B.DevType;
+                DevID   = PackData->Pack_0X1B.DevID;
+                if(HAL_OK ==GetMeters_Num(DevID,(SysDEV_Type)DevType ,&DevNum)) //成功找到用户设备
+				{
+                    dbg_printf(DEBUG_INFO,"系统通信响应 Pack_R 0X1B...");	//Ctrl_Point->Pack_0X1B.Register_Addr;
+                    
+                    //往服务器发送
+//                    SendBuffer_1000.SendData.Pack_0X1C.DevType          = PackData->Pack_0X1B.DevType;//设备类型
+//                    SendBuffer_1000.SendData.Pack_0X1C.DevID            = PackData->Pack_0X1B.DevID;//设备ID
+//                    SendBuffer_1000.SendData.Pack_0X1C.Register_Addr    = PackData->Pack_0X1B.Register_Addr;//地址
+//                    SendBuffer_1000.SendData.Pack_0X1C.data             = PackData->Pack_0X1B.data;//数据
+//                    FY_1000Send_Code_QInput(&SendBuffer_1000, 0X1C);
+                    NWK_0X1B_Register_Addr = PackData->Pack_0X1B.Register_Addr;//地址
+                    NWK_0X1B_Data          = PackData->Pack_0X1B.data;//数据
+                    //MBUS端口下行数据发送
+                    //SendBuffer_NWK.SendData.NWKData.pack_06_cmd.Head.Addr = PackData->Pack_0X1B.DevID;
+                    
+                    //0x10命令：12/14/16/18/  0x06命令：22/23/24/25/26/27
+                    switch(PackData->Pack_0X1B.Register_Addr)
+                    {
+                        case 12://开度设定地址
+                        {
+                            SendBuffer_NWK.SendData.NWKData.pack_10_cmd.Head.Addr       = PackData->Pack_0X1B.DevID;
+                            SendBuffer_NWK.SendData.NWKData.pack_10_cmd.Register_Addr   = (INT16U)PackData->Pack_0X1B.Register_Addr;
+                            bytes_reverse( (unsigned char *)&SendBuffer_NWK.SendData.NWKData.pack_10_cmd.Register_Addr, 2);//把寄存器地址字节倒序
 
+                            if(PackData->Pack_0X1B.data==0 || (PackData->Pack_0X1B.data>0 && PackData->Pack_0X1B.data<=100 ))
+                            {
+                                
+                                f_temp = (float)(PackData->Pack_0X1B.data);
+                                SendBuffer_NWK.SendData.NWKData.pack_10_cmd.DataValue   = f_temp;
+                                //把数据域字节倒序
+                                bytes_reverse( (unsigned char *)&SendBuffer_NWK.SendData.NWKData.pack_10_cmd.DataValue, 2);
+                                bytes_reverse( (unsigned char *)&SendBuffer_NWK.SendData.NWKData.pack_10_cmd.DataValue+2, 2);
+                                
+                                
+                                //SendBuffer_2000.Device.Num  =SysDeviceList.Device[DevNum].Num;
+                                //SendBuffer_2000.Device.Type =SysDeviceList.Device[DevNum].Type;
+                                //SendBuffer_2000.Device.ID   =SysDeviceList.Device[DevNum].ID;
+                                //SendBuffer_2000.SignleCom   =SET;
+                                //SendBuffer_2000.UaComFlg    =0XAAAA;                               //传递命回复记录
+                                //SendBuffer_2000.Uapack      =0X0D;
+                                //SendBuffer_2000.SendData.FY2000Data.Pack_54.ValveCtrlDemandFlg =CtrlDemand;
+                                //SendBuffer_2000.SendData.FY2000Data.Pack_54.CtrlFlg =0XAA;
+                                
+                                
+                                SendBuffer_NWK.SignleCom    = SET;     //抄收次数不累加
+                                SendBuffer_NWK.Uapack       = 0X0D;     //表明远程控制
+                                SendBuffer_NWK.UaComFlg     = 0XAAAA;   //表明远程 抄收
+                                SendBuffer_NWK.Device       = SysDeviceList.Device[DevNum];
+                                //SendBuffer_NWK.Device.Num = SysDeviceList.Device[DevNum].Num;
+                                //SendBuffer_NWK.Device.Type =SysDeviceList.Device[DevNum].Type;
+                                //SendBuffer_NWK.Device.ID=SysDeviceList.Device[DevNum].ID;
+                                //SendBuffer_NWK.Device.COM_Type=SysDeviceList.Device[DevNum].COM_Type;
+                                
+                                NWK_Send_Code_QInput(&SendBuffer_NWK, 0x10);//10命令
+                                
+                                dbg_printf(DEBUG_INFO,"设置成功 Pack_R 0X1B...");
+                            }
+                            else
+                            {
+                                ErrorFlg = 0x01;//出错
+                            }
+                        }break;
+                        case 14://温差设定地址
+                        {
+                            SendBuffer_NWK.SendData.NWKData.pack_10_cmd.Head.Addr       = PackData->Pack_0X1B.DevID;
+                            SendBuffer_NWK.SendData.NWKData.pack_10_cmd.Register_Addr   = (INT16U)PackData->Pack_0X1B.Register_Addr;
+                            bytes_reverse( (unsigned char *)&SendBuffer_NWK.SendData.NWKData.pack_10_cmd.Register_Addr, 2);//把寄存器地址字节倒序
+                            
+                            if(PackData->Pack_0X1B.data==0 || (PackData->Pack_0X1B.data>0 && PackData->Pack_0X1B.data<=10000 ))
+                            {
+                                
+                                f_temp = (float)((float)PackData->Pack_0X1B.data/(float)100);
+                                SendBuffer_NWK.SendData.NWKData.pack_10_cmd.DataValue   = f_temp;
+                                //把数据域字节倒序
+                                bytes_reverse( (unsigned char *)&SendBuffer_NWK.SendData.NWKData.pack_10_cmd.DataValue, 2);
+                                bytes_reverse( (unsigned char *)&SendBuffer_NWK.SendData.NWKData.pack_10_cmd.DataValue+2, 2);
+                                
+                                SendBuffer_NWK.SignleCom    = SET;     //抄收次数不累加
+                                SendBuffer_NWK.Uapack       = 0X0D;     //表明远程控制
+                                SendBuffer_NWK.UaComFlg     = 0XAAAA;   //表明远程 抄收
+                                SendBuffer_NWK.Device       = SysDeviceList.Device[DevNum];
+                                NWK_Send_Code_QInput(&SendBuffer_NWK, 0x10);//10命令
+                            }
+                            else
+                            {
+                                ErrorFlg = 0x01;//出错
+                            }
+                        }break;
+                        case 16://回水温度设定地址
+                        {
+                            SendBuffer_NWK.SendData.NWKData.pack_10_cmd.Head.Addr       = PackData->Pack_0X1B.DevID;
+                            SendBuffer_NWK.SendData.NWKData.pack_10_cmd.Register_Addr   = (INT16U)PackData->Pack_0X1B.Register_Addr;
+                            bytes_reverse( (unsigned char *)&SendBuffer_NWK.SendData.NWKData.pack_10_cmd.Register_Addr, 2);//把寄存器地址字节倒序
+                            
+                            if(PackData->Pack_0X1B.data==0 || (PackData->Pack_0X1B.data>0 && PackData->Pack_0X1B.data<=10000 ))
+                            {
 
+                                f_temp = (float)((float)PackData->Pack_0X1B.data/(float)100);
+                                SendBuffer_NWK.SendData.NWKData.pack_10_cmd.DataValue   = f_temp;
+                                //把数据域字节倒序
+                                bytes_reverse( (unsigned char *)&SendBuffer_NWK.SendData.NWKData.pack_10_cmd.DataValue, 2);
+                                bytes_reverse( (unsigned char *)&SendBuffer_NWK.SendData.NWKData.pack_10_cmd.DataValue+2, 2);
+                                
+                                
+                                SendBuffer_NWK.SignleCom    = SET;     //抄收次数不累加
+                                SendBuffer_NWK.Uapack       = 0X0D;     //表明远程控制
+                                SendBuffer_NWK.UaComFlg     = 0XAAAA;   //表明远程 抄收
+                                SendBuffer_NWK.Device       = SysDeviceList.Device[DevNum];
+                                NWK_Send_Code_QInput(&SendBuffer_NWK, 0x10);//10命令
+                            }
+                            else
+                            {
+                                ErrorFlg = 0x01;//出错
+                            }
+                        }break;
+                        case 18://压差设定地址
+                        {
+                            SendBuffer_NWK.SendData.NWKData.pack_10_cmd.Head.Addr       = PackData->Pack_0X1B.DevID;
+                            SendBuffer_NWK.SendData.NWKData.pack_10_cmd.Register_Addr   = (INT16U)PackData->Pack_0X1B.Register_Addr;
+                            bytes_reverse( (unsigned char *)&SendBuffer_NWK.SendData.NWKData.pack_10_cmd.Register_Addr, 2);//把寄存器地址字节倒序
+                            
+                            if(PackData->Pack_0X1B.data==0 || (PackData->Pack_0X1B.data>0 && PackData->Pack_0X1B.data<=10000 ))
+                            {
 
+                                f_temp = (float)((float)PackData->Pack_0X1B.data/(float)100);
+                                SendBuffer_NWK.SendData.NWKData.pack_10_cmd.DataValue   = f_temp;
+                                //把数据域字节倒序
+                                bytes_reverse( (unsigned char *)&SendBuffer_NWK.SendData.NWKData.pack_10_cmd.DataValue, 2);
+                                bytes_reverse( (unsigned char *)&SendBuffer_NWK.SendData.NWKData.pack_10_cmd.DataValue+2, 2);
+                                
+                                
+                                SendBuffer_NWK.SignleCom    = SET;     //抄收次数不累加
+                                SendBuffer_NWK.Uapack       = 0X0D;     //表明远程控制
+                                SendBuffer_NWK.UaComFlg     = 0XAAAA;   //表明远程 抄收
+                                SendBuffer_NWK.Device       = SysDeviceList.Device[DevNum];
+                                NWK_Send_Code_QInput(&SendBuffer_NWK, 0x10);//10命令
+                            }
+                            else
+                            {
+                                ErrorFlg = 0x01;//出错
+                            }
+                        }break;
+                        case 22://运行模式设定地址
+                        {
+                            SendBuffer_NWK.SendData.NWKData.pack_06_cmd.Head.Addr       = PackData->Pack_0X1B.DevID;
+                            SendBuffer_NWK.SendData.NWKData.pack_06_cmd.Register_Addr   = (INT16U)PackData->Pack_0X1B.Register_Addr;
+                            bytes_reverse( (unsigned char *)&SendBuffer_NWK.SendData.NWKData.pack_10_cmd.Register_Addr, 2);//把寄存器地址字节倒序
+                            
+                            if( PackData->Pack_0X1B.data < 7 )
+                            {
+                                
+                                SendBuffer_NWK.SendData.NWKData.pack_06_cmd.Register_Data= PackData->Pack_0X1B.data;
+                                //把数据域字节倒序
+                                bytes_reverse( (unsigned char *)&SendBuffer_NWK.SendData.NWKData.pack_06_cmd.Register_Data, 2);
+                                
+                                
+                                SendBuffer_NWK.SignleCom    = SET;     //抄收次数不累加
+                                SendBuffer_NWK.Uapack       = 0X0D;     //表明远程控制
+                                SendBuffer_NWK.UaComFlg     = 0XAAAA;   //表明远程 抄收
+                                SendBuffer_NWK.Device       = SysDeviceList.Device[DevNum];
+                                NWK_Send_Code_QInput(&SendBuffer_NWK, 0x06);//06命令
+                            }
+                            else
+                            {
+                                ErrorFlg = 0x01;//出错
+                            }
+                        }break;
+                        case 23://编号设定
+                        {
+                            SendBuffer_NWK.SendData.NWKData.pack_06_cmd.Head.Addr       = PackData->Pack_0X1B.DevID;
+                            SendBuffer_NWK.SendData.NWKData.pack_06_cmd.Register_Addr   = (INT16U)PackData->Pack_0X1B.Register_Addr;
+                            bytes_reverse( (unsigned char *)&SendBuffer_NWK.SendData.NWKData.pack_10_cmd.Register_Addr, 2);//把寄存器地址字节倒序
+                            
+                            if( PackData->Pack_0X1B.data < 247 )
+                            {
+                                
+                                SendBuffer_NWK.SendData.NWKData.pack_06_cmd.Register_Data= PackData->Pack_0X1B.data;
+                                //把数据域字节倒序
+                                bytes_reverse( (unsigned char *)&SendBuffer_NWK.SendData.NWKData.pack_06_cmd.Register_Data, 2);
+                                
+                                
+                                SendBuffer_NWK.SignleCom    = SET;     //抄收次数不累加
+                                SendBuffer_NWK.Uapack       = 0X0D;     //表明远程控制
+                                SendBuffer_NWK.UaComFlg     = 0XAAAA;   //表明远程 抄收
+                                SendBuffer_NWK.Device       = SysDeviceList.Device[DevNum];
+                                NWK_Send_Code_QInput(&SendBuffer_NWK, 0x06);//06命令
+                            }
+                            else
+                            {
+                                ErrorFlg = 0x01;//出错
+                            }
+                        }break;
+                        case 24:// 电机转向设定
+                        {
+                            SendBuffer_NWK.SendData.NWKData.pack_06_cmd.Head.Addr       = PackData->Pack_0X1B.DevID;
+                            SendBuffer_NWK.SendData.NWKData.pack_06_cmd.Register_Addr   = (INT16U)PackData->Pack_0X1B.Register_Addr;
+                            bytes_reverse( (unsigned char *)&SendBuffer_NWK.SendData.NWKData.pack_10_cmd.Register_Addr, 2);//把寄存器地址字节倒序
+                            
+                            if( PackData->Pack_0X1B.data==0 || PackData->Pack_0X1B.data==1 )
+                            {
+                                
+                                SendBuffer_NWK.SendData.NWKData.pack_06_cmd.Register_Data= PackData->Pack_0X1B.data;
+                                //把数据域字节倒序
+                                bytes_reverse( (unsigned char *)&SendBuffer_NWK.SendData.NWKData.pack_06_cmd.Register_Data, 2);
+                                
+                                
+                                SendBuffer_NWK.SignleCom    = SET;     //抄收次数不累加
+                                SendBuffer_NWK.Uapack       = 0X0D;     //表明远程控制
+                                SendBuffer_NWK.UaComFlg     = 0XAAAA;   //表明远程 抄收
+                                SendBuffer_NWK.Device       = SysDeviceList.Device[DevNum];
+                                NWK_Send_Code_QInput(&SendBuffer_NWK, 0x06);//06命令
+                            }
+                            else
+                            {
+                                ErrorFlg = 0x01;//出错
+                            }
+                        }break;
+                        case 25://自动行程校验触发
+                        {
+                            SendBuffer_NWK.SendData.NWKData.pack_06_cmd.Head.Addr       = PackData->Pack_0X1B.DevID;
+                            SendBuffer_NWK.SendData.NWKData.pack_06_cmd.Register_Addr   = (INT16U)PackData->Pack_0X1B.Register_Addr;
+                            bytes_reverse( (unsigned char *)&SendBuffer_NWK.SendData.NWKData.pack_10_cmd.Register_Addr, 2);//把寄存器地址字节倒序
+                            
+                            if( PackData->Pack_0X1B.data==0 || PackData->Pack_0X1B.data==1 )
+                            {
+                                
+                                SendBuffer_NWK.SendData.NWKData.pack_06_cmd.Register_Data= PackData->Pack_0X1B.data;
+                                //把数据域字节倒序
+                                bytes_reverse( (unsigned char *)&SendBuffer_NWK.SendData.NWKData.pack_06_cmd.Register_Data, 2);
+                                
+                                
+                                SendBuffer_NWK.SignleCom    = SET;     //抄收次数不累加
+                                SendBuffer_NWK.Uapack       = 0X0D;     //表明远程控制
+                                SendBuffer_NWK.UaComFlg     = 0XAAAA;   //表明远程 抄收
+                                SendBuffer_NWK.Device       = SysDeviceList.Device[DevNum];
+                                NWK_Send_Code_QInput(&SendBuffer_NWK, 0x06);//06命令
+                            }
+                            else
+                            {
+                                ErrorFlg = 0x01;//出错
+                            }
+                        }break;
+                        case 26://远程行程校验触发
+                        {
+                            SendBuffer_NWK.SendData.NWKData.pack_06_cmd.Head.Addr       = PackData->Pack_0X1B.DevID;
+                            SendBuffer_NWK.SendData.NWKData.pack_06_cmd.Register_Addr   = (INT16U)PackData->Pack_0X1B.Register_Addr;
+                            bytes_reverse( (unsigned char *)&SendBuffer_NWK.SendData.NWKData.pack_10_cmd.Register_Addr, 2);//把寄存器地址字节倒序
+                            
+                            if( PackData->Pack_0X1B.data==0x5555 )
+                            {
+                                
+                                SendBuffer_NWK.SendData.NWKData.pack_06_cmd.Register_Data= PackData->Pack_0X1B.data;
+                                //把数据域字节倒序
+                                bytes_reverse( (unsigned char *)&SendBuffer_NWK.SendData.NWKData.pack_06_cmd.Register_Data, 2);
+                                
+                                
+                                SendBuffer_NWK.SignleCom    = SET;     //抄收次数不累加
+                                SendBuffer_NWK.Uapack       = 0X0D;     //表明远程控制
+                                SendBuffer_NWK.UaComFlg     = 0XAAAA;   //表明远程 抄收
+                                SendBuffer_NWK.Device       = SysDeviceList.Device[DevNum];
+                                NWK_Send_Code_QInput(&SendBuffer_NWK, 0x06);//06命令
+                            }
+                            else
+                            {
+                                ErrorFlg = 0x01;//出错
+                            }
+                        }break;
+                        case 27://直流电机速度
+                        {
+                            SendBuffer_NWK.SendData.NWKData.pack_06_cmd.Head.Addr       = PackData->Pack_0X1B.DevID;
+                            SendBuffer_NWK.SendData.NWKData.pack_06_cmd.Register_Addr   = (INT16U)PackData->Pack_0X1B.Register_Addr;
+                            bytes_reverse( (unsigned char *)&SendBuffer_NWK.SendData.NWKData.pack_10_cmd.Register_Addr, 2);//把寄存器地址字节倒序
+                            
+                            if( PackData->Pack_0X1B.data>=10 &&  PackData->Pack_0X1B.data<=100 )
+                            {
+                                
+                                SendBuffer_NWK.SendData.NWKData.pack_06_cmd.Register_Data= PackData->Pack_0X1B.data;
+                                //把数据域字节倒序
+                                bytes_reverse( (unsigned char *)&SendBuffer_NWK.SendData.NWKData.pack_06_cmd.Register_Data, 2);
+                                
+                                
+                                SendBuffer_NWK.SignleCom    = SET;     //抄收次数不累加
+                                SendBuffer_NWK.Uapack       = 0X0D;     //表明远程控制
+                                SendBuffer_NWK.UaComFlg     = 0XAAAA;   //表明远程 抄收
+                                SendBuffer_NWK.Device       = SysDeviceList.Device[DevNum];
+                                NWK_Send_Code_QInput(&SendBuffer_NWK, 0x06);//06命令
+                            }
+                            else
+                            {
+                                ErrorFlg = 0x01;//出错
+                            }
+                        }break;
+                        default:
+                            ErrorFlg = 0x01;//出错
+                            break;
+                    }
+                }                
+			}
+		}break;
+        
+        
+        
+/********************************************************************************************/
+/********************************************************************************************/
+/***********************************新添加命令 END********************************************/
+/********************************************************************************************/
+/********************************************************************************************/
+#endif        //#ifdef  Valve_NWK_ENABLE
+        
 		case 0X41:
 		{
 			ErrorFlg =FY1000_Pack_0X41(Ctrl_Point);
@@ -3896,8 +4372,15 @@ INT8U FY1000_Pack_TxServer_S(UART_RBC_Stru* Ctrl_Point)
 			FY1000_Pack_0X1A(Ctrl_Point);
 			dbg_printf(DEBUG_INFO,"系统通信应答 Pack_T 0X1A...");	
 		}break;	
-
-		
+        
+#ifdef Valve_NWK_ENABLE
+		case 0X1C:
+		{
+			FY1000_Pack_0X1C(Ctrl_Point);
+			dbg_printf(DEBUG_INFO,"系统通信应答 Pack_T 0X1C...");	
+		}break;	
+#endif
+        
 		case 0X40:
 		{
 			FY1000_Pack_0X40(Ctrl_Point);

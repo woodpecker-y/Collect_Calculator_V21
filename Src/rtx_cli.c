@@ -37,13 +37,14 @@ int cli_getchar(char *inbuf);
 #define END_CHAR				'\r'
 #define BACKSPACE				0x08
 #define DEL                     0x7f
-#define PROMPT                  "\r\napp# "
+#define PROMPT                  "\r\n[foryon@app]# "
 #define EXIT_MSG				"exit"
 #define NUM_BUFFERS             1
 #define MAX_COMMANDS			50
 #define INBUF_SIZE				512
-#define OUTBUF_SIZE             2048
+#define OUTBUF_SIZE             (2048)
 
+//#define SYSTEM_VERSION              20191020            //采集器软件版本号（32位无符号整数）
 
 struct cli_st 
 {
@@ -453,50 +454,93 @@ static void cli_exit_handler(char *pcWriteBuffer, int xWriteBufferLen,int argc, 
   // exit command not excuted
 }
 
+//static const struct cli_command built_ins[] = 
+//{
+//	{"help","          Show all command-------------------------(帮助)",				    		                help_command},
+//	{"version","       Show firmware version--------------------(软件版本号)",			    		                get_version},
+//	{"exit","          Cli exit---------------------------------(关闭调试功能 谨慎操作，重启后恢复)",                 cli_exit_handler}, 
+//	{"reboot","        Reboot system----------------------------(重启)",					    	                reboot},
+//	{"time","          System tick time-------------------------(Systick)",				    		                uptime_Command},
+//    
+//	{"clear","         Clear screen-----------------------------(清除)",					    		            clear_screen},
+//	{"printenv","      Print system env-------------------------(系统参数信息)",				    		            printenv},
+//	{"setenv","        Set env parameter------------------------(导入bin文件)",				    	                setEnvParameter},
+//	{"setip","         Set server ip and port-------------------(设置IP地址和端口号)",		    	    	        setServer},
+//	{"printip","       Print server ip and port-----------------(IP地址和端口号)",		    	    	            printServer},
+//	{"ps","            Show task status-------------------------(系统运行状态)",				    		            ps},
+//	{"userpa","        Show user para---------------------------(用户参数)",				    	    	            userpara},
+//	{"devpa","         Show device para-------------------------(设备参数)",				    		                devicepara},
+//	{"userda","        Show user data---------------------------(用户数据)",				    	    	            userdata},
+//	{"devda","         Show device data-------------------------(设备参数)",				    		                devicedata},
+//	{"devcom","        Show device com status-------------------(从机通信状况)",    			    	                devicestatus},
+//	{"sysparst","      System Para reset------------------------(重置系统参数配置)",			    		            systemparareset},
+//	{"userparst","     User Para reset--------------------------(重置用户参数)", 				    		        userparareset},
+//	{"devparst","      Device Para reset------------------------(重置设备参数)",					                    deviceparareset},  
+//	{"userdarst","     User Dara Reset--------------------------(重置用户数据)", 		  				            userdatareset},
+//	{"devdarst","      Device Dara reset------------------------(重置设备参数)",					                    devicedatareset},
+//	{"sysdarst","      Reset All the system data----------------(重置系统数据配置)",		    		                sysdataresetall},
+//	{"settime","       Set The Systemtime-----------------------(设置系统时间)", 		    			            settime},
+//	{"setstime","      Set The Start time-----------------------(设置供暖期起始时间)", 		     			        settime_s},
+//	{"setftime","      Set The Final time-----------------------(设置供暖期结束时间)", 		  	    		        settime_f},
+//	{"mem","           Show system heap status------------------(内存状态)", 		    		                    mem},
+//	{"systype","       Set The System Type----------------------(系统类型 1:热量表 2:温控计量 3:通断)",               setsystype},
+//	{"savedata","      Save data to excel-----------------------(保存数据到SD卡)", 		  	    		            saveData},
+//	{"devchange","     Change the deviceID----------------------(修改设备编号、类型)", 		  	    		        devchange},
+//	{"alarm","         Show all alarm---------------------------(闹钟)", 		  			    	                alarm},
+//	{"changeloop","    Change device loop num-------------------(改变抄收顺序)", 		    	                    changedevnum}, 
+//	{"setsn","         Set the system SN------------------------(设置采集计算器编号)",					            setsn},
+//	{"setread","       Set the Client device Read Space ms------(设置抄表时间间隔)", 	                            setread}, 
+//	{"setsend","       Set the Client Report mode and Space ms--(设置上报模式及终端上报间隔)",                        setsend}, 
+//	{"setshare","      Set the Share Space Minute---------------(设置分摊周期)", 			                        setshare},
+//	{"relay","         Ctrl the power relay on/off--------------(远程断送电功能)", 			                        powrelayctrl},
+//	{"ddf2ct","        Ctrl the DDF2 on/off---------------------(手动打开/关闭功能)", 			                    ddf2ctrl},
+//	{"clirate","       Set the debug cli com rate---------------(设置调试串口波特率功能)", 			                ClirateSet},
+//	
+//	
+//};
 
 static const struct cli_command built_ins[] = 
 {
-	{"help","          Show all command",				    		help_command},
-	{"version","       Show firmware version",			    		get_version},
-	{"exit","          Cli exit",						            cli_exit_handler}, 
-	{"reboot","        Reboot system",					    	    reboot},
-	{"time","          System tick time",				    		uptime_Command},
+	{"help","          (帮助)",				    		                    help_command},
+	{"version","       (软件版本号)",			    		                get_version},
+	{"exit","          (关闭调试功能 谨慎操作，重启后恢复)",                  cli_exit_handler}, 
+	{"reboot","        (重启)",					    	                    reboot},
+	{"time","          (Systick)",				    		                uptime_Command},
     
-	{"clear","         Clear screen",					    		clear_screen},
-	{"printenv","      Print system env",				    		printenv},
-	{"setenv","        Set env parameter",				    	    setEnvParameter},
-	{"setip","         Set server ip and port",		    	    	setServer},
-	{"printip","       Print server ip & port",		    	    	printServer},
-	{"ps","            Show task status",				    		ps},
-	{"userpa","        Show user para",				    	    	userpara},
-	{"devpa","         Show device para",				    		devicepara},
-	{"userda","        Show user data",				    	    	userdata},
-	{"devda","         Show device data",				    		devicedata},
-	{"devcom","        Show device com status",    			    	devicestatus},
-	{"sysparst","      System Para reset",			    		    systemparareset},
-	{"userparst","     User Para reset", 				    		userparareset},
-	{"devparst","      Device Para reset",					        deviceparareset},  
-	{"userdarst","     User Dara Reset", 		  				    userdatareset},
-	{"devdarst","      Device Dara reset",					        devicedatareset},
-	{"sysdarst","      Reset All the system data",		    		sysdataresetall},
-	{"settime","       Set The Systemtime", 		    			settime},
-	{"setstime","      Set The Start time", 		     			settime_s},
-	{"setftime","      Set The Final time", 		  	    		settime_f},
-	{"mem","           Show system heap status", 		    		mem},
-	{"systype","       Set The System Type",		        		setsystype},
-	{"savedata","      Save data to excel", 		  	    		saveData},
-	{"devchange","     Change the deviceID", 		  	    		devchange},
-	{"alarm","         Show all alarm", 		  			    	alarm},
-	{"changeloop","    Change device loop num", 		    	    changedevnum}, 
-	{"setsn","         Set the system SN",					        setsn},
-	{"setread","       Set the Client device Read Space ms", 	    setread}, 
-	{"setsend","       Set the Client Report mode and Space ms",    setsend}, 
-	{"setshare","      Set the Share Space Minute", 			    setshare},
-	{"relay","         Ctrl the power relay on/off", 			    powrelayctrl},
-	{"ddf2ct","        Ctrl the DDF2 on/off", 			            ddf2ctrl},
-	{"clirate","       Set the debug cli com rate", 			    ClirateSet},
-	
-	
+	{"clear","         (清除)",					    		                clear_screen},
+	{"printenv","      (系统参数信息)",				    		            printenv},
+	{"setenv","        (导入bin文件)",				    	                setEnvParameter},
+	{"setip","         (设置IP地址和端口号)",		    	    	        setServer},
+	{"printip","       (IP地址和端口号)",		    	    	            printServer},
+	{"ps","            (系统运行状态)",				    		            ps},
+	{"userpa","        (用户参数)",				    	    	            userpara},
+	{"devpa","         (设备参数)",				    		                devicepara},
+	{"userda","        (用户数据)",				    	    	            userdata},
+	{"devda","         (设备参数)",				    		                devicedata},
+	{"devcom","        (从机通信状况)",    			    	                devicestatus},
+	{"sysparst","      (重置系统参数配置)",			    		            systemparareset},
+	{"userparst","     (重置用户参数)", 				    		            userparareset},
+	{"devparst","      (重置设备参数)",					                    deviceparareset},  
+	{"userdarst","     (重置用户数据)", 		  				                userdatareset},
+	{"devdarst","      (重置设备参数)",					                    devicedatareset},
+	{"sysdarst","      (重置系统数据配置)",		    		                sysdataresetall},
+	{"settime","       (设置系统时间)", 		    			                settime},
+	{"setstime","      (设置供暖期起始时间)", 		     			        settime_s},
+	{"setftime","      (设置供暖期结束时间)", 		  	    		        settime_f},
+	{"mem","           (内存状态)", 		    		                        mem},
+	{"systype","       (系统类型 1:热量表 2:温控计量 3:通断)",               setsystype},
+	{"savedata","      (保存数据到SD卡)",                                   saveData},
+	{"devchange","     (修改设备编号、类型)",                                devchange},
+	{"alarm","         (闹钟)", 		  			    	                alarm},
+	{"changeloop","    (改变抄收顺序)", 		    	                        changedevnum}, 
+	{"setsn","         (设置采集计算器编号)",					            setsn},
+	{"setread","       (设置抄表时间间隔)", 	                                setread}, 
+	{"setsend","       (设置上报模式及终端上报间隔)",                        setsend}, 
+	{"setshare","      (设置分摊周期)", 			                            setshare},
+	{"relay","         (远程断送电功能)", 			                        powrelayctrl},
+	{"ddf2ct","        (手动打开/关闭功能)", 			                    ddf2ctrl},
+	{"clirate","       (设置调试串口波特率功能)", 			                ClirateSet},
+    
 };
 
 
@@ -639,10 +683,15 @@ static void sysdebug_Command(char *pcWriteBuffer, int xWriteBufferLen,int argc, 
 	Updatedebug(os_debug_enabled, os_debug_level);
 }
 
+//static const struct cli_command user_clis[1] = 
+//{
+//	{"debug","         System debug on/off", 					sysdebug_Command},
+
+//};
 
 static const struct cli_command user_clis[1] = 
 {
-	{"debug","         System debug on/off", 					sysdebug_Command},
+	{"debug","         (日志调试开关 on/off e.g.\"debug on 4\" / \"debug off 4\")",       sysdebug_Command},
 
 };
 

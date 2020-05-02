@@ -330,7 +330,7 @@ void devicedata(char *pcWriteBuffer, int xWriteBufferLen,int argc, char **argv)
 		{
 			DevType =SysDeviceList.Device[devNum].Type;
 			cli_printf("设备序号:%d\r\n",devNum);
-			cli_printf("ID:      %08lX\r\n",SysDeviceList.Device[devNum].ID);
+			cli_printf("设备编号:%08lX\r\n",SysDeviceList.Device[devNum].ID);
 
 			
 		switch(DevType)	
@@ -622,30 +622,30 @@ void devicedata(char *pcWriteBuffer, int xWriteBufferLen,int argc, char **argv)
 
 		case Valve_NWK:
 		{
-			cli_printf("Valve_NWK                  耐威科楼栋单元调节阀 -NWK \r\n");
-			cli_printf("耐威科单元阀 进水温度:      %f℃\r\n", SysDevData[devNum].Device11.Input_Temp);
-            cli_printf("耐威科单元阀 回水温度:      %f℃\r\n", SysDevData[devNum].Device11.Output_Temp);
-            cli_printf("耐威科单元阀 进水压力:      %fMpa\r\n", SysDevData[devNum].Device11.EnterWater_Pressure);
-            cli_printf("耐威科单元阀 回水压力:      %fMpa\r\n", SysDevData[devNum].Device11.ReturnWater_Pressure);
-            cli_printf("耐威科单元阀 室温:          %f℃\r\n",  SysDevData[devNum].Device11.Room_Temp);
-            cli_printf("耐威科单元阀 当前阀门开度值: %f%%\r\n", SysDevData[devNum].Device11.Current_Valve_Open);
-            cli_printf("耐威科单元阀 设置阀门开度值: %f%%\r\n", SysDevData[devNum].Device11.SetValue_Open);
-            cli_printf("耐威科单元阀 温差设定值:     %f℃\r\n", SysDevData[devNum].Device11.Temp_Diff);
-            cli_printf("耐威科单元阀 回水温度设定值: %f℃\r\n", SysDevData[devNum].Device11.ReturnTemp_Set);
-            cli_printf("耐威科单元阀 压差设定值:     %fMpa\r\n", SysDevData[devNum].Device11.PressureDiff_Set);
+			cli_printf("耐威科单元阀 耐威科楼栋单元调节阀 - NWK \r\n");
+			cli_printf("耐威科单元阀 进水温度:       %f ℃\r\n", SysDevData[devNum].Device11.Input_Temp);
+            cli_printf("耐威科单元阀 回水温度:       %f ℃\r\n", SysDevData[devNum].Device11.Output_Temp);
+            cli_printf("耐威科单元阀 进水压力:       %f Mpa\r\n", SysDevData[devNum].Device11.EnterWater_Pressure);
+            cli_printf("耐威科单元阀 回水压力:       %f Mpa\r\n", SysDevData[devNum].Device11.ReturnWater_Pressure);
+            cli_printf("耐威科单元阀 室   温:        %f ℃\r\n",  SysDevData[devNum].Device11.Room_Temp);
+            cli_printf("耐威科单元阀 当前阀门开度值: %f %%\r\n", SysDevData[devNum].Device11.Current_Valve_Open);
+            cli_printf("耐威科单元阀 设置阀门开度值: %f %%\r\n", SysDevData[devNum].Device11.SetValue_Open);
+            cli_printf("耐威科单元阀 温差设定值:     %f ℃\r\n", SysDevData[devNum].Device11.Temp_Diff);
+            cli_printf("耐威科单元阀 回水温度设定值: %f ℃\r\n", SysDevData[devNum].Device11.ReturnTemp_Set);
+            cli_printf("耐威科单元阀 压差设定值:     %f Mpa\r\n", SysDevData[devNum].Device11.PressureDiff_Set);
             
-            cli_printf("耐威科单元阀 错误代码:       %d\r\n", SysDevData[devNum].Device11.Error);
-            cli_printf("耐威科单元阀 软件版本号:     %d\r\n", SysDevData[devNum].Device11.Software_Version);
-            cli_printf("耐威科单元阀 运行模式:       %d\r\n", SysDevData[devNum].Device11.Run_Mode);
-            cli_printf("耐威科单元阀 modbus地址:     %d\r\n", SysDevData[devNum].Device11.Address);
+            cli_printf("耐威科单元阀 错误代码:       %d （0为正常，1为堵转，2为进水温度传感器开路，3.回水温度传感器开路，4.进水压力传感器开路，5回水压力传感器开路）\r\n", SysDevData[devNum].Device11.Error);
+            cli_printf("耐威科单元阀 软件版本号:     %d \r\n", SysDevData[devNum].Device11.Software_Version);
+            cli_printf("耐威科单元阀 运行模式:       %d （0为开度模式；1为温差模式 2为回温模式 3为压差模式  4.就地控制模式（电机掉电）5.4-20控制开度模式（需硬件支持） 6 TIME）\r\n", SysDevData[devNum].Device11.Run_Mode);
+            cli_printf("耐威科单元阀 modbus地址:     %d \r\n", SysDevData[devNum].Device11.Address);
             cli_printf("耐威科单元阀 电机转向:       %d（0:正 1：反)\r\n", SysDevData[devNum].Device11.Motor_Steering);
             cli_printf("耐威科单元阀 行程校正开关:   %d（0:关 1：开)\r\n", SysDevData[devNum].Device11.Adjust_Switch);
             cli_printf("耐威科单元阀 行程校正触发:   %d（写0x5555触发一次）\r\n", SysDevData[devNum].Device11.Adjust_Tigger);
             cli_printf("耐威科单元阀 直流电机速度:   %d（10%-100% 直流电机有效）\r\n", SysDevData[devNum].Device11.Dc_Motor_Speed);
 
-            cli_printf("通信总数:                  %lu\r\n",SysDevStatus[devNum].Device11.ComTolNum);
-			cli_printf("耐威科单元阀 通讯成功:      %lu\r\n",SysDevStatus[devNum].Device11.ComSucNum);
-			cli_printf("耐威科单元阀 通讯失败:      %lu\r\n",SysDevStatus[devNum].Device11.ComFauNum);	
+            cli_printf("耐威科单元阀 通信总数:       %lu\r\n",SysDevStatus[devNum].Device11.ComTolNum);
+			cli_printf("耐威科单元阀 通讯成功:       %lu\r\n",SysDevStatus[devNum].Device11.ComSucNum);
+			cli_printf("耐威科单元阀 通讯失败:       %lu\r\n",SysDevStatus[devNum].Device11.ComFauNum);	
 
 		}break;
 #endif
@@ -1581,7 +1581,8 @@ void ClirateSet(char *pcWriteBuffer, int xWriteBufferLen,int argc, char **argv)
 
     
     cli_printf("如果您想恢复默认设置[115200]，请重新启动设备.\r\n");
-    cli_printf("THANK YOU, GOOD LUCK\r\n\r\n");
+    
+    cli_printf("THANK YOU FOR USING THE FORYON COLLECTION CALCULATOR. GOOD LUCK\r\n\r\n");
 
     HAL_Delay(2500);
 

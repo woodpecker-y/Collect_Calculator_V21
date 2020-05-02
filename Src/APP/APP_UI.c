@@ -28,7 +28,7 @@
 
 
 char Hardware[]="1.Ó²¼þ: FY-1100M-V22";
-char Software[]="2.Èí¼þ: FY-1101_V22A";
+char Software[]="2.Èí¼þ: FY-1102_V22A";
 
 
 

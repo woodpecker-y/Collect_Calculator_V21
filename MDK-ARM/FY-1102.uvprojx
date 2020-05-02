@@ -49,7 +49,7 @@
             <InvalidFlash>1</InvalidFlash>
           </TargetStatus>
           <OutputDirectory>.\FY-1102\</OutputDirectory>
-          <OutputName>FY-1102</OutputName>
+          <OutputName>FY-1102-NWK</OutputName>
           <CreateExecutable>1</CreateExecutable>
           <CreateLib>0</CreateLib>
           <CreateHexFile>1</CreateHexFile>
@@ -956,6 +956,16 @@
               <FileName>debug.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Src\debug.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Doc</GroupName>
+          <Files>
+            <File>
+              <FileName>readme.txt</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\Doc\readme.txt</FilePath>
             </File>
           </Files>
         </Group>

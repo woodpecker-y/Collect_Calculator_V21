@@ -32,10 +32,6 @@ extern int os_debug_level;
 
 
 
-
-
-
-
 /*
 	Task01
 	实时时钟服务函数
@@ -43,7 +39,7 @@ extern int os_debug_level;
 #define Task01_Prio				2			//任务优先级
 #define Task01_StkSize 			2048 		//任务堆栈大小	
 TaskHandle_t Task01_Handle;					//任务句柄
-void Task01_F(void const * argument);			//任务函数
+void Task01_F(void const * argument);		//任务函数
 /*END */
 
 
@@ -54,7 +50,7 @@ void Task01_F(void const * argument);			//任务函数
 #define Task02_Prio				3			//任务优先级
 #define Task02_StkSize 			128  		//任务堆栈大小	
 TaskHandle_t Task02_Handle;					//任务句柄
-void Task02_F(void const * argument);			//任务函数
+void Task02_F(void const * argument);		//任务函数
 /*END */
 
 
@@ -67,7 +63,7 @@ void Task02_F(void const * argument);			//任务函数
 #define Task03_Prio				4			//任务优先级
 #define Task03_StkSize 			256  		//任务堆栈大小	
 TaskHandle_t Task03_Handle;					//任务句柄
-void Task03_F(void const * argument);			//任务函数
+void Task03_F(void const * argument);		//任务函数
 /*END */
 
 
@@ -81,7 +77,7 @@ void Task03_F(void const * argument);			//任务函数
 #define Task04_Prio				5			//任务优先级
 #define Task04_StkSize 			256  		//任务堆栈大小	
 TaskHandle_t Task04_Handle;					//任务句柄
-void Task04_F(void const * argument);			//任务函数
+void Task04_F(void const * argument);		//任务函数
 /*END */
 
 
@@ -94,7 +90,7 @@ void Task04_F(void const * argument);			//任务函数
 #define Task05_Prio				12			//任务优先级
 #define Task05_StkSize 			256  		//任务堆栈大小	
 TaskHandle_t Task05_Handle;					//任务句柄
-void Task05_F(void const * argument);			//任务函数
+void Task05_F(void const * argument);		//任务函数
 /*END */
 
 
@@ -105,7 +101,7 @@ void Task05_F(void const * argument);			//任务函数
 #define Task06_Prio				11			//任务优先级
 #define Task06_StkSize 			256  		//任务堆栈大小	
 TaskHandle_t Task06_Handle;					//任务句柄
-void Task06_F(void const * argument);			//任务函数
+void Task06_F(void const * argument);		//任务函数
 /*END */
 
 
@@ -116,7 +112,7 @@ void Task06_F(void const * argument);			//任务函数
 #define Task07_Prio				6			//任务优先级
 #define Task07_StkSize 			256  		//任务堆栈大小	
 TaskHandle_t Task07_Handle;					//任务句柄
-void Task07_F(void const * argument);			//任务函数
+void Task07_F(void const * argument);		//任务函数
 /*END */
 
 
@@ -128,7 +124,7 @@ void Task07_F(void const * argument);			//任务函数
 #define Task08_Prio				4			//任务优先级
 #define Task08_StkSize 			256  		//任务堆栈大小	
 TaskHandle_t Task08_Handle;					//任务句柄
-void Task08_F(void const * argument);			//任务函数
+void Task08_F(void const * argument);		//任务函数
 /*END */
 
 
@@ -139,7 +135,7 @@ void Task08_F(void const * argument);			//任务函数
 #define Task09_Prio				4			//任务优先级
 #define Task09_StkSize 			256  		//任务堆栈大小	
 TaskHandle_t Task09_Handle;					//任务句柄
-void Task09_F(void const * argument);			//任务函数
+void Task09_F(void const * argument);		//任务函数
 /*END */
 
 
@@ -150,7 +146,7 @@ void Task09_F(void const * argument);			//任务函数
 #define Task10_Prio				2			//任务优先级
 #define Task10_StkSize 			256  		//任务堆栈大小	
 TaskHandle_t Task10_Handle;					//任务句柄
-void Task10_F(void const * argument);			//任务函数
+void Task10_F(void const * argument);		//任务函数
 
 
 /*
@@ -160,7 +156,7 @@ void Task10_F(void const * argument);			//任务函数
 #define Task11_Prio				3			//任务优先级
 #define Task11_StkSize 			256  		//任务堆栈大小	
 TaskHandle_t Task11_Handle;					//任务句柄
-void Task11_F(void const * argument);			//任务函数
+void Task11_F(void const * argument);		//任务函数
 */
 
 /*
@@ -181,7 +177,7 @@ void TaskCli(void const * argument);        //任务函数
 #define Task12_Prio				3			//任务优先级
 #define Task12_StkSize 			256  		//任务堆栈大小	
 TaskHandle_t Task12_Handle;					//任务句柄
-void Task12_F(void const * argument);    //任务函数
+void Task12_F(void const * argument);       //任务函数
 
 
 
@@ -236,7 +232,7 @@ EventBits_t Iwdg_T10;
 
 
 
-#define APP_VECT_TAB_OFFSET    0x20000		//中断向量表偏移
+#define APP_VECT_TAB_OFFSET    0x20000	//中断向量表偏移
 int main(void)
 {
 
@@ -257,7 +253,7 @@ int main(void)
 	huart1.Init.Parity =UART_PARITY_NONE;
 	UART1_Cfg();						//通用异步端口1初始化
 
-	int cli_res = cli_init();				//超级终端及调试模块初始化
+	int cli_res = cli_init();			//超级终端及调试模块初始化
 	
 	huart2.Init.BaudRate =9600;
 	huart2.Init.WordLength = UART_WORDLENGTH_9B;
@@ -346,23 +342,23 @@ int main(void)
 
 
 
-	W25QXX_Init();					//片外Flash初始化
-	FlashID =W25QXX_ReadID();		//读取FlashID
+	W25QXX_Init();					                                        //片外Flash初始化
+	FlashID =W25QXX_ReadID();		                                        //读取FlashID
 
 
-	PowerRelay_Init();				//主供电回路控制继电器初始化
+	PowerRelay_Init();				                                        //主供电回路控制继电器初始化
 
 	dbg_printf(DEBUG_INFO,"系统正在初始化......欢迎使用......\r\n\r\n");
 
 	/*   系统参数初始化......*/
 	if( SysPara_Init() ==HAL_OK )
 	{
-		os_debug_enabled =SysPara.DebugEnable;
-		os_debug_level =SysPara.DebugLevel;
+		os_debug_enabled    = SysPara.DebugEnable;
+		os_debug_level      = SysPara.DebugLevel;
 
-		dbg_printf(DEBUG_INFO,"系统参数区初始化完成......\r\n");
-		dbg_printf(DEBUG_INFO,"系统参数区地址:   %ld",SysPara_Addr);
-		dbg_printf(DEBUG_INFO,"系统参数区容量:   %d",sizeof(SysPara_Stru));	
+		dbg_printf(DEBUG_INFO, "系统参数区初始化完成......\r\n");
+		dbg_printf(DEBUG_DEBUG, "系统参数区地址:   %ld", SysPara_Addr);
+		dbg_printf(DEBUG_DEBUG, "系统参数区容量:   %d", sizeof(SysPara_Stru));	
 		
 	}
 	else
@@ -371,11 +367,11 @@ int main(void)
 		SysPara_Reset();
 	}
 
-	dbg_printf(DEBUG_INFO,"调试端口UART1 %d ...",huart1.Init.BaudRate);
-	dbg_printf(DEBUG_INFO,"STM32F405VGT6...\r\n");
+	dbg_printf(DEBUG_INFO,"调试端口UART1 %d  %c  %d  %d...", huart1.Init.BaudRate, 'N', 8, huart1.Init.StopBits);
+	dbg_printf(DEBUG_DEBUG,"STM32F407VGT6...\r\n");
 
 
-	if(FRAM_USED >FRAM_Size)
+	if(FRAM_USED > FRAM_Size)
 	{
 		while(1)
 		{
@@ -431,8 +427,8 @@ int main(void)
 	{
 		GetSystemUserNum();
 		dbg_printf(DEBUG_INFO,"用户参数区初始化完成......");
-		dbg_printf(DEBUG_INFO,"用户参数地址:   %ld",SysUserList_Addr);
-		dbg_printf(DEBUG_INFO,"用户参数容量:   %d\r\n",sizeof(SysUserList_Stru));
+		dbg_printf(DEBUG_DEBUG,"用户参数地址:   %ld",SysUserList_Addr);
+		dbg_printf(DEBUG_DEBUG,"用户参数容量:   %d\r\n",sizeof(SysUserList_Stru));
 	}
 	else
 	{
@@ -448,8 +444,8 @@ int main(void)
 	{
 		GetSystemDevMessage();
 		dbg_printf(DEBUG_INFO,"设备参数区初始化完成......");
-		dbg_printf(DEBUG_INFO,"设备参数地址:   %ld",SysDeviceList_Addr);
-		dbg_printf(DEBUG_INFO,"设备参数容量:   %d\r\n",sizeof(SysDeviceList_Stru));
+		dbg_printf(DEBUG_DEBUG,"设备参数地址:   %ld",SysDeviceList_Addr);
+		dbg_printf(DEBUG_DEBUG,"设备参数容量:   %d\r\n",sizeof(SysDeviceList_Stru));
 	}
 	else
 	{
@@ -463,9 +459,9 @@ int main(void)
 	if( UserData_InitALL(MAXUser_Num) ==HAL_OK )
 	{
 		dbg_printf(DEBUG_INFO,"用户数据区初始化完成......");
-		dbg_printf(DEBUG_INFO,"用户容量:       %d",MAXUser_Num);
-		dbg_printf(DEBUG_INFO,"用户数据地址:   %ld",UserData_Addr);
-		dbg_printf(DEBUG_INFO,"用户数据容量:   %d\r\n",sizeof(UserData_Stru)*MAXUser_Num);
+		dbg_printf(DEBUG_DEBUG,"用户容量:       %d",MAXUser_Num);
+		dbg_printf(DEBUG_DEBUG,"用户数据地址:   %ld",UserData_Addr);
+		dbg_printf(DEBUG_DEBUG,"用户数据容量:   %d\r\n",sizeof(UserData_Stru)*MAXUser_Num);
 
 	}
 	else
@@ -481,9 +477,9 @@ int main(void)
 	if( SysDevData_InitALL(MAXDevice_Num) ==HAL_OK )
 	{
 		dbg_printf(DEBUG_INFO,"设备数据区初始化完成......");
-		dbg_printf(DEBUG_INFO,"设备容量:       %d",MAXDevice_Num);
-		dbg_printf(DEBUG_INFO,"设备数据地址:   %ld",DevData_Addr);
-		dbg_printf(DEBUG_INFO,"设备数据容量:   %d\r\n",MAXDevice_Num*sizeof(SysDevData_Stru));
+		dbg_printf(DEBUG_DEBUG,"设备容量:       %d",MAXDevice_Num);
+		dbg_printf(DEBUG_DEBUG,"设备数据地址:   %ld",DevData_Addr);
+		dbg_printf(DEBUG_DEBUG,"设备数据容量:   %d\r\n",MAXDevice_Num*sizeof(SysDevData_Stru));
 	}
 	else
 	{
@@ -493,29 +489,29 @@ int main(void)
 
 
 	dbg_printf(DEBUG_INFO,"设备数据区全部初始化完成...");
-	dbg_printf(DEBUG_INFO,"FRAM边界:       %ld....\r\n",FRAM_USED);
+	dbg_printf(DEBUG_INFO,"DEBUG_DEBUG:       %ld....\r\n",FRAM_USED);
 
 
 
 	ID =HAL_GetREVID();
-	dbg_printf(DEBUG_INFO,"HAL_GetREVID:%ld",ID);
+	dbg_printf(DEBUG_DEBUG,"HAL_GetREVID:%ld",ID);
 	
 	ID =HAL_GetDEVID();
-	dbg_printf(DEBUG_INFO,"HAL_GetDEVID:%ld",ID);
+	dbg_printf(DEBUG_DEBUG,"HAL_GetDEVID:%ld",ID);
 	
 	Get_ChipID( &ChipID);
-	dbg_printf(DEBUG_INFO,"MCUchipID:%d %d %d \r\n",ChipID.Fourdata.ChipUniqueID[0],ChipID.Fourdata.ChipUniqueID[1],ChipID.Fourdata.ChipUniqueID[2]);
+	dbg_printf(DEBUG_DEBUG,"MCUchipID:%d %d %d \r\n\r\n",ChipID.Fourdata.ChipUniqueID[0],ChipID.Fourdata.ChipUniqueID[1],ChipID.Fourdata.ChipUniqueID[2]);
 
 	
 	Init_PaulseFunction();										//虚拟脉冲控制功能初始化
     Beep_Ctrler=Pulse_Create(0,BeepWork_RebackFun);				//创建一个脉冲控制   使能位   回调函数
-	PulseLeaguer_SET(Beep_Ctrler, 1, 100, 3, 20, 0, 0); 				//功能指针  脉冲数量  扫描间隔(tick*X) 边沿宽度   周期    周期计数器  当前状态
-	PulseLeaguer_Enalbe(Beep_Ctrler, 1);							//使能某个脉冲控制模块	
+	PulseLeaguer_SET(Beep_Ctrler, 1, 100, 3, 20, 0, 0);         //功能指针  脉冲数量  扫描间隔(tick*X) 边沿宽度   周期    周期计数器  当前状态
+	PulseLeaguer_Enalbe(Beep_Ctrler, 1);                        //使能某个脉冲控制模块	
 
 
-    LedBR_Ctrler=Pulse_Create(0,LEDBR_RebackFun);					//创建一个脉冲控制   使能位   回调函数
-	PulseLeaguer_SET(LedBR_Ctrler, 2, 10, 8, 16, 0, 0); 				//功能指针  脉冲数量  扫描间隔(tick*X) 边沿宽度   周期    周期计数器  当前状态
-	PulseLeaguer_Enalbe(LedBR_Ctrler, 1);							//使能某个脉冲控制模块	
+    LedBR_Ctrler=Pulse_Create(0,LEDBR_RebackFun);               //创建一个脉冲控制   使能位   回调函数
+	PulseLeaguer_SET(LedBR_Ctrler, 2, 10, 8, 16, 0, 0);         //功能指针  脉冲数量  扫描间隔(tick*X) 边沿宽度   周期    周期计数器  当前状态
+	PulseLeaguer_Enalbe(LedBR_Ctrler, 1);                       //使能某个脉冲控制模块	
 
 
 	if(PCF8563_Read(&RTC_Time) ==HAL_OK)						//实时时钟读取
@@ -524,34 +520,34 @@ int main(void)
 	}
 	else
 	{
-		dbg_printf(DEBUG_INFO,"实时时钟初始化错误...\r\n\r\n");
+		dbg_printf(DEBUG_ERR,"实时时钟初始化错误...\r\n\r\n");
 	}
 	
 	PowerStateRecord_Init();									//上电记录参数初始化
-	PowerStateRecord_Update();								//上电记录参数更新
+	PowerStateRecord_Update();								    //上电记录参数更新
 
 
 
 	/*操作系统初始化部分*/
 
-	portENTER_CRITICAL();	//进入临界区
+	portENTER_CRITICAL();	                                    //进入临界区
 	dbg_printf(DEBUG_INFO,"系统硬初始化完成，操作系统加载中...\r\n");
-	fy1000SendMetexInit();          //FY1000Send互斥锁初始化
-	ClientCH1SendMetexInit();	    //终端通信通道互斥锁初始化
+	fy1000SendMetexInit();                                      //FY1000Send互斥锁初始化
+	ClientCH1SendMetexInit();	                                //终端通信通道互斥锁初始化
 	
-	KEY_OUT_Msg =xQueueCreate(BUTTONMSG_Q_NUM, sizeof(KEY_OUT_Stru));							    //创建应用于按键的消息队列
+	KEY_OUT_Msg =xQueueCreate(BUTTONMSG_Q_NUM, sizeof(KEY_OUT_Stru));							            //创建应用于按键的消息队列
     
-	UART_TO_FY188_Msg =xQueueCreate(UART_TO_FY188_Q_NUM, sizeof(UART_TO_FY188_QueueSend_Stru*));	//创建应用于UARTRBC的消息队列
-	UART_TO_FY2000_Msg =xQueueCreate(UART_TO_FY2000_Q_NUM, sizeof(UART_TO_FY2000_QueueSend_Stru*));	//创建应用于UARTRBC的消息队列
-	UART_TO_FY1000_Msg =xQueueCreate(UART_TO_FY1000_Q_NUM, sizeof(UART_TO_FY1000_QueueSend_Stru*));	//创建应用于UARTRBC的消息队列
+	UART_TO_FY188_Msg =xQueueCreate(UART_TO_FY188_Q_NUM, sizeof(UART_TO_FY188_QueueSend_Stru*));	        //创建应用于UARTRBC的消息队列
+	UART_TO_FY2000_Msg =xQueueCreate(UART_TO_FY2000_Q_NUM, sizeof(UART_TO_FY2000_QueueSend_Stru*));	        //创建应用于UARTRBC的消息队列
+	UART_TO_FY1000_Msg =xQueueCreate(UART_TO_FY1000_Q_NUM, sizeof(UART_TO_FY1000_QueueSend_Stru*));	        //创建应用于UARTRBC的消息队列
 
     
 #ifdef Meter_H_ENABLE
-	UART_TO_HZCRL_Msg =xQueueCreate(UART_TO_HZCRL_Q_NUM, sizeof(UART_TO_HZCRL_QueueSend_Stru*));	//创建应用于UARTRBC的消息队列
+	UART_TO_HZCRL_Msg =xQueueCreate(UART_TO_HZCRL_Q_NUM, sizeof(UART_TO_HZCRL_QueueSend_Stru*));	        //创建应用于UARTRBC的消息队列
 #endif
 
 #ifdef Meter_XY_ENABLE
-	UART_TO_XY188_Msg =xQueueCreate(UART_TO_XY188_Q_NUM, sizeof(UART_TO_XY188_QueueSend_Stru*));	//创建应用于UARTRBC的消息队列
+	UART_TO_XY188_Msg =xQueueCreate(UART_TO_XY188_Q_NUM, sizeof(UART_TO_XY188_QueueSend_Stru*));	        //创建应用于UARTRBC的消息队列
 #endif
 
 #ifdef Meter_HT2X_ENABLE
@@ -573,11 +569,11 @@ int main(void)
 
 
 	
-	ClientCH1_Msg =xQueueCreate(ClientCH1_Q_NUM, sizeof(ClientCH1_Queue_Stru*));				    //创建应用于终端通信的消息队列
+	ClientCH1_Msg =xQueueCreate(ClientCH1_Q_NUM, sizeof(ClientCH1_Queue_Stru*));        //创建应用于终端通信的消息队列
 
-	Display_Semaphore =xSemaphoreCreateCounting(8,0);											    //创建服务于LCD扫描的计数型信号量
-	UseSend_Semaphore =xSemaphoreCreateCounting(4,0);											    //创建计数型信号量 用户数据的发送数据
-	EneryShare_Semaphore=xSemaphoreCreateCounting(4,0);										        //创建计数型信号量 用于系统数据热量分摊
+	Display_Semaphore =xSemaphoreCreateCounting(8,0);                                   //创建服务于LCD扫描的计数型信号量
+	UseSend_Semaphore =xSemaphoreCreateCounting(4,0);                                   //创建计数型信号量 用户数据的发送数据
+	EneryShare_Semaphore=xSemaphoreCreateCounting(4,0);                                 //创建计数型信号量 用于系统数据热量分摊
 						
 	dbg_printf(DEBUG_DEBUG,"系统信号量初始化完成...\r\n");
 	
@@ -826,7 +822,7 @@ void Task01_F(void const * argument)
 	RealySt =SysPara.RelayRecord;
 
 	PowerRelay_SET(RealySt);			//主回路继电器动作控制
-	createIWDG( &Iwdg_T1, 30);		//软件看门狗创建
+	createIWDG( &Iwdg_T1, 30);		    //软件看门狗创建
 
 	
 
@@ -888,8 +884,9 @@ void Task01_F(void const * argument)
 		if(Times1 >=10)			
         {
         	Times1 =0;
-			SysStatus.Dev_ComStatus =GetDev_ComStatus();
-			if(SysStatus.Dev_ComStatus ==HAL_OK)
+			SysStatus.Dev_ComStatus = GetDev_ComStatus();
+            //dbg_printf(DEBUG_INFO,"报警状态 = %d\r\n",SysStatus.Dev_ComStatus);
+			if(SysStatus.Dev_ComStatus == HAL_OK)
 			{
 				LED_Alarm_OFF;
 			}
@@ -904,7 +901,8 @@ void Task01_F(void const * argument)
         if(Times2 >=5)			
 		{
 			Times2 =0;
-			if(SysStatus.Syspara ==HAL_OK)
+            //dbg_printf(DEBUG_INFO,"故障状态 = %d\r\n", SysStatus.Syspara);
+			if(SysStatus.Syspara == HAL_OK)
 			{
 				LED_Fault_OFF;
 			}
@@ -974,7 +972,7 @@ void Task03_F(void const * argument)
 	KEY_OUT_Stru value;
 	KEY_OUT_Stru pi;
 	IndepKEYFunction_Init();											//独立按键功能初始化
-	KeyboardApp_Init();												//按键应用初始化  IndepKEYFunction_Init 初始化被挂接后不用再次初始化
+	KeyboardApp_Init();												    //按键应用初始化  IndepKEYFunction_Init 初始化被挂接后不用再次初始化
 
 	osStatus TimerErr;
 	TimerErr =TimerErr;
@@ -983,7 +981,7 @@ void Task03_F(void const * argument)
     /* definition and creation of Timer01 */
     osTimerDef(Timer01, Timer01Callback);								//创建应用于按键扫描的定时器
     Timer01Handle = osTimerCreate(osTimer(Timer01), osTimerPeriodic, NULL);
-    TimerErr =osTimerStart (Timer01Handle , 5 );	//定时器扫描间隔为5毫秒/Ticks
+    TimerErr =osTimerStart (Timer01Handle , 5 );	                    //定时器扫描间隔为5毫秒/Ticks
 
 	Err =Err;
     while(1)
@@ -992,8 +990,8 @@ void Task03_F(void const * argument)
         if(Err ==pdTRUE)
         {
 			value =pi;
-			PulseLeaguer_SET(Beep_Ctrler, 1, 10, 5, 10, 0, 0); 	//功能指针	脉冲数量  扫描间隔(tick*X) 边沿宽度   周期	  周期计数器  当前状态
-			LCD_light_Ct =SystemTick_ms;					//有按键按下时刷新背光控制器
+			PulseLeaguer_SET(Beep_Ctrler, 1, 10, 5, 10, 0, 0); 	        //功能指针	脉冲数量  扫描间隔(tick*X) 边沿宽度   周期	  周期计数器  当前状态
+			LCD_light_Ct =SystemTick_ms;					            //有按键按下时刷新背光控制器
 			
 			Keyvalue.value =value.Button_Num;
 			Keyvalue.resp =1;
@@ -1015,12 +1013,12 @@ void Task03_F(void const * argument)
 void Task04_F(void const * argument)
 {
 
-	LCD_IOInit();										//LCD外设管脚初始化
-	LCD_REST();										    //液晶复位
+	LCD_IOInit();										        //LCD外设管脚初始化
+	LCD_REST();										            //液晶复位
 	
-	Lcd_Init();											//液晶驱动初始化
-	Clear_VisionBUF();									//清空显示缓冲区
-	Refresh_Screen();									//屏幕刷新
+	Lcd_Init();											        //液晶驱动初始化
+	Clear_VisionBUF();									        //清空显示缓冲区
+	Refresh_Screen();									        //屏幕刷新
 	BaseType_t Err=pdTRUE;
 	
 	if(Display_Semaphore !=NULL)
@@ -1029,7 +1027,7 @@ void Task04_F(void const * argument)
 	}
 
 	
-	GetbuildMeterMessage();	 							//获取栋表信息
+	GetbuildMeterMessage();	 							        //获取栋表信息
     while(1)
     {
 		Err =xSemaphoreTake(Display_Semaphore,portMAX_DELAY);	//等待屏幕刷新信号量
@@ -1073,7 +1071,7 @@ void Task06_F(void const * argument)
 	while(1)
 	{
 		feedIWDG(Iwdg_T6);
-		UART_RBC_TXServer();		//异步串行通信发送服务
+		UART_RBC_TXServer();		    //异步串行通信发送服务
 		osDelay(200);
 	}
 }
@@ -1097,7 +1095,7 @@ void Task07_F(void const * argument)
 	{
 		dbg_printf(DEBUG_INFO,"主站重连注册申请....");
 	}
-	createIWDG( &Iwdg_T7, 30);			 //软件看门狗创建
+	createIWDG( &Iwdg_T7, 30);			                //软件看门狗创建
 
 
     while(1)
@@ -1192,7 +1190,7 @@ void Task08_F(void const * argument)
 	ClientCH1Ctrler.CreatFlag =HAL_OK;
 	SysStatus.ShareFlag =HAL_ERROR;			//分摊标志复位
 
-	createIWDG( &Iwdg_T8, 60);			 //软件看门狗创建
+	createIWDG( &Iwdg_T8, 60);			    //软件看门狗创建
 
 #if 0
 
@@ -1210,9 +1208,9 @@ void Task08_F(void const * argument)
     while(1)
     {
 		feedIWDG(Iwdg_T8);
-    	if(ClientCH1Ctrler.Busy ==HAL_OK)  //总线空闲 
+    	if(ClientCH1Ctrler.Busy ==HAL_OK)                               //总线空闲 
     	{
-			Num = uxQueueSpacesAvailable(ClientCH1_Msg);//得到队列剩余大小
+			Num = uxQueueSpacesAvailable(ClientCH1_Msg);                //得到队列剩余大小
 			if( (Num ==ClientCH1_Q_NUM)&&(SystemTick_ms -ClientReadCtrler.LoopSpace >SysPara.LoopSpace) )   //总线没有队列协议需要触发  同时检查循环抄收间隔计数器  此时可以触发自动超收设备序列
 			{
 				ClientCH1_QueueIN.Device=SysDeviceList.Device[ClientReadCtrler.Num];						//传递设备参数
@@ -1221,29 +1219,29 @@ void Task08_F(void const * argument)
 
 				
 				ClientReadCtrler.Num +=1;
-				if( ClientReadCtrler.Num >=MAXDevice_Num) //循环限制
+				if( ClientReadCtrler.Num >=MAXDevice_Num)               //循环限制
 				{
 					ClientReadCtrler.Num =0;
 				}
 
 				
-				if( CalculateProvideTimeCtrler.LoopWorkFlg ==ENABLE)//自动轮超收有效
+				if( CalculateProvideTimeCtrler.LoopWorkFlg ==ENABLE)    //自动轮超收有效
 				{
 					SysStatus.LoopCtrler +=1;
 					if(SysStatus.LoopCtrler >=MAXDevice_Num)
 					{
 						SysStatus.ShareFlag =HAL_OK;
 					}
-					switch(DeviceType)  //选择设备类型
+					switch(DeviceType)      //选择设备类型
 					{
-						case Meter_B ://大口径超声波热量表 FY-188
+						case Meter_B :      //大口径超声波热量表 FY-188
 						{
-						    ClientCH1_QueueIN.Device=ClientCH1_QueueIN.Device;										//获取设备编号
-							ClientCH1_QueueIN.UaComFlg =0;													        //协议返回 标志复位
+						    ClientCH1_QueueIN.Device=ClientCH1_QueueIN.Device;                  //获取设备编号
+							ClientCH1_QueueIN.UaComFlg =0;										//协议返回 标志复位
 							ClientCH1_QueueIN.Uapack=0;
 							
-							ClientCH1_QueueIN.SignleCom =SET;													    //重复超收
-							Err = FY_188Send_Code_QInput(&ClientCH1_QueueIN, 0X01);									//队列填充	
+							ClientCH1_QueueIN.SignleCom =SET;									//重复超收
+							Err = FY_188Send_Code_QInput(&ClientCH1_QueueIN, 0X01);             //队列填充	
 							if(Err ==pdTRUE)
 							{
 								dbg_printf(DEBUG_DEBUG,"FY_188Send_Code_QInput    OK ");
@@ -1259,11 +1257,11 @@ void Task08_F(void const * argument)
 
 						case Meter_U ://用户超声波热量表 FY-188
 						{
-						    ClientCH1_QueueIN.Device=ClientCH1_QueueIN.Device;									//获取设备编号
-							ClientCH1_QueueIN.UaComFlg =0;													    //协议返回 标志复位
+						    ClientCH1_QueueIN.Device=ClientCH1_QueueIN.Device;					//获取设备编号
+							ClientCH1_QueueIN.UaComFlg =0;                                      //协议返回 标志复位
 							ClientCH1_QueueIN.Uapack=0;
-							ClientCH1_QueueIN.SignleCom =SET;													//重复超收
-							Err = FY_188Send_Code_QInput(&ClientCH1_QueueIN, 0X01);								//队列填充	
+							ClientCH1_QueueIN.SignleCom =SET;									//重复超收
+							Err = FY_188Send_Code_QInput(&ClientCH1_QueueIN, 0X01);				//队列填充	
 							if(Err ==pdTRUE)
 							{
 								dbg_printf(DEBUG_DEBUG,"FY_188Send_Code_QInput    OK ");
@@ -1279,28 +1277,28 @@ void Task08_F(void const * argument)
 							INT16U UserNum =0;
 							INT16U DevNum =0;
 							
-							UserNum =ClientCH1_QueueIN.Device.UserNum;                                          //获取用户编号
+							UserNum =ClientCH1_QueueIN.Device.UserNum;                                                          //获取用户编号
 							DevNum =ClientCH1_QueueIN.Device.Num;
-							ClientCH1_QueueIN.Device=ClientCH1_QueueIN.Device;                                  //传递设备参数
-							ClientCH1_QueueIN.UaComFlg =0;                                                      //协议返回 标志复位
+							ClientCH1_QueueIN.Device=ClientCH1_QueueIN.Device;                                                  //传递设备参数
+							ClientCH1_QueueIN.UaComFlg =0;                                                                      //协议返回 标志复位
 							ClientCH1_QueueIN.Uapack=0;
 							ClientCH1_QueueIN.SendData.FY2000Data.Pack_59.Head.DESN=ClientCH1_QueueIN.Device.Num;				//填入DESN
-							ClientCH1_QueueIN.SendData.FY2000Data.Pack_59.LoopTime=CalculateProvideTimeCtrler.ProvideTime;			//周期供暖时间
+							ClientCH1_QueueIN.SendData.FY2000Data.Pack_59.LoopTime=CalculateProvideTimeCtrler.ProvideTime;		//周期供暖时间
 							
-							ClientCH1_QueueIN.SendData.FY2000Data.Pack_59.Apportion_Energy=UserData[UserNum].Apportion_Energy;		//填入周期热量/热量表表底
+							ClientCH1_QueueIN.SendData.FY2000Data.Pack_59.Apportion_Energy=UserData[UserNum].Apportion_Energy;	//填入周期热量/热量表表底
 							ClientCH1_QueueIN.SendData.FY2000Data.Pack_59.Remain_Heat=UserData[UserNum].Remain_Heat;			//填入剩余热量
 							ClientCH1_QueueIN.SendData.FY2000Data.Pack_59.Total_Heat=UserData[UserNum].Total_Heat;				//填入用户购入热量
 							
-							ClientCH1_QueueIN.SendData.FY2000Data.Pack_59.ControlType=SysDevData[DevNum].Device3.ControlType;		//填入控制类型
-							ClientCH1_QueueIN.SendData.FY2000Data.Pack_59.ForceCtrlFlg=SysDevData[DevNum].Device3.ForceCtrlFlg;		//填入强制控制标志
+							ClientCH1_QueueIN.SendData.FY2000Data.Pack_59.ControlType=SysDevData[DevNum].Device3.ControlType;   //填入控制类型
+							ClientCH1_QueueIN.SendData.FY2000Data.Pack_59.ForceCtrlFlg=SysDevData[DevNum].Device3.ForceCtrlFlg; //填入强制控制标志
 							
-							ClientCH1_QueueIN.SendData.FY2000Data.Pack_59.Set_TCtrlFg=SysDevData[DevNum].Device3.Set_TCtrlFg;		//系统设定温度标志
+							ClientCH1_QueueIN.SendData.FY2000Data.Pack_59.Set_TCtrlFg=SysDevData[DevNum].Device3.Set_TCtrlFg;   //系统设定温度标志
 							ClientCH1_QueueIN.SendData.FY2000Data.Pack_59.Set_Temp=SysDevData[DevNum].Device3.Set_Temp;			//系统设定温度
 
-							ClientCH1_QueueIN.SendData.FY2000Data.Pack_59.LimtTE_Flag=SysDevData[DevNum].Device3.LimtTE_Flag;		//系统极限温度标志
-							ClientCH1_QueueIN.SendData.FY2000Data.Pack_59.LimtTE_Value=SysDevData[DevNum].Device3.LimtTE_Value;		//系统极限设置温度
+							ClientCH1_QueueIN.SendData.FY2000Data.Pack_59.LimtTE_Flag=SysDevData[DevNum].Device3.LimtTE_Flag;   //系统极限温度标志
+							ClientCH1_QueueIN.SendData.FY2000Data.Pack_59.LimtTE_Value=SysDevData[DevNum].Device3.LimtTE_Value; //系统极限设置温度
 							ClientCH1_QueueIN.SignleCom =SET;
-				 			Err =FY_2000Send_Code_QInput(&ClientCH1_QueueIN,59);										//队列填充
+				 			Err =FY_2000Send_Code_QInput(&ClientCH1_QueueIN,59);										        //队列填充
 							if(Err ==pdTRUE)
 							{
 								dbg_printf(DEBUG_DEBUG,"FY_2000Send_Code_QInput    OK ");
@@ -1316,28 +1314,28 @@ void Task08_F(void const * argument)
 							INT16U UserNum =0;
 							INT16U DevNum =0;
 							
-							UserNum =ClientCH1_QueueIN.Device.UserNum;												//获取用户编号
+							UserNum =ClientCH1_QueueIN.Device.UserNum;												                //获取用户编号
 							DevNum =ClientCH1_QueueIN.Device.Num;
-							ClientCH1_QueueIN.Device=ClientCH1_QueueIN.Device;											//传递设备参数
-							ClientCH1_QueueIN.UaComFlg =0;														//协议返回 标志复位
+							ClientCH1_QueueIN.Device=ClientCH1_QueueIN.Device;											            //传递设备参数
+							ClientCH1_QueueIN.UaComFlg =0;														                    //协议返回 标志复位
 							ClientCH1_QueueIN.Uapack=0;
-							ClientCH1_QueueIN.SendData.FY2000Data.Pack_59.Head.DESN =DevNum;								//填入DESN
-							ClientCH1_QueueIN.SendData.FY2000Data.Pack_59.LoopTime =CalculateProvideTimeCtrler.ProvideTime;			//周期供暖时间
+							ClientCH1_QueueIN.SendData.FY2000Data.Pack_59.Head.DESN =DevNum;								        //填入DESN
+							ClientCH1_QueueIN.SendData.FY2000Data.Pack_59.LoopTime =CalculateProvideTimeCtrler.ProvideTime;         //周期供暖时间
 							
 							ClientCH1_QueueIN.SendData.FY2000Data.Pack_59.Apportion_Energy =UserData[UserNum].Apportion_Energy;		//填入周期热量/热量表表底
-							ClientCH1_QueueIN.SendData.FY2000Data.Pack_59.Remain_Heat =UserData[UserNum].Remain_Heat;			//填入剩余热量
-							ClientCH1_QueueIN.SendData.FY2000Data.Pack_59.Total_Heat =UserData[UserNum].Total_Heat;				//填入总热量
+							ClientCH1_QueueIN.SendData.FY2000Data.Pack_59.Remain_Heat =UserData[UserNum].Remain_Heat;			    //填入剩余热量
+							ClientCH1_QueueIN.SendData.FY2000Data.Pack_59.Total_Heat =UserData[UserNum].Total_Heat;				    //填入总热量
 							
 							ClientCH1_QueueIN.SendData.FY2000Data.Pack_59.ControlType =SysDevData[DevNum].Device4.ControlType;		//填入控制类型
-							ClientCH1_QueueIN.SendData.FY2000Data.Pack_59.ForceCtrlFlg =SysDevData[DevNum].Device4.ForceCtrlFlg;		//填入强制控制标志
+							ClientCH1_QueueIN.SendData.FY2000Data.Pack_59.ForceCtrlFlg =SysDevData[DevNum].Device4.ForceCtrlFlg;    //填入强制控制标志
 							
 							ClientCH1_QueueIN.SendData.FY2000Data.Pack_59.Set_TCtrlFg =0;		//系统设定温度标志
-							ClientCH1_QueueIN.SendData.FY2000Data.Pack_59.Set_Temp =0;		//系统设定温度
+							ClientCH1_QueueIN.SendData.FY2000Data.Pack_59.Set_Temp =0;		    //系统设定温度
 
 							ClientCH1_QueueIN.SendData.FY2000Data.Pack_59.LimtTE_Flag =0;		//系统极限温度标志
 							ClientCH1_QueueIN.SendData.FY2000Data.Pack_59.LimtTE_Value =0;		//系统极限设置温度
 							ClientCH1_QueueIN.SignleCom =SET;
-				 			Err =FY_2000Send_Code_QInput(&ClientCH1_QueueIN,59);		 	//队列填充
+				 			Err =FY_2000Send_Code_QInput(&ClientCH1_QueueIN,59);		 	    //队列填充
 							if(Err ==pdTRUE)
 							{
 								dbg_printf(DEBUG_DEBUG,"FY_2000Send_Code_QInput    OK ");
@@ -1351,11 +1349,11 @@ void Task08_F(void const * argument)
 #ifdef Meter_H_ENABLE
 						case Meter_H ://汇中大口径超声波热量表 CJ-T188
 						{
-						    ClientCH1_QueueIN.Device=ClientCH1_QueueIN.Device;										//获取设备编号
-							ClientCH1_QueueIN.UaComFlg =0;													//协议返回 标志复位
+						    ClientCH1_QueueIN.Device=ClientCH1_QueueIN.Device;                  //获取设备编号
+							ClientCH1_QueueIN.UaComFlg =0;                                      //协议返回 标志复位
 							ClientCH1_QueueIN.Uapack=0;
-							ClientCH1_QueueIN.SignleCom =SET;													//重复超收
-							Err = HZCRL_188Send_Code_QInput(&ClientCH1_QueueIN, 0X01);								//队列填充	
+							ClientCH1_QueueIN.SignleCom =SET;									//重复超收
+							Err = HZCRL_188Send_Code_QInput(&ClientCH1_QueueIN, 0X01);			//队列填充	
 							if(Err ==pdTRUE)
 							{
 								dbg_printf(DEBUG_DEBUG,"HZCRL_188Send_Code_QInput    OK ");
@@ -1468,7 +1466,7 @@ void Task08_F(void const * argument)
                             ClientCH1_QueueIN.UaComFlg =0;                                                      //协议返回 标志复位
                             ClientCH1_QueueIN.Uapack=0;
                             ClientCH1_QueueIN.SignleCom =SET;                                                   //重复超收
-                            Err = NWK_Send_Code_QInput(&ClientCH1_QueueIN, 0X01);                              //队列填充  
+                            Err = NWK_Send_Code_QInput(&ClientCH1_QueueIN, 0X03);                               //队列填充  
                             if(Err ==pdTRUE)
                             {
                                 dbg_printf(DEBUG_DEBUG, "NWK_Send_Code_QInput    OK ");
@@ -1494,9 +1492,9 @@ void Task08_F(void const * argument)
 					
 					ClientCH1_QueueBF =*ClientCH1_QueueBFP;
 					
-                    ClientCH1Ctrler.Device =ClientCH1_QueueBF.Device;       			//数据移交   将队列数据移交给通道控制器  
-					ClientCH1Ctrler.SignleCom =ClientCH1_QueueBF.SignleCom;			//传递重复超收次数命令
-					ClientCH1Ctrler.UaComFlg =ClientCH1_QueueBF.UaComFlg;			//传递协议标志
+                    ClientCH1Ctrler.Device =ClientCH1_QueueBF.Device;       		    //数据移交   将队列数据移交给通道控制器  
+					ClientCH1Ctrler.SignleCom =ClientCH1_QueueBF.SignleCom;			    //传递重复超收次数命令
+					ClientCH1Ctrler.UaComFlg =ClientCH1_QueueBF.UaComFlg;			    //传递协议标志
 					ClientCH1Ctrler.Uapack=ClientCH1_QueueBF.Uapack;
 					
 					ClientCH1Ctrler.PackCreatFlag=ClientCH1_QueueBF.PackCreatFlag;		//传递协议触发控制标志
@@ -1517,7 +1515,7 @@ void Task08_F(void const * argument)
 
 							}break;
 							
-							case Meter_U: //FY-188小口径表
+							case Meter_U:   //FY-188小口径表
 							{
 								SysDevStatus[DevNum].Device2.ComTolNum +=1;
 
@@ -1534,7 +1532,7 @@ void Task08_F(void const * argument)
 						
 							}break;
 #ifdef Meter_H_ENABLE
-							case Meter_H: //汇中 CJ-T188 大口径表
+							case Meter_H:   //汇中 CJ-T188 大口径表
 							{
 								SysDevStatus[DevNum].Device5.ComTolNum +=1;
 
@@ -1608,12 +1606,12 @@ void Task08_F(void const * argument)
             	case Meter_B ://大口径超声波热量表
 				{
 					
-					FY188_QueueSend.ID =ClientCH1Ctrler.Device.ID;				//传递设备编号ID
+					FY188_QueueSend.ID =ClientCH1Ctrler.Device.ID;				    //传递设备编号ID
 					FY188_QueueSend.PackCreatFlag =ClientCH1Ctrler.PackCreatFlag;	//传递协议创建触发标志
-					FY188_QueueSend.PackINPort =ClientCH1Ctrler.PackINPort;		//传递协议入口序号
-					FY188_QueueSend.SendData =ClientCH1Ctrler.SendData;			//传递协议数据
+					FY188_QueueSend.PackINPort =ClientCH1Ctrler.PackINPort;		    //传递协议入口序号
+					FY188_QueueSend.SendData =ClientCH1Ctrler.SendData;			    //传递协议数据
 					
-					Err =UART_TO_FY188_CCB_QueueSend(&FY188_QueueSend);		//发送消息
+					Err =UART_TO_FY188_CCB_QueueSend(&FY188_QueueSend);		        //发送消息
 					if( Err ==pdTRUE)
 					{
                         ClientCH1Ctrler.Repeat +=1;
@@ -1627,12 +1625,12 @@ void Task08_F(void const * argument)
             	case Meter_U ://户用超声波热量表
 				{
 				
-					FY188_QueueSend.ID =ClientCH1Ctrler.Device.ID;				//传递设备编号ID
+					FY188_QueueSend.ID =ClientCH1Ctrler.Device.ID;				    //传递设备编号ID
 					FY188_QueueSend.PackCreatFlag =ClientCH1Ctrler.PackCreatFlag;	//传递协议创建触发标志
-					FY188_QueueSend.PackINPort =ClientCH1Ctrler.PackINPort;		//传递协议入口序号
-					FY188_QueueSend.SendData =ClientCH1Ctrler.SendData;			//传递协议数据
+					FY188_QueueSend.PackINPort =ClientCH1Ctrler.PackINPort;		    //传递协议入口序号
+					FY188_QueueSend.SendData =ClientCH1Ctrler.SendData;			    //传递协议数据
 
-					Err =UART_TO_FY188_CCB_QueueSend(&FY188_QueueSend);		//发送消息
+					Err =UART_TO_FY188_CCB_QueueSend(&FY188_QueueSend);		        //发送消息
 					if( Err ==pdTRUE)
 					{
                         ClientCH1Ctrler.Repeat +=1;
@@ -1648,13 +1646,13 @@ void Task08_F(void const * argument)
             	case Valve_U ://户用通断控制器 标准型
 				{
 
-					FY2000_QueueSend.ID =ClientCH1Ctrler.Device.ID;				//传递设备编号ID
+					FY2000_QueueSend.ID =ClientCH1Ctrler.Device.ID;				    //传递设备编号ID
 					FY2000_QueueSend.PackCreatFlag =ClientCH1Ctrler.PackCreatFlag;	//传递协议创建触发标志
 					FY2000_QueueSend.PackINPort =ClientCH1Ctrler.PackINPort;		//传递协议入口序号
 				
 					FY2000_QueueSend.SendData =ClientCH1Ctrler.SendData;			//传递协议数据
 
-					Err =UART_TO_FY2000_CCB_QueueSend(&FY2000_QueueSend);		//发送消息
+					Err =UART_TO_FY2000_CCB_QueueSend(&FY2000_QueueSend);		    //发送消息
 					if( Err ==pdTRUE)
 					{
                         ClientCH1Ctrler.Repeat +=1;
@@ -1671,12 +1669,12 @@ void Task08_F(void const * argument)
             	case Valve_UH ://户用通断控制器 回水阀
 				{
 
-					FY2000_QueueSend.ID =ClientCH1Ctrler.Device.ID;				//传递设备编号ID
+					FY2000_QueueSend.ID =ClientCH1Ctrler.Device.ID;				    //传递设备编号ID
 					FY2000_QueueSend.PackCreatFlag =ClientCH1Ctrler.PackCreatFlag;	//传递协议创建触发标志
 					FY2000_QueueSend.PackINPort =ClientCH1Ctrler.PackINPort;		//传递协议入口序号
 					FY2000_QueueSend.SendData =ClientCH1Ctrler.SendData;			//传递协议数据
 
-					Err =UART_TO_FY2000_CCB_QueueSend(&FY2000_QueueSend);		//发送消息
+					Err =UART_TO_FY2000_CCB_QueueSend(&FY2000_QueueSend);		    //发送消息
 					if( Err ==pdTRUE)
 					{
                         ClientCH1Ctrler.Repeat +=1;
@@ -1717,12 +1715,12 @@ void Task08_F(void const * argument)
             	case Meter_XY ://祥源超声波热量表
 				{
 				
-					XY188_QueueSend.ID =ClientCH1Ctrler.Device.ID;				//传递设备编号ID
+					XY188_QueueSend.ID =ClientCH1Ctrler.Device.ID;				    //传递设备编号ID
 					XY188_QueueSend.PackCreatFlag =ClientCH1Ctrler.PackCreatFlag;	//传递协议创建触发标志
-					XY188_QueueSend.PackINPort =ClientCH1Ctrler.PackINPort;		//传递协议入口序号
-					XY188_QueueSend.SendData =ClientCH1Ctrler.SendData;			//传递协议数据
+					XY188_QueueSend.PackINPort =ClientCH1Ctrler.PackINPort;		    //传递协议入口序号
+					XY188_QueueSend.SendData =ClientCH1Ctrler.SendData;			    //传递协议数据
 
-					Err =UART_TO_XY188_CCB_QueueSend(&XY188_QueueSend);		//发送消息
+					Err =UART_TO_XY188_CCB_QueueSend(&XY188_QueueSend);		        //发送消息
 					if( Err ==pdTRUE)
 					{
                         ClientCH1Ctrler.Repeat +=1;
@@ -1740,13 +1738,13 @@ void Task08_F(void const * argument)
                 case Meter_HT3X ://祥源超声波热量表
                 {
                 
-                    HT2X188_QueueSend.ID =ClientCH1Ctrler.Device.ID;              //传递设备编号ID
-                    HT2X188_QueueSend.Type =ClientCH1Ctrler.Device.Type;          //传递设备类型 该型号表对应 
-                    HT2X188_QueueSend.PackCreatFlag =ClientCH1Ctrler.PackCreatFlag;   //传递协议创建触发标志
-                    HT2X188_QueueSend.PackINPort =ClientCH1Ctrler.PackINPort;     //传递协议入口序号
-                    HT2X188_QueueSend.SendData =ClientCH1Ctrler.SendData;         //传递协议数据
+                    HT2X188_QueueSend.ID =ClientCH1Ctrler.Device.ID;                    //传递设备编号ID
+                    HT2X188_QueueSend.Type =ClientCH1Ctrler.Device.Type;                //传递设备类型 该型号表对应 
+                    HT2X188_QueueSend.PackCreatFlag =ClientCH1Ctrler.PackCreatFlag;     //传递协议创建触发标志
+                    HT2X188_QueueSend.PackINPort =ClientCH1Ctrler.PackINPort;           //传递协议入口序号
+                    HT2X188_QueueSend.SendData =ClientCH1Ctrler.SendData;               //传递协议数据
 
-                    Err =UART_TO_HT2X188_CCB_QueueSend(&HT2X188_QueueSend);     //发送消息
+                    Err =UART_TO_HT2X188_CCB_QueueSend(&HT2X188_QueueSend);             //发送消息
                     if( Err ==pdTRUE)
                     {
                         ClientCH1Ctrler.Repeat +=1;
@@ -1771,7 +1769,7 @@ void Task08_F(void const * argument)
                 case Meter_BRC ://祥源超声波热量表
                 {
                 
-                    BRC188_QueueSend.ID =ClientCH1Ctrler.Device.ID;                     //传递设备编号ID
+                    BRC188_QueueSend.ID =ClientCH1Ctrler.Device.ID;                  //传递设备编号ID
                     BRC188_QueueSend.PackCreatFlag =ClientCH1Ctrler.PackCreatFlag;   //传递协议创建触发标志
                     BRC188_QueueSend.PackINPort =ClientCH1Ctrler.PackINPort;         //传递协议入口序号
                     BRC188_QueueSend.SendData =ClientCH1Ctrler.SendData;             //传递协议数据
@@ -1793,7 +1791,7 @@ void Task08_F(void const * argument)
                 case Meter_DDF2 ://海通通断控制器DDF2
                 {
                 
-                    DDF2_QueueSend.ID =ClientCH1Ctrler.Device.ID;                   //传递设备编号ID
+                    DDF2_QueueSend.ID =ClientCH1Ctrler.Device.ID;                  //传递设备编号ID
                     DDF2_QueueSend.COM_Type =ClientCH1Ctrler.Device.COM_Type;            
                     DDF2_QueueSend.PackCreatFlag =ClientCH1Ctrler.PackCreatFlag;   //传递协议创建触发标志
                     DDF2_QueueSend.PackINPort =ClientCH1Ctrler.PackINPort;         //传递协议入口序号
@@ -1816,13 +1814,13 @@ void Task08_F(void const * argument)
                 case Valve_NWK ://耐威科NWK
                 {
                 
-                    NWK_QueueSend.ID                = ClientCH1Ctrler.Device.ID;                   //传递设备编号ID
+                    NWK_QueueSend.ID                = ClientCH1Ctrler.Device.ID;            //传递设备编号ID
                     //NWK_QueueSend.COM_Type          = ClientCH1Ctrler.Device.COM_Type;            
-                    NWK_QueueSend.PackCreatFlag     = ClientCH1Ctrler.PackCreatFlag;   //传递协议创建触发标志
-                    NWK_QueueSend.PackINPort        = ClientCH1Ctrler.PackINPort;         //传递协议入口序号
+                    NWK_QueueSend.PackCreatFlag     = ClientCH1Ctrler.PackCreatFlag;        //传递协议创建触发标志
+                    NWK_QueueSend.PackINPort        = ClientCH1Ctrler.PackINPort;           //传递协议入口序号
                     NWK_QueueSend.SendData          = ClientCH1Ctrler.SendData;             //传递协议数据
 
-                    Err =UART_TO_NWK_CCB_QueueSend(&NWK_QueueSend);              //发送消息
+                    Err =UART_TO_NWK_CCB_QueueSend(&NWK_QueueSend);                         //发送消息
                     if( Err ==pdTRUE)
                     {
                         ClientCH1Ctrler.Repeat +=1;
@@ -2622,7 +2620,7 @@ void Task12_F(void const * argument)
 
 /*
 Task13_F function   
-设备数据间隔上报任务  （采集器-->服务器  采集器返回抄收到的数据打包为丰源采集器协议上报到服务器）
+设备数据间隔上报任务  自动上报任务（采集器-->服务器  采集器返回抄收到的数据打包为丰源采集器协议上报到服务器）
 */
 void Task13_F(void const * argument)
 {
@@ -2637,8 +2635,7 @@ void Task13_F(void const * argument)
 	{
 		SysPara.SendSpace =5000;
 	}
-	//osDelay(1000*60);				//上电延时1分钟
-    osDelay(1000*5);				//上电延时1分钟
+	osDelay(1000*60);				//上电延时1分钟
 
 	while(1)
 	{
@@ -3046,17 +3043,19 @@ void Task13_F(void const * argument)
 							FY1000_Q_TX_Buffer.SendData.Pack_0XB0_D5.Dev_ID                 = Device.ID;
 							FY1000_Q_TX_Buffer.SendData.Pack_0XB0_D5.BackFlag               = COMBack_OK;
 
-                            //数据域
-                            FY1000_Q_TX_Buffer.SendData.Pack_0XB0_D5.Input_Temp             = SysDevData[DevNum].Device11.Input_Temp;
-                            FY1000_Q_TX_Buffer.SendData.Pack_0XB0_D5.Output_Temp            = SysDevData[DevNum].Device11.Output_Temp;
-                            FY1000_Q_TX_Buffer.SendData.Pack_0XB0_D5.EnterWater_Pressure    = SysDevData[DevNum].Device11.EnterWater_Pressure;
-                            FY1000_Q_TX_Buffer.SendData.Pack_0XB0_D5.ReturnWater_Pressure   = SysDevData[DevNum].Device11.ReturnWater_Pressure;
-                            FY1000_Q_TX_Buffer.SendData.Pack_0XB0_D5.Room_Temp              = SysDevData[DevNum].Device11.Room_Temp;
-                            FY1000_Q_TX_Buffer.SendData.Pack_0XB0_D5.Current_Valve_Open     = SysDevData[DevNum].Device11.Current_Valve_Open;
-                            FY1000_Q_TX_Buffer.SendData.Pack_0XB0_D5.SetValue_Open          = SysDevData[DevNum].Device11.SetValue_Open;
-                            FY1000_Q_TX_Buffer.SendData.Pack_0XB0_D5.Temp_Diff              = SysDevData[DevNum].Device11.Temp_Diff;
-                            FY1000_Q_TX_Buffer.SendData.Pack_0XB0_D5.ReturnTemp_Set         = SysDevData[DevNum].Device11.ReturnTemp_Set;
-                            FY1000_Q_TX_Buffer.SendData.Pack_0XB0_D5.PressureDiff_Set       = SysDevData[DevNum].Device11.PressureDiff_Set;
+                            //数据域  //bytes_reverse( (unsigned char *)&temp, 2); 数据小端模式 字节倒序
+                            
+                            FY1000_Q_TX_Buffer.SendData.Pack_0XB0_D5.Input_Temp             = (UINT16)(SysDevData[DevNum].Device11.Input_Temp*100);
+                            FY1000_Q_TX_Buffer.SendData.Pack_0XB0_D5.Output_Temp            = (UINT16)(SysDevData[DevNum].Device11.Output_Temp*100);
+                            FY1000_Q_TX_Buffer.SendData.Pack_0XB0_D5.EnterWater_Pressure    = (UINT16)(SysDevData[DevNum].Device11.EnterWater_Pressure*100);
+                            FY1000_Q_TX_Buffer.SendData.Pack_0XB0_D5.ReturnWater_Pressure   = (UINT16)(SysDevData[DevNum].Device11.ReturnWater_Pressure*100);
+                            FY1000_Q_TX_Buffer.SendData.Pack_0XB0_D5.Room_Temp              = (UINT16)(SysDevData[DevNum].Device11.Room_Temp*100);
+                            FY1000_Q_TX_Buffer.SendData.Pack_0XB0_D5.Current_Valve_Open     = (UINT16)(SysDevData[DevNum].Device11.Current_Valve_Open*100);
+                            FY1000_Q_TX_Buffer.SendData.Pack_0XB0_D5.SetValue_Open          = (UINT16)(SysDevData[DevNum].Device11.SetValue_Open*100);
+                            FY1000_Q_TX_Buffer.SendData.Pack_0XB0_D5.Temp_Diff              = (UINT16)(SysDevData[DevNum].Device11.Temp_Diff*100);
+                            FY1000_Q_TX_Buffer.SendData.Pack_0XB0_D5.ReturnTemp_Set         = (UINT16)(SysDevData[DevNum].Device11.ReturnTemp_Set*100);
+                            FY1000_Q_TX_Buffer.SendData.Pack_0XB0_D5.PressureDiff_Set       = (UINT16)(SysDevData[DevNum].Device11.PressureDiff_Set*100);
+                            
                             FY1000_Q_TX_Buffer.SendData.Pack_0XB0_D5.Error                  = SysDevData[DevNum].Device11.Error;
                             FY1000_Q_TX_Buffer.SendData.Pack_0XB0_D5.Software_Version       = SysDevData[DevNum].Device11.Software_Version;
                             FY1000_Q_TX_Buffer.SendData.Pack_0XB0_D5.Run_Mode               = SysDevData[DevNum].Device11.Run_Mode;

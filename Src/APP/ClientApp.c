@@ -413,7 +413,7 @@ BaseType_t DDF2_Send_Code_QInput(ClientCH1_Queue_Stru*DataBuffer_P,INT8U PackPor
 
 
 
-
+#ifdef Valve_NWK_ENABLE
 /*
 采集器 耐威科NWK单元调节阀modbus阀 数据发送 队列装入函数
 队列填入
@@ -432,7 +432,7 @@ BaseType_t NWK_Send_Code_QInput(ClientCH1_Queue_Stru*DataBuffer_P,INT8U PackPort
 }
 
 
-
+#endif
 
 
 

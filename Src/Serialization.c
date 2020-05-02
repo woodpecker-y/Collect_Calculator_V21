@@ -34,17 +34,17 @@ void CreateFileName(char *buf, SysDEV_Type type)
         sprintf(typeName,"MH");
         break;
 #endif
-#ifdef Valve_NWK_ENABLE
-        case Valve_NWK:
-        sprintf(typeName,"NWK");
-        break;
-#endif
+//#ifdef Valve_NWK_ENABLE
+//        case Valve_NWK:
+//        sprintf(typeName,"NWK");
+//        break;
+//#endif
         default:
         break;
     }
 
     sprintf(buf,"%04d%02d%02d%02d%02d%02d-%s-%d.csv",RTC_Time.Year,RTC_Time.Month,RTC_Time.Day,RTC_Time.Hour,RTC_Time.Minute,RTC_Time.Second,typeName,tick);
-    dbg_printf(DEBUG_INFO,"Create CSV fileName:%s",buf);
+    dbg_printf(DEBUG_INFO,"Create CSV file Name:%s",buf);
 }
 
 
@@ -234,6 +234,11 @@ int SaveDeviceInfo(SysDEV_Type type)
         f_res = f_write(&file, MeterH_Title, strlen(MeterH_Title), &writed);
         break;
 #endif
+//#ifdef Valve_NWK_ENABLE
+//        case Valve_NWK:
+//        f_res = f_write(&file, Valve_NWK_Title, strlen(Valve_NWK_Title), &writed);
+//        break;
+//#endif
         default:
         break;
     }
@@ -376,6 +381,19 @@ int SaveLog(void)
         dbg_printf(DEBUG_NOTICE,"Save device:%d data success...",Meter_H);
     }
 #endif
+    
+//#ifdef Valve_NWK_ENABLE
+//    res = SaveDeviceInfo(Valve_NWK);
+//    if(0 != res)
+//    {
+//        dbg_printf(DEBUG_WARNING,"Save device:%d data fail...",Valve_NWK);
+//        return -1;
+//    }
+//    else
+//    {
+//        dbg_printf(DEBUG_NOTICE,"Save device:%d data success...",Valve_NWK);
+//    }
+//#endif
     return res;
 }
 

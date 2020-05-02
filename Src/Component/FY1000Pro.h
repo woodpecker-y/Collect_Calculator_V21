@@ -42,7 +42,8 @@
 
 
 
-
+FY1000PRO_EXT INT8U  NWK_0X1B_Register_Addr;  //接收服务器下发耐威科指令的寄存器地址 保存下来， 以备后面反馈给服务打包使用
+FY1000PRO_EXT INT16U NWK_0X1B_Data;           //接收服务器下发耐威科指令的数据 保存下来， 以备后面反馈给服务打包使用
 
 typedef enum
 {
@@ -259,27 +260,28 @@ typedef struct
 	INT32U	Dev_ID;				        //设备编号
 	INT8U	BackFlag;				    //回馈标志
 	
-	float	Input_Temp;                 //进水温度
-	float	Output_Temp;                //回水温度
-    float   EnterWater_Pressure;        //进水压力
-    float   ReturnWater_Pressure;       //回水压力
-    float   Room_Temp;                  //室温
-    float   Current_Valve_Open;         //当前阀门开度值
-    float   SetValue_Open;              //设置阀门开度值
-    float   Temp_Diff;                  //温差设定值
-    float   ReturnTemp_Set;             //回水温度设定值
-    float   PressureDiff_Set;           //压差设定值
-    INT8U  Error;                      //错误代码 0为正常，1为堵转，2为进水温度传感器开路，3.回水温度传感器开路，4.进水压力传感器开路，5回水压力传感器开路
-    INT8U  Software_Version;           //软件版本号  100 则为 V1.0 
-    INT8U  Run_Mode;                   //运行模式  0为开度模式；1为温差模式2为回温模式3为压差模式4.就地控制模式（电机掉电）5.4-20控制开度模式（需硬件支持）6 TIME
-    INT8U  Address;                    //地址 1-247，默认为1
-    INT8U  Motor_Steering;             //电机转向 0为正向阀，1为反向阀
-    INT8U  Adjust_Switch;              //自动行程校正开关，0关闭，1为打开，值为1时每次上电自动校正行程
-    INT8U  Adjust_Tigger;              //写0x5555触发一次
-    INT8U  Dc_Motor_Speed;             //直流电机速度
+    //两个字节发送 以小端模式发给服务器
+	INT16U	Input_Temp;                 //进水温度  2556= 09FC  （25.56℃） （保持后面有两个小数点）
+	INT16U	Output_Temp;                //回水温度  2556= 09FC  （25.56℃） （保持后面有两个小数点）
+    INT16U  EnterWater_Pressure;        //进水压力  （保持后面有两个小数点）
+    INT16U  ReturnWater_Pressure;       //回水压力 （保持后面有两个小数点）
+    INT16U  Room_Temp;                  //室温 （保持后面有两个小数点）
+    INT16U  Current_Valve_Open;         //当前阀门开度值（保持后面有两个小数点）
+    INT16U  SetValue_Open;              //设置阀门开度值（保持后面有两个小数点）
+    INT16U  Temp_Diff;                  //温差设定值（保持后面有两个小数点）
+    INT16U  ReturnTemp_Set;             //回水温度设定值（保持后面有两个小数点）
+    INT16U  PressureDiff_Set;           //压差设定值  （保持后面有两个小数点）
+    INT16U  Error;                      //错误代码 0为正常，1为堵转，2为进水温度传感器开路，3.回水温度传感器开路，4.进水压力传感器开路，5回水压力传感器开路
+    INT16U  Software_Version;           //软件版本号  100 则为 V1.0 
+    INT16U  Run_Mode;                   //运行模式  0为开度模式；1为温差模式2为回温模式3为压差模式4.就地控制模式（电机掉电）5.4-20控制开度模式（需硬件支持）6 TIME
+    INT16U  Address;                    //地址 1-247，默认为1
+    INT16U  Motor_Steering;             //电机转向 0为正向阀，1为反向阀
+    INT16U  Adjust_Switch;              //自动行程校正开关，0关闭，1为打开，值为1时每次上电自动校正行程
+    INT16U  Adjust_Tigger;              //写0x5555触发一次
+    INT16U  Dc_Motor_Speed;             //直流电机速度 
 
-	INT8U	Check;				//校验和
-	INT8U	End;					//结束标志
+	INT8U	Check;				        //校验和
+	INT8U	End;					    //结束标志
 }FY1000_Pack0X02_D5_Stru;
 
 
@@ -599,7 +601,6 @@ typedef struct
 
 
 
-
 //采集器发送GPRS模块的主站IP地址配置命令
 typedef struct
 {
@@ -821,28 +822,32 @@ typedef struct
 	INT32U	Dev_ID;				        //设备编号
 	INT8U	BackFlag;				    //回馈标志
 	
-	float	Input_Temp;                 //进水温度
-	float	Output_Temp;                //回水温度
-    float   EnterWater_Pressure;        //进水压力
-    float   ReturnWater_Pressure;       //回水压力
-    float   Room_Temp;                  //室温
-    float   Current_Valve_Open;         //当前阀门开度值
-    float   SetValue_Open;              //设置阀门开度值
-    float   Temp_Diff;                  //温差设定值
-    float   ReturnTemp_Set;             //回水温度设定值
-    float   PressureDiff_Set;           //压差设定值
-    INT8U  Error;                      //错误代码 0为正常，1为堵转，2为进水温度传感器开路，3.回水温度传感器开路，4.进水压力传感器开路，5回水压力传感器开路
-    INT8U  Software_Version;           //软件版本号  100 则为 V1.0 
-    INT8U  Run_Mode;                   //运行模式  0为开度模式；1为温差模式2为回温模式3为压差模式4.就地控制模式（电机掉电）5.4-20控制开度模式（需硬件支持）6 TIME
-    INT8U  Address;                    //地址 1-247，默认为1
-    INT8U  Motor_Steering;             //电机转向 0为正向阀，1为反向阀
-    INT8U  Adjust_Switch;              //自动行程校正开关，0关闭，1为打开，值为1时每次上电自动校正行程
-    INT8U  Adjust_Tigger;              //写0x5555触发一次
-    INT8U  Dc_Motor_Speed;             //直流电机速度
+    //两个字节发送 以小端模式发给服务器
+	INT16U	Input_Temp;                 //进水温度  2556= 09FC  （25.56℃） （保持后面有两个小数点）
+	INT16U	Output_Temp;                //回水温度  2556= 09FC  （25.56℃） （保持后面有两个小数点）
+    INT16U  EnterWater_Pressure;        //进水压力  （保持后面有两个小数点）
+    INT16U  ReturnWater_Pressure;       //回水压力 （保持后面有两个小数点）
+    INT16U  Room_Temp;                  //室温 （保持后面有两个小数点）
+    INT16U  Current_Valve_Open;         //当前阀门开度值（保持后面有两个小数点）
+    INT16U  SetValue_Open;              //设置阀门开度值（保持后面有两个小数点）
+    INT16U  Temp_Diff;                  //温差设定值（保持后面有两个小数点）
+    INT16U  ReturnTemp_Set;             //回水温度设定值（保持后面有两个小数点）
+    INT16U  PressureDiff_Set;           //压差设定值  （保持后面有两个小数点）
+    INT16U  Error;                      //错误代码 0为正常，1为堵转，2为进水温度传感器开路，3.回水温度传感器开路，4.进水压力传感器开路，5回水压力传感器开路
+    INT16U  Software_Version;           //软件版本号  100 则为 V1.0 
+    INT16U  Run_Mode;                   //运行模式  0为开度模式；1为温差模式2为回温模式3为压差模式4.就地控制模式（电机掉电）5.4-20控制开度模式（需硬件支持）6 TIME
+    INT16U  Address;                    //地址 1-247，默认为1
+    INT16U  Motor_Steering;             //电机转向 0为正向阀，1为反向阀
+    INT16U  Adjust_Switch;              //自动行程校正开关，0关闭，1为打开，值为1时每次上电自动校正行程
+    INT16U  Adjust_Tigger;              //写0x5555触发一次
+    INT16U  Dc_Motor_Speed;             //直流电机速度 
 
 	INT8U	Check;				//校验和
 	INT8U	End;					//结束标志
 }FY1000_Pack0XB0_D5_Stru;
+
+
+
 
 //	（0XBA）服务器开启下载文件 / 服务器下载文件包 / 服务器文件下载结束
 typedef struct
@@ -932,6 +937,19 @@ typedef struct
 }FY1000_Pack0XFF_Stru;
 
 
+typedef struct
+{
+	FY1000Pro_Head_Stru Head;
+	
+	INT8U	DevType;		//设备类型
+	INT32U	DevID;			//设备编号
+	
+    INT8U   Register_Addr;  //寄存器地址
+	INT16U	data;			//下发数据
+	
+	INT8U	Check;			//校验和
+	INT8U	End;			//结束标志
+}FY1000_Pack0X1B_NWK_Stru;	    // 一下命令同样适用此结构体  0X1B 0X1C
 
 
 typedef union
@@ -994,13 +1012,17 @@ typedef union
 
 	FY1000_Pack0X19_Stru		Pack_0X19;
 	FY1000_Pack0X1A_Stru		Pack_0X1A;
+    
+    /*耐威科接收06结构体*/
+    FY1000_Pack0X1B_NWK_Stru    Pack_0X1B;
+    /*耐威科接收06结构体 -END*/
 
 	FY1000_Pack0XB0_F_Stru	Pack_0XB0_F;
 	FY1000_Pack0XB0_D1_Stru	Pack_0XB0_D1;
 	FY1000_Pack0XB0_D2_Stru	Pack_0XB0_D2;
 	FY1000_Pack0XB0_D3_Stru	Pack_0XB0_D3;
 	FY1000_Pack0XB0_D4_Stru	Pack_0XB0_D4;
-    FY1000_Pack0XB0_D5_Stru	Pack_0XB0_D5;
+    FY1000_Pack0XB0_D5_Stru	Pack_0XB0_D5; /*耐威科接收03结构体*/
 
 	FY1000_Pack0XBA_Stru	Pack_0XBA;
 	FY1000_Pack0XBF_Stru		Pack_0XBF;
@@ -1044,6 +1066,10 @@ typedef union
 	FY1000_Pack0X18_Stru		Pack_0X18;	
 	FY1000_Pack0X1A_Stru		Pack_0X1A;	
 	
+    /*耐威科接收06结构体*/
+    FY1000_Pack0X1B_NWK_Stru    Pack_0X1C;
+    /*耐威科接收06结构体E -END*/
+    
 	FY1000_Pack0X40_Stru		Pack_0X40;
 
 
@@ -1052,7 +1078,7 @@ typedef union
 	FY1000_Pack0XB0_D2_Stru		Pack_0XB0_D2;
 	FY1000_Pack0XB0_D3_Stru		Pack_0XB0_D3;
 	FY1000_Pack0XB0_D4_Stru		Pack_0XB0_D4;
-    FY1000_Pack0XB0_D5_Stru	    Pack_0XB0_D5;
+    FY1000_Pack0XB0_D5_Stru	    Pack_0XB0_D5; /*耐威科接收03结构体*/
 
 	
 	FY1000_Pack0XBF_Stru		Pack_0XBF;

@@ -38,9 +38,8 @@
 /*
 系统默认参数数据初始化
 */
-#define SYSTEM_BulidTime            0X20191020			//系统编译日期
-#define SYSTEM_VERSION              20191020            //采集器软件版本号（32位无符号整数）
-
+#define SYSTEM_BulidTime            0X20200501			//系统编译日期
+#define SYSTEM_VERSION              20200501            //采集器软件版本号（32位无符号整数）
 
 
 #define Valve_U_TempChange          0					//通断控制器温度修正  "0":不修正  "1":修正
@@ -49,10 +48,10 @@
 
 /**/
 #define MAXUser_Num                 (320)				//系统最大用户容量
-#define MAXBuldMeter_Num			(20)                 //系统最大楼栋热表容量
-#define MAXUserMeter_Num			(MAXUser_Num)		//系统最大用户热表容量
-#define MAXUserValve_Num			(0)	//系统最大用户通断控制器容量
-#define MAXDevice_Num				(MAXBuldMeter_Num+MAXUserMeter_Num+MAXUserValve_Num)
+#define MAXBuldMeter_Num			(20)                //系统最大楼栋热表容量
+#define MAXUserMeter_Num			(MAXUser_Num)		//320 系统最大用户热表容量
+#define MAXUserValve_Num			(0)	                //系统最大用户通断控制器容量
+#define MAXDevice_Num				(MAXBuldMeter_Num+MAXUserMeter_Num+MAXUserValve_Num)//340
 
 
 

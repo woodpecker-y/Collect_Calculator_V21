@@ -586,14 +586,14 @@ typedef struct
     float   Temp_Diff;                  //温差设定值
     float   ReturnTemp_Set;             //回水温度设定值
     float   PressureDiff_Set;           //压差设定值
-    INT8U   Error;                      //错误代码 0为正常，1为堵转，2为进水温度传感器开路，3.回水温度传感器开路，4.进水压力传感器开路，5回水压力传感器开路
-    INT8U   Software_Version;           //软件版本号  100 则为 V1.0 
-    INT8U   Run_Mode;                   //运行模式  0为开度模式；1为温差模式2为回温模式3为压差模式4.就地控制模式（电机掉电）5.4-20控制开度模式（需硬件支持）6 TIME
-    INT8U   Address;                    //地址 1-247，默认为1
-    INT8U   Motor_Steering;             //电机转向 0为正向阀，1为反向阀
-    INT8U   Adjust_Switch;              //自动行程校正开关，0关闭，1为打开，值为1时每次上电自动校正行程
-    INT8U   Adjust_Tigger;              //写0x5555触发一次
-    INT8U   Dc_Motor_Speed;             //直流电机速度
+    INT16U   Error;                      //错误代码 0为正常，1为堵转，2为进水温度传感器开路，3.回水温度传感器开路，4.进水压力传感器开路，5回水压力传感器开路
+    INT16U   Software_Version;           //软件版本号  100 则为 V1.0 
+    INT16U   Run_Mode;                   //运行模式  0为开度模式；1为温差模式2为回温模式3为压差模式4.就地控制模式（电机掉电）5.4-20控制开度模式（需硬件支持）6 TIME
+    INT16U   Address;                    //地址 1-247，默认为1
+    INT16U   Motor_Steering;             //电机转向 0为正向阀，1为反向阀
+    INT16U   Adjust_Switch;              //自动行程校正开关，0关闭，1为打开，值为1时每次上电自动校正行程
+    INT16U   Adjust_Tigger;              //写0x5555触发一次
+    INT16U   Dc_Motor_Speed;             //直流电机速度
     
 	//INT16U	CRC16;				    //校验码
     
