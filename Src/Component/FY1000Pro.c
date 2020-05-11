@@ -3143,8 +3143,10 @@ INT8U FY1000_Pack_Rx_S(UART_RBC_Stru* Ctrl_Point,INT8U Protocol)
 
 			ErrorFlg =FY1000_Pack_0X12(Ctrl_Point);
 			if( ErrorFlg==0X00 )
-			{	dbg_printf(DEBUG_INFO,"系统通信响应 Pack_R 0X12...");	
-				dbg_printf(DEBUG_INFO,"Heart Beat Ack...");
+			{	//dbg_printf(DEBUG_INFO,"系统通信响应 Pack_R 0X12...");
+				//dbg_printf(DEBUG_INFO,"Heart Beat Ack...");
+                
+                dbg_printf(DEBUG_INFO,"服务器心跳应答 Pack_R 0X12...");
 
 				
 				/* 重置心跳检测 */
@@ -4161,9 +4163,12 @@ INT8U FY1000_Pack_Rx_S(UART_RBC_Stru* Ctrl_Point,INT8U Protocol)
 			
 			if( ErrorFlg==0X00 )
 			{	
-				dbg_printf(DEBUG_INFO,"系统通信响应 Pack_R 0XFF...");	
+				//dbg_printf(DEBUG_INFO,"系统通信响应 Pack_R 0XFF...");	
+                //dbg_printf(DEBUG_INFO,"服务器注册成功");
+                
+				dbg_printf(DEBUG_INFO,"服务器注册成功-系统通信响应 Pack_R 0XFF...");	
+                
 				SerReg_Flg =0XAAAA;
-				dbg_printf(DEBUG_INFO,"服务器注册成功");
 				PulseLeaguer_SET(Beep_Ctrler, 3, 10, 8, 15, 0, 0);			   		//功能指针  脉冲数量  扫描间隔(tick*X) 边沿宽度	 周期	 周期计数器  当前状态
 			}
 			

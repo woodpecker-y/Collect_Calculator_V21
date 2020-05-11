@@ -84,6 +84,14 @@ void HbMainTask(void)
             {
                 dbg_printf(DEBUG_INFO,"DTU重启成功...");
             }
+            
+            //2020.05.11 添加当心跳超过次数之后 重新发送注册命令
+            UART_TO_FY1000_QueueSend_Stru SendBuffer;
+            if(FY_1000Send_Code_QInput(&SendBuffer,0XFE)==pdTRUE)
+            {			
+                dbg_printf(DEBUG_INFO,"主站重连注册申请....");
+            }
+            
         }
         else
         {

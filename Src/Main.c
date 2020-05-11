@@ -1086,17 +1086,16 @@ void Task06_F(void const * argument)
 void Task07_F(void const * argument)
 {
 
+    //2020.05.11 添加上电延时3秒注册发送信息
+    osDelay(1000*3);
+    
 	UART_TO_FY1000_QueueSend_Stru SendBuffer;
 	if(FY_1000Send_Code_QInput(&SendBuffer,0XFE)==pdTRUE)
 	{			
 		dbg_printf(DEBUG_INFO,"主站重连注册申请....");
 	}
-	else
-	{
-		dbg_printf(DEBUG_INFO,"主站重连注册申请....");
-	}
+    
 	createIWDG( &Iwdg_T7, 30);			                //软件看门狗创建
-
 
     while(1)
     {
