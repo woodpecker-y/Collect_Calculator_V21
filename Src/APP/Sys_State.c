@@ -803,7 +803,8 @@ void devicestatus(char *pcWriteBuffer, int xWriteBufferLen,int argc, char **argv
             }
             else
             {
-                cli_printf("   %-8d%-8d%-18lu%-18lu%-18lu%08lX     **号楼 - *单元 - **层 - **室\r\n", i, DeviceT, COM_T, COM_S, COMBack_CE, SysDeviceList.Device[i].ID);
+                //cli_printf("   %-8d%-8d%-18lu%-18lu%-18lu%08lX     **号楼 - *单元 - **层 - **室\r\n", i, DeviceT, COM_T, COM_S, COMBack_CE, SysDeviceList.Device[i].ID);
+                cli_printf("   %-8d%-8d%-18lu%-18lu%-18lu%08lX     公共计量设备不绑定用户信息\r\n", i, DeviceT, COM_T, COM_S, COMBack_CE, SysDeviceList.Device[i].ID);
             }
             //cli_printf("--------|-------|-------------------|-----------------|-----------------|----------------|-------------------------------\r\n");
             //cli_printf("-------------------------------------------------------------------------------------------------------------------------\r\n");

@@ -1901,7 +1901,7 @@ void Task09_F(void const * argument)
 										SendBuffer_1000.SendData.Pack_0XB0_F.ComSucNum =SysDevStatus[DevNum].Device1.ComSucNum;
 										SendBuffer_1000.SendData.Pack_0XB0_F.ComFauNum =SysDevStatus[DevNum].Device1.ComFauNum;
 										FY_1000Send_Code_QInput(&SendBuffer_1000,0XB0);
-                                       dbg_printf(DEBUG_WARNING,"自动 抄收失败，类型:%d 编号:%08lX...",DevType, ClientCH1Ctrler.Device.ID);
+                                       dbg_printf(DEBUG_WARNING,"自动 抄收失败，类型:%d 编号:%08lX...楼栋热量表",DevType, ClientCH1Ctrler.Device.ID);
                                         
 									}break;
 									case 0XAAAA: //远程抄收
@@ -1916,7 +1916,7 @@ void Task09_F(void const * argument)
 										SendBuffer_1000.SendData.Pack_0X02_F.ComSucNum =SysDevStatus[DevNum].Device1.ComSucNum;
 										SendBuffer_1000.SendData.Pack_0X02_F.ComFauNum =SysDevStatus[DevNum].Device1.ComFauNum;
 										FY_1000Send_Code_QInput(&SendBuffer_1000,0X02);
-                                        dbg_printf(DEBUG_WARNING,"远程 抄收失败 0X01，类型:%d 编号:%08lX...", DevType, ClientCH1Ctrler.Device.ID);
+                                        dbg_printf(DEBUG_WARNING,"远程 抄收失败 0X01，类型:%d 编号:%08lX...楼栋热量表", DevType, ClientCH1Ctrler.Device.ID);
                                         
 									}break;
 									default:break;
@@ -2125,7 +2125,7 @@ void Task09_F(void const * argument)
 										SendBuffer_1000.SendData.Pack_0XB0_F.ComSucNum =SysDevStatus[DevNum].Device5.ComSucNum;
 										SendBuffer_1000.SendData.Pack_0XB0_F.ComFauNum =SysDevStatus[DevNum].Device5.ComFauNum;
 										FY_1000Send_Code_QInput(&SendBuffer_1000,0XB0);										
-                                        dbg_printf(DEBUG_WARNING,"自动 抄收失败，类型:%d 编号:%08lX...",DevType, ClientCH1Ctrler.Device.ID);
+                                        dbg_printf(DEBUG_WARNING,"自动 抄收失败，类型:%d 编号:%08lX...楼栋热量表",DevType, ClientCH1Ctrler.Device.ID);
                                         
 									}break;
 									
@@ -2141,7 +2141,7 @@ void Task09_F(void const * argument)
 										SendBuffer_1000.SendData.Pack_0X02_F.ComSucNum =SysDevStatus[DevNum].Device5.ComSucNum;
 										SendBuffer_1000.SendData.Pack_0X02_F.ComFauNum =SysDevStatus[DevNum].Device5.ComFauNum;
 										FY_1000Send_Code_QInput(&SendBuffer_1000,0X02);										
-                                        dbg_printf(DEBUG_WARNING,"远程 抄收失败 0X01，类型:%d 编号:%08lX...", DevType, ClientCH1Ctrler.Device.ID);
+                                        dbg_printf(DEBUG_WARNING,"远程 抄收失败 0X01，类型:%d 编号:%08lX...楼栋热量表", DevType, ClientCH1Ctrler.Device.ID);
                                         
 									}break;
 									default:break;
@@ -2390,7 +2390,7 @@ void Task09_F(void const * argument)
 										SendBuffer_1000.SendData.Pack_0XB0_F.ComSucNum =SysDevStatus[DevNum].Device11.ComSucNum;
 										SendBuffer_1000.SendData.Pack_0XB0_F.ComFauNum =SysDevStatus[DevNum].Device11.ComFauNum;
 										FY_1000Send_Code_QInput(&SendBuffer_1000,0XB0);
-                                        dbg_printf(DEBUG_WARNING,"自动 抄收失败，类型:%d 编号:%08lX...",DevType, ClientCH1Ctrler.Device.ID);
+                                        dbg_printf(DEBUG_WARNING,"自动 抄收失败，类型:%d 编号:%08lX...楼栋单元调节阀",DevType, ClientCH1Ctrler.Device.ID);
                                         
 									}break;
 									
@@ -2410,7 +2410,7 @@ void Task09_F(void const * argument)
 												SendBuffer_1000.SendData.Pack_0X02_F.ComSucNum =SysDevStatus[DevNum].Device11.ComSucNum;
 												SendBuffer_1000.SendData.Pack_0X02_F.ComFauNum =SysDevStatus[DevNum].Device11.ComFauNum;
 												FY_1000Send_Code_QInput(&SendBuffer_1000,0X02);
-												dbg_printf(DEBUG_WARNING,"远程 抄收失败 0X01，类型:%d 编号:%08lX...", DevType, ClientCH1Ctrler.Device.ID);
+												dbg_printf(DEBUG_WARNING,"远程 抄收失败 0X01，类型:%d 编号:%08lX...楼栋单元调节阀", DevType, ClientCH1Ctrler.Device.ID);
 
 											}break;
 											case 0X0D://阀门动作控制
@@ -2419,7 +2419,7 @@ void Task09_F(void const * argument)
 												SendBuffer_1000.SendData.Pack_0X0E.DevID =ClientCH1Ctrler.Device.ID;
 												SendBuffer_1000.SendData.Pack_0X0E.State =0X03;
 												FY_1000Send_Code_QInput(&SendBuffer_1000,0X0E);												
-												dbg_printf(DEBUG_WARNING,"远程 控制失败 0X0D，类型:%d 编号:%08lX...", DevType, ClientCH1Ctrler.Device.ID);
+												dbg_printf(DEBUG_WARNING,"远程 控制失败 0X0D，类型:%d 编号:%08lX...楼栋单元调节阀", DevType, ClientCH1Ctrler.Device.ID);
 												
 											}break;
 										}

@@ -143,13 +143,13 @@ HAL_StatusTypeDef PCF8563_Read_DEV(RealClock_Str* RealTime)
 	    }
     	else
     	{
-			RealTime->Year =1000;
+			//RealTime->Year =1000;
 			return HAL_ERROR;
 		}
     }
 	else
 	{
-		RealTime->Year =1000;
+		//RealTime->Year =1000;
 		return HAL_ERROR;
 	}
 	return HAL_OK;
