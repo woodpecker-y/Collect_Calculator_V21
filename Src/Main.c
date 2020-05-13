@@ -2580,7 +2580,7 @@ void Task12_F(void const * argument)
 				{
 					if( UserData_Save(UserNum) ==HAL_OK)
 					{
-                        dbg_printf(DEBUG_INFO,"用户数据保存成功 序号:%d    用户主键:%08lX    DeviceID:%08lX", UserNum, SysUserList.User[UserNum].User_ID, ClientCH1Ctrler.Device.ID);
+                        dbg_printf(DEBUG_INFO,"用户数据保存成功 序号:%d    用户主键:%lX    DeviceID:%08lX", UserNum, SysUserList.User[UserNum].User_ID, ClientCH1Ctrler.Device.ID);
                         //dbg_printf(DEBUG_INFO,"用户数据保存成功 序号:%d    用户主键:%08lX    DeviceID:%08lX---位置信息 %02d号楼-%d单元-%02d层-%02d室",\
                                                                                 UserNum, SysUserList.User[UserNum].User_ID, ClientCH1Ctrler.Device.ID,\
                                                                                 SysUserList.User[UserNum].Buld,\

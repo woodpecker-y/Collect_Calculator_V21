@@ -3297,7 +3297,7 @@ INT8U FY1000_Pack_Rx_S(UART_RBC_Stru* Ctrl_Point,INT8U Protocol)
 					if(HAL_OK ==UserData_Save(userNum))
 					{
 						SendBuffer_1000.SendData.Pack_0X18.State =COMBack_OK;
-						dbg_printf(DEBUG_INFO,"主站命令 用户数据保存成功...");						
+						dbg_printf(DEBUG_INFO,"主站命令 用户数据保存成功...");
 						dbg_printf(DEBUG_INFO,"设备类型:%d  设备序号:%d  设备编号:%08lX  用户序号:%d ",DevType,DevNum,DevID,userNum);
 						
 					}
