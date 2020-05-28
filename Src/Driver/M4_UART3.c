@@ -357,8 +357,9 @@ void USART3_IRQHandler(void)
 
 			default: 
             {
-            
+#ifdef Meter_DDF2_ENABLE
                 UART_RBC_BufferInput(UART_TO_DDF2_CCB_S,UART3_Rxlenth,UART3_RxBuffer);
+#endif
             }
 
             break;

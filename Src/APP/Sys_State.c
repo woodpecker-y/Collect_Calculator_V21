@@ -96,7 +96,26 @@ void printenv(char *pcWriteBuffer, int xWriteBufferLen,int argc, char **argv)
 	
 	cli_printf("   供暖开始时间:   %4d年%2d月%2d日 %2d:%2d:%2d  \r\n",SysPara.StartTime.Year,SysPara.StartTime.Month,SysPara.StartTime.Day,SysPara.StartTime.Hour,SysPara.StartTime.Minute,SysPara.StartTime.Second);
 	cli_printf("   供暖结束时间:   %4d年%2d月%2d日 %2d:%2d:%2d  \r\n",SysPara.FinalTime.Year,SysPara.FinalTime.Month,SysPara.FinalTime.Day,SysPara.FinalTime.Hour,SysPara.FinalTime.Minute,SysPara.FinalTime.Second);
-	cli_printf("   系统供暖时长:   %f 小时 \r\n", (FL32)CalculateProvideTimeCtrler.ProvideTime/3600);
+    if(CalculateProvideTimeCtrler.LoopWorkFlg == ENABLE)
+    {
+        if( CalculateProvideTimeCtrler.PassData < 0 )
+        {
+            cli_printf("   是否在供暖季:   试运营前一个月内  \r\n");
+        }
+        else if(CalculateProvideTimeCtrler.PassData == 0)
+        {
+            cli_printf("   是否在供暖季:   供暖季内  \r\n");
+        }
+        else if(CalculateProvideTimeCtrler.PassData > 0)
+        {
+            cli_printf("   是否在供暖季:   供暖延期后一个月内  \r\n");
+        }
+    }
+    else if(CalculateProvideTimeCtrler.LoopWorkFlg == DISABLE)
+    {
+        cli_printf("   是否在供暖季:   非供暖季  \r\n");
+    }
+    cli_printf("   系统供暖时长:   %f 小时 \r\n", (FL32)CalculateProvideTimeCtrler.ProvideTime/3600);
 	cli_printf("   供暖超时时长:   %f 小时 \r\n", (FL32)CalculateProvideTimeCtrler.PassData/3600);
     cli_printf("\r\n\r\n");
 	cli_printf("   系统分摊周期:   %lu 分钟 \r\n",SysPara.Apportion_T);	
@@ -1484,12 +1503,13 @@ void powrelayctrl(char *pcWriteBuffer, int xWriteBufferLen,int argc, char **argv
 
 void ddf2ctrl(char *pcWriteBuffer, int xWriteBufferLen,int argc, char **argv)
 {
-
+#ifdef Meter_DDF2_ENABLE
     INT32U DevID =0;
     INT32U DevID1 =0;
     INT32U flag =0;
     INT16U DevNum =0;
     ClientCH1_Queue_Stru SendBuffer_DDF2;
+#endif
     
 
     if(argc != 3)       //判断输入参数的合法性
@@ -1497,10 +1517,12 @@ void ddf2ctrl(char *pcWriteBuffer, int xWriteBufferLen,int argc, char **argv)
         cmd_printf("ddf2ctrl [12345678] [0/1]\r\n");
         return;
     }
+# ifdef Meter_DDF2_ENABLE
     DevID = atoi(argv[1]);
     DevID1 = HexToBcd4(&DevID);
 
     flag =atoi(argv[2]);
+    
     if(GetMeters_Num(DevID1,Meter_DDF2 ,&DevNum) ==HAL_OK) //成功找到用户设备
     {
         if(0==flag)
@@ -1540,7 +1562,7 @@ void ddf2ctrl(char *pcWriteBuffer, int xWriteBufferLen,int argc, char **argv)
         dbg_printf(DEBUG_INFO,"设备查询失败...");
 
     }
-
+#endif
 }
 
 

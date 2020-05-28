@@ -49,7 +49,7 @@
             <InvalidFlash>1</InvalidFlash>
           </TargetStatus>
           <OutputDirectory>.\FY-1102\</OutputDirectory>
-          <OutputName>FY-1102-NWK</OutputName>
+          <OutputName>FY-1102-NWK2</OutputName>
           <CreateExecutable>1</CreateExecutable>
           <CreateLib>0</CreateLib>
           <CreateHexFile>1</CreateHexFile>

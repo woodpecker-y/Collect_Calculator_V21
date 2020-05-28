@@ -2694,7 +2694,7 @@ INT8U FY1000_Pack_Rx_S(UART_RBC_Stru* Ctrl_Point,INT8U Protocol)
 				{
 				
 					UART_TO_FY1000_QueueSend_Stru SendBuffer;
-					dbg_printf(DEBUG_INFO,"全局设备温度设置...");
+					dbg_printf(DEBUG_INFO,"系统统一设定温度...");
 
 					if(PackData->Pack_0X05.Set_TCtrlFg ==0XAA)
 					{

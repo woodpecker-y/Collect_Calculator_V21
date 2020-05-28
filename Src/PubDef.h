@@ -79,7 +79,7 @@
 
 //#define Meter_HT2X_ENABLE       //海通小口径热量表HT2X
 //#define Meter_BRC_ENABLE        //山东贝特智联小口径热量表BRC
-#define Meter_DDF2_ENABLE       //海通通断控制器 DDF2
+//#define Meter_DDF2_ENABLE       //海通通断控制器 DDF2
 
 #define Valve_NWK_ENABLE        //耐威科楼栋单元调节阀modbus协议
 

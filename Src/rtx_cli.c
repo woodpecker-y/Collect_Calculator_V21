@@ -509,7 +509,7 @@ static const struct cli_command built_ins[] =
     
 	{"clear","         (清除)",					    		                clear_screen},
 	{"printenv","      (系统参数信息)",				    		            printenv},
-	{"setenv","        (导入设备及用户bin文件)",				    	                setEnvParameter},
+	{"setenv","        (导入设备及用户bin文件)",				    	        setEnvParameter},
 	{"setip","         (设置IP地址和端口号)",		    	    	        setServer},
 	{"printip","       (IP地址和端口号)",		    	    	            printServer},
 	{"ps","            (系统运行状态)",				    		            ps},

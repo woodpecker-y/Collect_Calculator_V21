@@ -177,7 +177,7 @@ void SystemEnergyValue_Cal(void)
 				
 			}
 #ifdef Meter_H_ENABLE
-			else if( SysDeviceList.Device[LoopBM].Type ==Meter_H)								//设备为大口径热恋表 汇中188
+			else if( SysDeviceList.Device[LoopBM].Type ==Meter_H)								//设备为大口径热量表 汇中188
 			{
 
 				BuldMeterEnergyValue = SysDevData[LoopBM].Device5.Apportion_Energy;					//周期热量值传递

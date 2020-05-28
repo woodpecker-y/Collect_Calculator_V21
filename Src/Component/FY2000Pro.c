@@ -567,7 +567,7 @@ void FY2000_Pack_59(UART_RBC_Stru* PORT )
 		}
 		else
 		{
-			PackData->Pack_59.Set_TCtrlFg =0XFF;
+			PackData->Pack_59.Set_TCtrlFg =0X00;
 		}
 		
 		PackData->Pack_59.Set_Temp =FY2000_Q_RX_Buffer.SendData.FY2000Data.Pack_59.Set_Temp;
@@ -712,7 +712,37 @@ void FY2000_Pack_61(UART_RBC_Stru* PORT)
 
 
 
+/*
+62组包子函数
+主机广播发送供暖季通断控制器清除计量数据命令
 
+*/
+void FY2000_Pack_62(UART_RBC_Stru* PORT)
+{
+
+	FY2000_Pack_Uni* PackData =(FY2000_Pack_Uni*)(PORT->OutputPack);	//指针变换
+	INT16U PackSize =0;
+
+	PackData->Pack_62.Head.Start =FY2000Pro_StartCode;
+	PackData->Pack_62.Head.Version =FY2000Pro_ProtocolCode;
+	PackData->Pack_62.Head.SN =FY2000Pro_BroadcastAddr;
+	PackData->Pack_62.Head.DESN =0;
+	PackData->Pack_62.Head.GN =0;
+	PackData->Pack_62.Head.ConType =62;
+
+	PackData->Pack_62.Head.Lenth =sizeof(FY2000_Pack62_Stru)-FY2000Pro_HeadSize-2;//实际有效数据区长度
+	PackSize =sizeof(FY2000_Pack62_Stru)-2; //校验数据长度计算
+
+	
+	PackData->Pack_62.DATA =0XAAAA;
+	
+	PackData->Pack_62.Check =SUMCheck_Input((INT8U*)PackData,PackSize);
+	PackData->Pack_62.End =FY2000Pro_EndCode;
+
+	PackSize+=2;
+	PORT->OutputPackSize =PackSize;
+	PORT->PackSendFlag =ENABLE; 
+}
 
 
 
@@ -1063,7 +1093,7 @@ INT8U FY2000_Pack_Rx_S(UART_RBC_Stru* Ctrl_Point,INT8U Protocol)
 
 							if(FY_1000Send_Code_QInput(&FY1000_Q_TX_Buffer,0XB0)==pdTRUE)
 							{
-								dbg_printf(DEBUG_DEBUG,"设备自动抄收数据转发  编号: %d SN:%08lX\r\n ",DESN,FY1000_Q_TX_Buffer.SendData.Pack_0XB0_D3.Dev_ID);
+								dbg_printf(DEBUG_DEBUG,"设备自动抄收数据转发至服务器  编号: %d SN:%08lX\r\n ",DESN,FY1000_Q_TX_Buffer.SendData.Pack_0XB0_D3.Dev_ID);
 							}
 						}
 					/* 后台实时数据转发 自动抄收END*/
@@ -1098,7 +1128,7 @@ INT8U FY2000_Pack_Rx_S(UART_RBC_Stru* Ctrl_Point,INT8U Protocol)
 
 							if(FY_1000Send_Code_QInput(&FY1000_Q_TX_Buffer,0X02)==pdTRUE)
 							{
-								dbg_printf(DEBUG_DEBUG,"设备远程抄收数据转发  编号: %d SN:%08lX\r\n ",DESN,FY1000_Q_TX_Buffer.SendData.Pack_0X02_D3.Dev_ID);
+								dbg_printf(DEBUG_DEBUG,"设备远程抄收数据转发至服务器  编号: %d SN:%08lX\r\n ",DESN,FY1000_Q_TX_Buffer.SendData.Pack_0X02_D3.Dev_ID);
 							}
 						}
 					/* 后台实时数据转发 自动抄收END*/
@@ -1147,7 +1177,7 @@ INT8U FY2000_Pack_Rx_S(UART_RBC_Stru* Ctrl_Point,INT8U Protocol)
 							
 							if(FY_1000Send_Code_QInput(&FY1000_Q_TX_Buffer,0XB0)==pdTRUE)
 							{
-								dbg_printf(DEBUG_DEBUG,"设备自动抄收数据转发  编号: %d SN:%08lX",DESN,FY1000_Q_TX_Buffer.SendData.Pack_0XB0_D4.Dev_ID);
+								dbg_printf(DEBUG_DEBUG,"设备自动抄收数据转发至服务器  编号: %d SN:%08lX",DESN,FY1000_Q_TX_Buffer.SendData.Pack_0XB0_D4.Dev_ID);
 							}
 						}
 					/* 后台实时数据转发 自动抄收END*/		
@@ -1171,7 +1201,7 @@ INT8U FY2000_Pack_Rx_S(UART_RBC_Stru* Ctrl_Point,INT8U Protocol)
 							
 							if(FY_1000Send_Code_QInput(&FY1000_Q_TX_Buffer,0X02)==pdTRUE)
 							{
-								dbg_printf(DEBUG_DEBUG,"设备远程抄收数据转发  编号: %d SN:%08lX",DESN,FY1000_Q_TX_Buffer.SendData.Pack_0X02_D4.Dev_ID);
+								dbg_printf(DEBUG_DEBUG,"设备远程抄收数据转发至服务器  编号: %d SN:%08lX",DESN,FY1000_Q_TX_Buffer.SendData.Pack_0X02_D4.Dev_ID);
 							}
 						}
 					/* 后台实时数据转发 远程抄收END*/						
@@ -1290,8 +1320,15 @@ INT8U FY2000_Pack_TxServer_S(UART_RBC_Stru* Ctrl_Point)
 		{
 			FY2000_Pack_61(Ctrl_Point);
 			
-		}break;				
-		default:
+		}break;
+        
+        case 62:
+		{
+			FY2000_Pack_62(Ctrl_Point);
+			
+		}break;
+        
+        default:
 		{
 			Ctrl_Point->PackINPort =0;
 		}

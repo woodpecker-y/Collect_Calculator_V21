@@ -248,7 +248,7 @@ int main(void)
 	dogInit();							//守护看门狗任务初始化
 	SysBeep_Cfg();						//系统蜂鸣器功能初始化
 
-	huart1.Init.BaudRate =115200;		
+	huart1.Init.BaudRate =9600;		
 	huart1.Init.WordLength = UART_WORDLENGTH_8B;
 	huart1.Init.Parity =UART_PARITY_NONE;
 	UART1_Cfg();						//通用异步端口1初始化
@@ -814,9 +814,11 @@ Task01_F function
 */
 void Task01_F(void const * argument)
 {
-	INT32U Times =0;
+	INT32U Times =30;
 	INT32U Times1 =0;
 	INT32U Times2 =0;
+    INT32U ClearDevDataTimer = 718;//在供暖期前一个月设备清零累计数据计时器
+    //如果系统时间在供暖期的前一个月内 重启设备的话会在30秒钟之后发送 设备清零指令，自动清零会在每6个小时清除一次通断控制器累计计量数据。
 	
 	static INT16U RealySt = 0;
 	RealySt =SysPara.RelayRecord;
@@ -838,6 +840,7 @@ void Task01_F(void const * argument)
 
 		if(Times >=30)
 		{
+            ClearDevDataTimer++;//30秒加一
 			Times =0;
 			PCF8563_Read(&RTC_Time);										//RTC读取
 			CalculateProvideTimeServer();									//供暖时间 以及供暖季的计算
@@ -854,6 +857,29 @@ void Task01_F(void const * argument)
 				((CalculateProvideTimeCtrler.PassData <=3600l*24*30)&&( CalculateProvideTimeCtrler.PassData >=-3600l*24*30))	//供暖季后有效时间内
 			)
 			{
+                
+                if(CalculateProvideTimeCtrler.PassData >= -3600l*24*30 && CalculateProvideTimeCtrler.PassData < 0 && ClearDevDataTimer >= 720)  //试运行期间每6个小时清除一次阀门累计数据
+                {
+                    ClearDevDataTimer = 0;                      //在供暖期前一个月设备清零累计数据计时器
+                    BaseType_t err;
+                    ClientCH1_Queue_Stru	DATAIN;
+
+                    DATAIN.Device.Type  = Valve_U;				//填充设备类型
+                    DATAIN.Device.ID    = 0XAAAAAAAA;				
+                    DATAIN.Device.Num   = 0;						
+                    DATAIN.SignleCom    = RESET;			    //不需要从机返回
+
+                    err = FY_2000Send_Code_QInput(&DATAIN, 62);
+                    if(err == pdTRUE)
+                    {
+                        dbg_printf(DEBUG_DEBUG,"发送供暖期开始清除累计计量数据    成功 ");
+                    }
+                    else
+                    {
+                        dbg_printf(DEBUG_DEBUG,"发送供暖期开始清除累计计量数据    失败 ");
+                    }
+                }
+                //dbg_printf(DEBUG_DEBUG,"\r\n\r\nCalculateProvideTimeCtrler.PassData = %ld\r\n\r\n", CalculateProvideTimeCtrler.PassData/3600);
 				CalculateProvideTimeCtrler.LoopWorkFlg =ENABLE;		
 			}
 			else
@@ -1139,7 +1165,7 @@ void Task07_F(void const * argument)
 
 
 /* Task08_F function
-Client 通信通道1 发送服务  数据发送服务任务（采集器-->从机设备  采集器发送命令给设备）
+Client 通信通道1 发送服务  数据发送服务任务（采集器-->从机设备  采集器发送命令给设备）轮询抄收
 
 */
 
@@ -1152,12 +1178,13 @@ void Task08_F(void const * argument)
 	
 	ClientReadCtrler.Num =0;
 	SysDEV_Type DeviceType;
+    
 	ClientCH1_Queue_Stru DevQueue;
+    
 	UART_TO_FY188_QueueSend_Stru		FY188_QueueSend;        //声明热量表通信协议发送队列缓冲器
+    
 	UART_TO_FY2000_QueueSend_Stru	    FY2000_QueueSend;       //声明通断阀通信协议协议发送队列缓冲器
 
-	
-    
 #ifdef Meter_H_ENABLE
 	UART_TO_HZCRL_QueueSend_Stru		HZCRL188_QueueSend;     //声明汇中188通信协议通信协议协议发送队列缓冲器
 #endif
@@ -1192,7 +1219,6 @@ void Task08_F(void const * argument)
 	createIWDG( &Iwdg_T8, 60);			    //软件看门狗创建
 
 #if 0
-
     for(int i =8;i< 40;i++)
     {
 
@@ -1204,6 +1230,9 @@ void Task08_F(void const * argument)
 	}
 	
 #endif
+    
+    osDelay(1000*5);
+    
     while(1)
     {
 		feedIWDG(Iwdg_T8);
@@ -1846,7 +1875,7 @@ void Task08_F(void const * argument)
 
 
 /* Task09_F function
-Client 通信通道1 总线控制服务     
+Client 通信通道1 总线控制服务   重复抄收没有抄收到的数据  
 */
 void Task09_F(void const * argument)
 {
@@ -2482,7 +2511,7 @@ void Task10_F(void const * argument)
 		
 		/*通断控制器广播对时*/
 		Time2 +=1;
-		if( Time2>=60)  //300秒广播对时触发一次
+		if( Time2>=60)  //300秒广播对时触发一次  每5分钟校准一次时间
 		{
 			Time2 =0;
 			ClientCH1_Queue_Stru	DATAIN;
@@ -2686,7 +2715,7 @@ void Task13_F(void const * argument)
 							
 							if(FY_1000Send_Code_QInput(&FY1000_Q_TX_Buffer,0XB0)==pdTRUE)
 							{
-								dbg_printf(DEBUG_DEBUG,"设备数据循环发送  编号: %d SN:%08lX\r\n ",DevNum,FY1000_Q_TX_Buffer.SendData.Pack_0XB0_D1.Dev_ID);
+								dbg_printf(DEBUG_DEBUG,"丰源大口径超声波热量表 设备数据循环发送至服务器  编号: %d SN:%08lX\r\n ",DevNum,FY1000_Q_TX_Buffer.SendData.Pack_0XB0_D1.Dev_ID);
 							}
 							osDelay(SysPara.SendSpace);
 						}
@@ -2734,7 +2763,7 @@ void Task13_F(void const * argument)
 						//	FY1000_Q_TX_Buffer.SendData.Pack_0XB0_D2.ComFauNum =SysDevStatus[DevNum].Device2.ComFauNum;
 							if(FY_1000Send_Code_QInput(&FY1000_Q_TX_Buffer,0XB0)==pdTRUE)
 							{
-								dbg_printf(DEBUG_DEBUG,"设备数据循环发送  编号: %d SN:%08lX\r\n ",DevNum,FY1000_Q_TX_Buffer.SendData.Pack_0XB0_D2.Dev_ID);
+								dbg_printf(DEBUG_DEBUG,"丰源户用超声波热量表 设备数据循环发送至服务器  编号: %d SN:%08lX\r\n ",DevNum,FY1000_Q_TX_Buffer.SendData.Pack_0XB0_D2.Dev_ID);
 							}
 							osDelay(SysPara.SendSpace);
 
@@ -2774,7 +2803,7 @@ void Task13_F(void const * argument)
 							
 							if(FY_1000Send_Code_QInput(&FY1000_Q_TX_Buffer,0XB0)==pdTRUE)
 							{
-								dbg_printf(DEBUG_DEBUG,"设备数据循环发送  编号: %d SN:%08lX\r\n ",DevNum,FY1000_Q_TX_Buffer.SendData.Pack_0XB0_D3.Dev_ID);
+								dbg_printf(DEBUG_DEBUG,"通断控制器 设备数据循环发送至服务器  编号: %d SN:%08lX\r\n ",DevNum,FY1000_Q_TX_Buffer.SendData.Pack_0XB0_D3.Dev_ID);
 							}
 							osDelay(SysPara.SendSpace);
 						}
@@ -2804,7 +2833,7 @@ void Task13_F(void const * argument)
 
 							if(FY_1000Send_Code_QInput(&FY1000_Q_TX_Buffer,0XB0)==pdTRUE)
 							{
-								dbg_printf(DEBUG_DEBUG,"设备数据循环发送  编号: %d SN:%08lX",DevNum,FY1000_Q_TX_Buffer.SendData.Pack_0XB0_D4.Dev_ID);
+								dbg_printf(DEBUG_DEBUG,"通断控制器（回水阀）设备数据循环发送至服务器  编号: %d SN:%08lX",DevNum,FY1000_Q_TX_Buffer.SendData.Pack_0XB0_D4.Dev_ID);
 							}						
 							osDelay(SysPara.SendSpace);
 						}
@@ -2849,7 +2878,7 @@ void Task13_F(void const * argument)
 							
 							if(FY_1000Send_Code_QInput(&FY1000_Q_TX_Buffer,0XB0)==pdTRUE)
 							{
-								dbg_printf(DEBUG_DEBUG,"设备数据循环发送  编号: %d SN:%08lX\r\n ",DevNum,FY1000_Q_TX_Buffer.SendData.Pack_0XB0_D1.Dev_ID);
+								dbg_printf(DEBUG_DEBUG,"汇中大口径超声波热量表 设备数据循环发送至服务器  编号: %d SN:%08lX\r\n ",DevNum,FY1000_Q_TX_Buffer.SendData.Pack_0XB0_D1.Dev_ID);
 							}
 							osDelay(SysPara.SendSpace);
 
@@ -3066,7 +3095,7 @@ void Task13_F(void const * argument)
 
 							if(FY_1000Send_Code_QInput(&FY1000_Q_TX_Buffer,0XB0)==pdTRUE)
 							{
-								dbg_printf(DEBUG_DEBUG,"设备数据循环发送  编号: %d SN:%08lX",DevNum,FY1000_Q_TX_Buffer.SendData.Pack_0XB0_D4.Dev_ID);
+								dbg_printf(DEBUG_DEBUG,"耐威科单元阀 设备数据循环发送至服务器  编号: %d SN:%08lX",DevNum,FY1000_Q_TX_Buffer.SendData.Pack_0XB0_D4.Dev_ID);
 							}						
 							osDelay(SysPara.SendSpace);
 						}
