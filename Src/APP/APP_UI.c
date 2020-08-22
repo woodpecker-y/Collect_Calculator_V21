@@ -232,7 +232,8 @@ void Disp_Open(void)
 	RealClock_Str TimeNow =RTC_Time;
 
 	strcat(TIME,Disp_Integer(TimeNow.Year));
-	strcat(TIME,hg);
+	//strcat(TIME,hg);
+    strcat(TIME,"年");
 
 	if( (TimeNow.Month/10) ==0)
 	{
@@ -240,7 +241,9 @@ void Disp_Open(void)
 	}
 	strcat(TIME,Disp_Integer(TimeNow.Month));
 	
-	strcat(TIME,hg);
+	//strcat(TIME,hg);
+    strcat(TIME,"月");
+
 
 	if( (TimeNow.Day/10) ==0)
 	{
@@ -248,8 +251,12 @@ void Disp_Open(void)
 	}
 	strcat(TIME,Disp_Integer(TimeNow.Day));
 	
+    strcat(TIME,"日");
 	strcat(TIME,kg);
 	strcat(TIME,kg);
+    strcat(TIME,kg);
+	strcat(TIME,kg);
+    strcat(TIME,kg);
 	
 	if( (TimeNow.Hour/10) ==0)
 	{
@@ -266,21 +273,23 @@ void Disp_Open(void)
 	}		
 	strcat(TIME,Disp_Integer(TimeNow.Minute));
 
-	strcat(TIME,mh);
-	if( (TimeNow.Second/10) ==0)
-	{
-		strcat(TIME,"0");
-	}		
-	strcat(TIME,Disp_Integer(TimeNow.Second));
+//	strcat(TIME,mh);
+//	if( (TimeNow.Second/10) ==0)
+//	{
+//		strcat(TIME,"0");
+//	}		
+//	strcat(TIME,Disp_Integer(TimeNow.Second));
 
 	Clear_VisionBUF();
-	
-	DispStringM(4,4,TIME,0,10);
-
-	DispStringM(52,45,"FY-1102",0,12);
+    
+    DispStringM(2,4,TIME,0,9);
+    
+	DispStringM(60,45,"FY-1102",0,9);
+    
 	DispStringM(32,75,"热量采集系统",0,12);
 	
-	DispStringM(41,140,"河北丰源智控",0,10);
+	DispStringM(45,140,"河北丰源智控",0,9);
+    
 	Refresh_Screen();
 
 }
@@ -4895,7 +4904,7 @@ void Disp_1(void)
     }
     
     DispStringM(32,4,"--主 菜 单--",0,12);
-    DispStringM(42,LineSpace*0+FirstSpace,"1.系统状态",SU1,11);
+    DispStringM(42,LineSpace*0+FirstSpace,"1.系统信息",SU1,11);
     DispStringM(42,LineSpace*1+FirstSpace,"2.用户信息",SU2,11);
     DispStringM(42,LineSpace*2+FirstSpace,"3.系统设置",SU3,11);
     DispStringM(42,LineSpace*3+FirstSpace,"4.栋表数据",SU4,11);
@@ -4939,9 +4948,9 @@ void Disp_1_1(void)//系统状态菜单子函数
 	  	SU5 =1;
 	}	
     
-	DispStringM(32,4,"--系统状态--",0,12);
-	DispStringM(42,LineSpace*0+FirstSpace,"1.设备自检",SU1,11);
-	DispStringM(42,LineSpace*1+FirstSpace,"2.系统终端",SU2,11);
+	DispStringM(32,4,"--系统信息--",0,12);
+	DispStringM(42,LineSpace*0+FirstSpace,"1.系统状态",SU1,11);
+	DispStringM(42,LineSpace*1+FirstSpace,"2.终端状态",SU2,11);
 	DispStringM(42,LineSpace*2+FirstSpace,"3.栋表状态",SU3,11);
 	DispStringM(42,LineSpace*3+FirstSpace,"4.版本信息",SU4,11);
 	DispStringM(42,LineSpace*4+FirstSpace,"5.系统数据",SU5,11);
@@ -4958,7 +4967,7 @@ void Disp_1_1_3(void)
 	INT16U User_ID =PressInData.PSG1-1;
 
 	
-	char CH1[2];	//序号
+	char CH1[3];	//序号
 	char CH2[12];	//SN
 	
 	char CH6[9];	//工作状态
@@ -5007,9 +5016,10 @@ void Disp_1_1_3(void)
 	strcat(DATA3,Disp_Integer(ComFaultNum));
 
 	
-
-	CH1[0] ='0'+DA1;
-	CH1[1] ='\0';
+    CH1[0] ='0'+(DA1/10);
+	CH1[1] ='0'+(DA1%10);
+	CH1[2] ='\0';
+    
 	CH2[0] ='S';
 	CH2[1] ='N';
 	CH2[2] =':';
@@ -5088,7 +5098,8 @@ void Disp_1_1_4A(void)
 	INT16U BuldMeterNum =MAXBuldMeter_Num;			//栋表数量
 	char CH1[9];//出厂编号
 	char CH2[4];//用户数量
-	char CH3[2];//栋表数量
+	char CH3[3];//栋表数量
+    
 	CH1[0] ='0'+((Device_SN>>28)&0X0F);//出厂编号
 	CH1[1] ='0'+((Device_SN>>24)&0X0F);
 	CH1[2] ='0'+((Device_SN>>20)&0X0F);
@@ -5105,33 +5116,35 @@ void Disp_1_1_4A(void)
 	CH2[2] ='0'+(UserNum%10);
 	CH2[3] ='\0';
 
-	CH3[0] ='0'+(BuldMeterNum%10);
-	CH3[1] ='\0';
+	CH3[0] ='0'+(BuldMeterNum/10);
+    CH3[1] ='0'+(BuldMeterNum%10);
+	CH3[2] ='\0';
 	
     DispStringM(32,4,"--版本信息--",0,12);
     DispStringM(4,LineSpace*0+FirstSpace, Hardware,0,10);
     DispStringM(4,LineSpace*1+FirstSpace, Software,0,10);
+
     DispStringM(4,LineSpace*2+FirstSpace, "3.出厂编号:",0,10);
-    DispStringM(77,LineSpace*2+FirstSpace, CH1,0,10);
+    DispStringM(77,LineSpace*2+FirstSpace, CH1,0,9);
     
-    DispStringM(4,LineSpace*3+FirstSpace, "4.设备类型",0,10);
+    DispStringM(4,LineSpace*3+FirstSpace, "4.系统类型:",0,10);
     
 	
 	if(DeviceType ==1)
 	{
-		DispStringM(4,LineSpace*4+FirstSpace ,"  热量表采集系统",0,10);
+		DispStringM(4,LineSpace*4+FirstSpace ,"        热量表采集系统",0,9);
 	}
 	else if(DeviceType ==2)
 	{
-		DispStringM(4,LineSpace*4+FirstSpace ,"  温控计量一体化系统",0,10);
+		DispStringM(4,LineSpace*4+FirstSpace ,"      温控计量一体化系统",0,9);
 	}
     else if(DeviceType ==3)
     {
-		DispStringM(4,LineSpace*4+FirstSpace ,"  通断时间面积计量系统",0,10);
+		DispStringM(4,LineSpace*4+FirstSpace ,"    通断时间面积计量系统",0,9);
     }
     else
     {
-		DispStringM(4,LineSpace*4+FirstSpace ,"  系统类型未设定",0,10);
+		DispStringM(4,LineSpace*4+FirstSpace ,"        系统类型未设定",0,9);
     }
     DispStringM(4,LineSpace*5+FirstSpace ,"5.用户容量:",0,10);
     DispStringM(77,LineSpace*5+FirstSpace ,CH2,0,10);
@@ -5258,20 +5271,20 @@ void Disp_1_1_4B(void)
 
     DispStringM(32,4,"--版本信息--",0,12);
     DispStringM(4, LineSpace*0+FirstSpace, "7.系统时间",0,10);
-    DispStringM(13,LineSpace*1+FirstSpace, TIME,0,10);
+    DispStringM(13,LineSpace*1+FirstSpace, TIME,0,9);
     
-    DispStringM(20, LineSpace*2+FirstSpace, "连续运行:",0,10);
-	DispStringM(20+59,LineSpace*2+FirstSpace, TIME_H,0,10);
-	DispStringM(20+59+35,LineSpace*2+FirstSpace, "时",0,10);
-	DispStringM(20+59+35+13,LineSpace*2+FirstSpace, TIME_M,0,10);
-	DispStringM(20+59+35+13+14,LineSpace*2+FirstSpace,"分",0,10);
+    DispStringM(20, LineSpace*2+FirstSpace, "连续运行:",0,9);
+	DispStringM(20+59,LineSpace*2+FirstSpace, TIME_H,0,9);
+	DispStringM(20+59+35,LineSpace*2+FirstSpace, "时",0,9);
+	DispStringM(20+59+35+13,LineSpace*2+FirstSpace, TIME_M,0,9);
+	DispStringM(20+59+35+13+14,LineSpace*2+FirstSpace,"分",0,9);
     
     DispStringM(4, LineSpace*3+FirstSpace, "8.供暖开始时间",0,10);
-    DispStringM(13,LineSpace*4+FirstSpace, TIME_S,0,10);
+    DispStringM(13,LineSpace*4+FirstSpace, TIME_S,0,9);
 
     
 	DispStringM(4, LineSpace*5+FirstSpace, "9.供暖结束时间",0,10);
-	DispStringM(13,LineSpace*6+FirstSpace, TIME_F,0,10);
+	DispStringM(13,LineSpace*6+FirstSpace, TIME_F,0,9);
 
 }
 
@@ -5287,23 +5300,33 @@ void Disp_1_1_5A(void)
 	char DATA2[30] =" ";
 	char DATA3[30] =" ";
 	char DATA4[30] =" ";
+    char DATA5[30] =" ";
+    char DATA6[30] =" ";
+    char DATA7[30] =" ";
 	
 	INT16U LineSpace =20;
 	INT16U FirstSpace =26;
 
-	strcat(DATA1,"__用户数量: ");
+	strcat(DATA1,"1.用户数量: ");
 	strcat(DATA1,Disp_Integer(SysPara.UserNum));
 
-   	strcat(DATA2,"__栋表数量: ");
-	strcat(DATA2,Disp_Integer(SysPara.BuldMeterNum));
+    strcat(DATA2,"2.终端数量: ");
+	strcat(DATA2,Disp_Integer(SysPara.DevNum));
+    
+   	strcat(DATA3,"3.栋表数量: ");
+	strcat(DATA3,Disp_Integer(SysPara.BuldMeterNum));
 
-   	strcat(DATA3,"__用户终端数量: ");
-	strcat(DATA3,Disp_Integer(SysPara.DevNum));
-
-   	strcat(DATA4,"__系统终端容量: ");
-	strcat(DATA4,Disp_Integer(MAXDevice_Num));
-
-
+    strcat(DATA4,"  ----------------");
+    
+    strcat(DATA5,"4.系统用户 容量: ");
+	strcat(DATA5,Disp_Integer(MAXUser_Num));//320 系统最大用户热表容量
+    
+    strcat(DATA6,"5.系统终端 容量: ");
+	strcat(DATA6,Disp_Integer(MAXUserMeter_Num));//320 系统最大用户热表容量
+    
+   	strcat(DATA7,"6.系统栋表 容量: ");
+	strcat(DATA7,Disp_Integer(MAXBuldMeter_Num));//系统最大楼栋热表容量
+    
     DispStringM(32,4,"--系统数据--",0,12);
     
     DispStringM(4,LineSpace*0+FirstSpace, DATA1,0,10);
@@ -5313,7 +5336,12 @@ void Disp_1_1_5A(void)
     DispStringM(4,LineSpace*2+FirstSpace, DATA3,0,10);
     
     DispStringM(4,LineSpace*3+FirstSpace, DATA4,0,10);
+    
+    DispStringM(4,LineSpace*4+FirstSpace, DATA5,0,10);
 
+    DispStringM(4,LineSpace*5+FirstSpace, DATA6,0,10);
+    
+    DispStringM(4,LineSpace*6+FirstSpace, DATA7,0,10);
 }
 
 
@@ -7930,21 +7958,22 @@ void Disp_1_4(void)
 {
 	INT16U LineSpace =23;
 	INT16U FirstSpace =29;
-	char CH1[2];
+	char CH1[3];
 	char CH2[9];
 //	char CH3[4];
 	char CH4[4];
 	
-	INT16U SN1=PressInData.Num_BuldMeter-1;//热表序号
-	INT32U SN=PressInData.Meter_ID = BuildMeters[SN1].ID;//热表序列号
-	INT16U ChannelUserNum =PressInData.ChannelUserNum = BuildMeters[SN1].Users;//管路用户数量
+	INT16U SN1            = PressInData.Num_BuldMeter - 1;//热表序号
+	INT32U SN             = PressInData.Meter_ID        = BuildMeters[SN1].ID;//热表序列号
+	INT16U ChannelUserNum = PressInData.ChannelUserNum  = BuildMeters[SN1].Users;//管路用户数量
 	
-	CH1[1] ='\0';
+	CH1[2] ='\0';
 	CH2[8] ='\0';
 //	CH3[3] ='\0';
 	CH4[3] ='\0';
-
-	CH1[0] ='0'+SN1+1;			//热表序号
+    
+    CH1[0] ='0'+((SN1+1)/10);			//热表序号
+	CH1[1] ='0'+((SN1+1)%10);			//热表序号
 	
 	CH2[0] ='0'+((SN>>28)&0X0F);//热表SN
 	CH2[1] ='0'+((SN>>24)&0X0F);
@@ -7970,8 +7999,8 @@ void Disp_1_4(void)
     DispStringM(4,LineSpace*1+FirstSpace+4, "1.热表SN:",0,11);
     DispStringM(4+15*2+8*5,LineSpace*1+FirstSpace+4,CH2,0,11);
 
- //   DispStringM(4,LineSpace*2+FirstSpace+4, "2.起始用户序号:",0,11);
-  //  DispStringM(4+15*6+8*3,LineSpace*2+FirstSpace+4, CH3,0,11);
+//   DispStringM(4,LineSpace*2+FirstSpace+4, "2.起始用户序号:",0,11);
+//   DispStringM(4+15*6+8*3,LineSpace*2+FirstSpace+4, CH3,0,11);
 
     DispStringM(4,LineSpace*3+FirstSpace+4, "2.管路用户数量:",0,11);
     DispStringM(4+15*6+8*3,LineSpace*3+FirstSpace+4,CH4,0,11);
@@ -7987,7 +8016,7 @@ void Disp_1_4_1(void)
 {
 	INT16U LineSpace =15;
 	INT16U FirstSpace =24;
-	char CH1[2];		//热表序号
+	char CH1[3];		//热表序号
 	char CH2[7];		//进水温度
 	char CH3[7];		//回水温度
 	char CH4[14];		//瞬时流量
@@ -8057,7 +8086,7 @@ void Disp_1_4_1(void)
 #endif
 
 
-	CH1[2-1] ='\0'; 	//热表序号
+	CH1[2] ='\0'; 	//热表序号
 	CH2[7-1] ='\0'; 	//进水温度
 	CH3[7-1] ='\0'; 	//回水温度
 	CH4[14-1] ='\0'; 	//瞬时流量
@@ -8067,7 +8096,8 @@ void Disp_1_4_1(void)
 	CH8[13-1] ='\0'; 	//分摊能量
 	CH9[9-1] ='\0'; 	//运行时间
 
-	CH1[0] ='0'+(SN1%10)+1; //热表序号
+	CH1[0] ='0'+((SN1+1)/10); //热表序号
+    CH1[1] ='0'+((SN1+1)%10); //热表序号
 	
 	CH2[0] ='0'+(Input_Temp/10000); //进水温度
 	CH2[1] ='0'+(Input_Temp%10000/1000); //进水温度
@@ -8387,10 +8417,10 @@ void DisplayManager(void)
 	            {
 	                Disp_1_4();
 	            }		
-			if ( ScreenRecord.ra3 ==1)		//热表状态
-			{
-				 Disp_1_4_1();
-	        }	
+                if ( ScreenRecord.ra3 ==1)		//热表状态
+                {
+                     Disp_1_4_1();
+                }	
 		}
 	}
 }

@@ -248,7 +248,7 @@ int main(void)
 	dogInit();							//守护看门狗任务初始化
 	SysBeep_Cfg();						//系统蜂鸣器功能初始化
 
-	huart1.Init.BaudRate =9600;		
+	huart1.Init.BaudRate =115200;		
 	huart1.Init.WordLength = UART_WORDLENGTH_8B;
 	huart1.Init.Parity =UART_PARITY_NONE;
 	UART1_Cfg();						//通用异步端口1初始化
@@ -945,7 +945,7 @@ void Task01_F(void const * argument)
 
 
 
-
+    u16 auto_return_display_timer = 0;
 
 /* 
 	Task02_F function
@@ -979,6 +979,20 @@ void Task02_F(void const * argument)
 			TimeLed =0;
 			PulseLeaguer_SET(LedBR_Ctrler, 4, 10, 8, 16, 0, 0); 	//设置主板工作指示灯 重设
 		}
+        
+        auto_return_display_timer++;
+        if(auto_return_display_timer>=1200)
+        {
+            auto_return_display_timer = 0;
+            ScreenRecord.ra0 = 0;
+            ScreenRecord.ra1 = 0;
+            ScreenRecord.ra2 = 0;
+            ScreenRecord.ra3 = 0;
+            ScreenRecord.ra4 = 0;
+            ScreenRecord.ra5 = 0;
+            xSemaphoreGive(Display_Semaphore);
+        }
+        
     	osDelay(50);
 	
     }
@@ -1009,12 +1023,15 @@ void Task03_F(void const * argument)
     Timer01Handle = osTimerCreate(osTimer(Timer01), osTimerPeriodic, NULL);
     TimerErr =osTimerStart (Timer01Handle , 5 );	                    //定时器扫描间隔为5毫秒/Ticks
 
+
 	Err =Err;
     while(1)
     {
         Err =xQueueReceive(KEY_OUT_Msg, &pi, portMAX_DELAY);
         if(Err ==pdTRUE)
         {
+            auto_return_display_timer = 0;
+            
 			value =pi;
 			PulseLeaguer_SET(Beep_Ctrler, 1, 10, 5, 10, 0, 0); 	        //功能指针	脉冲数量  扫描间隔(tick*X) 边沿宽度   周期	  周期计数器  当前状态
 			LCD_light_Ct =SystemTick_ms;					            //有按键按下时刷新背光控制器
@@ -1026,6 +1043,7 @@ void Task03_F(void const * argument)
         }
         
         osDelay(100);
+
     }
 }
 
@@ -1063,7 +1081,8 @@ void Task04_F(void const * argument)
 			Refresh_Screen();
 		}
     	osDelay(50);
-	
+	    //xSemaphoreGive(Display_Semaphore);
+
     }
 }
 

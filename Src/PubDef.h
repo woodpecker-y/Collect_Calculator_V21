@@ -227,7 +227,7 @@ typedef enum
 #define	FRAM_USED                   (DevData_Addr+MAXDevice_Num*sizeof(SysDevData_Stru))
 
 
-#define	LCD_OFF_TICKS               (120*1000ul)                                                         //定义LCD息屏 延时间隔
+#define	LCD_OFF_TICKS               (60*1000ul)                                                         //定义LCD息屏 延时间隔
 
 
 
